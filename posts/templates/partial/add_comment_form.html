@@ -1,0 +1,25 @@
+
+{% if comment %}
+<form action="{% url 'add_comment' post.pk comment.pk %}" method="post" class="form" >
+{% else %}
+<form action="{% url 'add_comment' post.pk %}" method="post" class="form add-comment-form" >
+{% endif %}
+{% csrf_token %}
+{% include "partial/form_error.html" with errors=new_comment_form.text.errors %}
+{# new_comment_form.text #}
+<textarea 
+   {% if user.is_authenticated %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Comment Input box (logged in)', 'Clicking in input text comment box when logged in.']);"
+   {% else %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Comment Input box (not logged in)', 'Clicking in input text comment box when not logged in.']);"{% endif %}
+
+class="form-control col-md-12 comment-form" cols="40" id="id_text" name="text"
+   {% if title %}placeholder="write a comment about ”{{title}}”"{% else %}placeholder="write a comment..."{% endif %} rows="4"></textarea>
+<input id="add-comment-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" value="Add Comment"
+       {% if user.is_authenticated %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Add Comment btn (logged in)', 'Clicking the add comment button when logged in.']);"
+       {% else %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Add Comment btn (not logged in)', 'Clicking the add comment button when not logged in.']);"{% endif %}>
+</form>
+
+
+<!--form action="">
+  <textarea class="form-control" rows="4" name="comment"></textarea>
+  <input class="btn comment-btn" type="submit" value="Add a Comment">
+</form-->

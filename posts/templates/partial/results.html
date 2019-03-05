@@ -1,0 +1,8 @@
+<div class="results-info">
+  {% if count > 0 %}
+  Results {{ items.start_index }}-{{ items.end_index }} of {{ count }}
+  {% else %}
+  No results 
+  {% endif %}
+  for <strong>{{ query }}</strong>
+</div>

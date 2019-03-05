@@ -1,0 +1,20 @@
+{% extends "dashboard.html" %}
+
+{% load posts_extras %}
+{% load admin_urls %}
+
+{% block inner-content %}
+<h3 class="section-header">Scheduled Posts</h3>
+{% for post in posts %}
+<div class="post-title">
+  <a {% if post.url %}href="{{ post.url }}{% endif %}">{{ post.title }}</a>
+  <a href="{% url 'admin:posts_post_change' post.id %}"><small>(edit)</small></a>
+  <a href="{% url 'share_now' post.id %}"><small>(share now)</small></a>
+</div>
+<div class="small-info-line">
+  will be posted in {{ post.submit_time|timeuntil }} ({{ post.submit_time|date:"l, M d" }} at {{ post.submit_time|date:"H:i T" }}) by <a href="{% url 'view_profile' post.submitter.pk %}">{{ post.submitter.username }}</a> |
+  <a href="{% url 'view_post' post.pk %}" class="comments-link">{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</a>
+  {% if post.url %}<span class="url-info">({{ post.url|domainize }})</span>{% endif %}  
+</div><br>
+{% endfor %}
+{% endblock %}

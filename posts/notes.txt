@@ -1,0 +1,44 @@
+Notes when redeploying after a couple years away:
+
+1. I had to remove configstore entirely (I think it doesn't work with django 1.9, not sure, but I couldn't get it to work). This will break a couple things, will have to replace them with another solution.
+2. I'm using new versions of all the requirements, hopefully it doesn't cause problems. I vaguely recall pytz needing to be an older version? I'm using the newer one now, will revert if there are problems.
+3. the django-endless-pagination module is deprecated, I've replaced with the fork django-el-pagination
+
+
+----
+
+=====BUFFER
+
+The Buffer feature should work as follows:
+
+1. When submitting a post, admins can select a checkbox called to "buffer" the post.
+2. This will cause two things to happen:
+	(a) It will not be visible on the site for another 60-90 minutes after the latest post, including currently buffered posts (its user-visible publish time will be this later time, not the time that the admin actually submitted it)
+	(b) It will be submitted to all Buffer social media accounts (e.g. Twitter) which are currently connected (see #3).
+3. Accounts that are connected to the Buffer account can be disconnected via the "Buffer Profiles" section of the "Admin Dashboard". The Admin Dashboard is accessible through the link on all pages. It is different than the Django admin interface. Its address is /admin_dashboard/
+
+
+=====EMBEDLY
+
+Embedly fetches 2000 words from any url that is submitted. Sometimes it can't find the content, in which case no content is saved (but the url and post still goes through fine, which people can vote on and discuss).
+
+Embedly returns the HTML of the content already sanitized (TODO: should we trust embedly to do a proper job of this, or should we sanitize as well?). In addition to this, we remove any img tags because we definitely don't want to hotlink their images.
+
+
+=====INSTAGRAM
+
+Test instagram account: njwernjkwernjk@mailinator.com
+
+
+
+API TODO:
+
+1. The buffer stuff is still set up for the PDL accounts. Everything works, it's just for PDL.
+2. Instagram needs a new access token
+3. Embedly works.
+4. Mailchimp is untested, but I think it works, I just need to log in to check.
+5. 
+
+OTHER TODO:
+1. Endless pagination
+2. 

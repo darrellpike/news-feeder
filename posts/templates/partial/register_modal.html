@@ -1,0 +1,12 @@
+<form action="{% url 'registration_register' %}" method="post" class="form" >    
+  {% csrf_token %}
+  username: <br><input class="form-control col-lg-8 text-input" id="id_username" name="username" type="text" />
+  password: <br><input class="form-control col-lg-8 text-input" id="id_password1" name="password1" type="password" />
+  confirm password: <br><input class="form-control col-lg-8 text-input" id="id_password2" name="password2" type="password" />
+  email: <br><input class="form-control col-lg-8 text-input" id="id_email" name="email" type="text" />
+  I would like to stay up to date with the PLANTDIETlife news letter and events: <input type="checkbox" name="mailing_signup" checked >
+  <br><br>
+  <div>
+    <button type="submit" class="btn btn-submit" onclick="_gaq.push(['_trackEvent', 'Actions', 'Sign Up Submit btn', 'The sign up button in the modal to submit registration info.']);">Sign Up</button>
+  </div>
+</form>

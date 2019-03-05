@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}<title>{{ profile_owner.username }}'s profile | PLANTDIETlife</title>{% endblock %}
+
+{% block css %}
+    <link href="{{ STATIC_URL }}css/view_post.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-1 col-md-offset-3">
+    User: 
+  </div>
+  <div class="col-md-4">
+    {{ profile_owner.username }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1 col-md-offset-3">
+    Joined:
+  </div>
+  <div class="col-md-4">
+    {{ profile_owner.date_joined|timesince }} ago.
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1 col-md-offset-3">
+    Email:
+  </div>
+  <div class="col-md-4">
+    {% if owns_page %}<form action="" method="POST">{% csrf_token %}
+      {{ form.email }}<br>
+    Show email publicly? {{ form.is_email_public }}<br>
+    {% else %}
+      {% if profile_owner.userprofile.is_email_public and profile_owner.email %}
+      Email: {{ profile_owner.email }}<br>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1 col-md-offset-3">
+    About:
+  </div>
+  <div class="col-md-4">
+    {% if owns_page %}
+    {{ form.description }}<br><br>
+    {% else %}
+    {{ profile_owner.userprofile.description }}
+    {% endif %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-1 col-md-offset-3">
+    Karma:
+  </div>
+  <div class="col-md-4">
+    {{ profile_owner.userprofile.count_karma }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+      {% if form.errors %}
+      <div class="alert alert-danger">
+	{{ form.errors }}
+      </div>
+      {% endif %}
+
+    {% if owns_page %}<input type="submit" value="update profile"></form>{% endif %}
+<br><br>
+    <a href="{% url 'view_user_submissions' profile_owner.pk %}">submissions</a> <br>
+    <a href="{% url 'view_user_comments' profile_owner.pk %}">comments</a> <br>
+    <br>
+    {% if owns_page %}<a href="{% url 'auth_password_change' %}">Change password</a>{% endif %}
+
+    {% if user.is_staff %}
+    <a href="{% url 'admin:posts_userprofile_change' profile_owner.id %}"><small>(edit user details as admin)</small></a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

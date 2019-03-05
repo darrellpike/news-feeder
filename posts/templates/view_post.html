@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% load sanitizer %}
+{% load posts_extras %}
+
+{% block meta_description %}<meta property="og:description" content="{{ post.title }}">{% endblock %}
+
+{% block title %}<title>{{ post.title }} | PLANTDIETlife</title>{% endblock %}
+{% block meta-title %}{{ post.title }} | PLANTDIETlife{% endblock %}
+
+{% block css %}
+    <link href="{{ STATIC_URL }}css/view_post.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+    {% include "partial/vote.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="row post">
+  <div id="main-post-content" class="col-md-10 col-md-offset-1">
+    <div class="fixed-voter hidden-xs hidden-sm">
+      {{ post.score }}<br>
+      point{{ post.score|pluralize }}<br>
+      <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored vote-btn upvote-btn">
+        <i class="material-icons">arrow_drop_up</i>
+      </button>
+      <br>
+      <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored vote-btn downvote-btn">
+        <i class="material-icons">arrow_drop_down</i>
+      </button>
+      <br>
+    </div>
+    {#{% include "partial/post_info.html" with individual_page=True %}#}
+    <div class="row">
+      <span class="main-post-title">{{ post.title }}</span>
+    </div>
+    <br>
+    {% if post.text %}
+    <div class="row" >
+      <div class="post-text col-md-6">
+	”{{ post.text|linebreaksbr }}” -{{ post.submitter.username }}
+	<hr class="post-sep" >
+      </div>
+    </div>
+    <br>
+    {% endif %}
+    {% if post.article_text %}
+    <div class="row" >
+      <div class="article-text">
+	{% if user.is_authenticated %}
+	{#% strip_html post.article_text "a, p, b" "href" %#}
+	{{ post.article_text|removetags:"img"|safe }}
+	{% else %}
+	{#% strip_html post.article_text|truncatewords_html:preview_wordcount "a, p, b" "href" %#}
+	{{ post.article_text|truncatewords_html:preview_wordcount|removetags:"img"|safe }}
+	  {% if article_length > 1300 %}
+	  <div class="signup-over-blurred">
+	    <p class="signup-instructions">Please sign up to read the rest of this story or click <a href="{{ post.url }}" target="_blank" >here</a> to read it on the web.</p>
+	    <a data-toggle="modal" href="#register-modal" class="btn btn-primary btn-blur-signup" onclick="_gaq.push(['_trackEvent', 'Actions', 'Sign Up Free blurred text btn', 'The sign up button that's over the blurred article text.']);">Sign Up Free</a>
+	  </div>
+	  <div class="article-text-blur">{% strip_html post.article_text|slice:"600:1500"|gibberishize "p" %}</div>
+	  {% endif %}
+	{#(<a href="{{ post.url }}" target="_blank">read more</a>)#}
+	{% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% comment %}
+    <div class="row">
+      <div class="share-buttons">
+	<div class="fb-like" data-href="https://www.plantdietlife.com/{% url 'view_post' post.pk %}" data-width="450" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+
+	<a href="https://twitter.com/share" class="twitter-share-button" data-via="plantdiet">Tweet</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script> 
+      </div>
+    </div>
+    {% endcomment %}
+
+    {% if post.url %}
+    <div class="row">
+      <p class="url-text">
+	You can view the full original article <a href="{{ post.url }}" target="_blank">here</a>{% if not user.is_authenticated %}, or <a href="{% url 'registration_register' %}">sign up</a> to view the article through motoranger{% endif %}.
+      </p>
+    </div>
+    {% endif %}
+
+    {% if post.relatedarticle_set.all %}
+    <div class="row">
+      <div class="related-articles">
+	    <div class="related-articles-header">Related articles on the web:</div>
+	    {% for p in post.relatedarticle_set.all %}
+	    <a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Related article link', 'Clicking on a related article at the bottom of a post's page.']);" href="{{ p.url }}" target="_blank"> {{ p.title }}</a><br>
+	    {% endfor %}
+	    <hr class="post-sep related-sep" >
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+      {% include "partial/add_comment_form.html" with title=post.title %}
+    </div>
+    <div class="row">
+      {% include "partial/comment_tree.html" %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

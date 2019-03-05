@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <link href="{{ STATIC_URL }}css/index.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+      <div class="row">
+        <div class="col-lg-8">
+	  <ol>
+	    {% if comments %}All comments by {{ show_user.username }}:{% else %}{{ show_user.username }} has not commented at all yet!{% endif %}
+	    {% for comment in comments %}
+	      <div class="row post">
+		<div class="col-md-12 post-col">
+		  {% include "partial/comment.html" with node=comment post=comment.post no_indent=True include_post=True %}
+		</div>
+	      </div>
+	    {% endfor %}
+	  </ol>
+	</div>
+      </div>
+
+
+{% endblock %}
+      {% block above-footer %}{% if comments.has_next %}<a href="?page={{ comments.next_page_number }}" class="more-link">More</a>{% endif %}{% endblock %}

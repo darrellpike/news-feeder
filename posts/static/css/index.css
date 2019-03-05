@@ -1,0 +1,156 @@
+.instagram-image {
+    margin-top:11px;
+    padding-left:0px;
+    height:auto;
+}
+.delete-image-link {
+    cursor:pointer;
+    cursor:hand;
+}
+
+.instagram-profile-link { 
+    font-weight:bold;
+}
+
+.side-drawer-links{
+    color:#45b875;
+}
+.side-drawer-links > a {
+    font-size:14px;
+    color:#45b875;
+    line-height:24px;
+}
+
+@media (max-width: 992px) {
+    #story-section {
+	display:none;
+    }
+    .image-sidebar {
+	display:none;
+    }
+}
+
+instagram-image-card-square.mdl-card {  /* leave the "." off of "instagram-image..." or it will screw up the layout */
+    width:320px;
+    height:320px;
+}
+.instagram-image-card {
+    width:100%;
+    margin-top:30px;
+}
+.story-card {
+    width:100%;
+    margin-top:30px;
+    padding-left:10px;
+    min-height:0px;
+}
+.instagram-image-row, .story-row {
+    padding-left:50px;
+    padding-right:50px;
+}
+.story-card-actions {
+    text-align:right;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.54);
+    padding-right:24px;
+}
+.story-card-comment-link, .story-card-comment-link:hover {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.54);
+    padding-left:10px;
+    padding-right:10px;
+    margin-right:20px;
+}
+div.story-card-title-container {
+    padding-bottom:0px;
+}
+.story-card-title-h2 {
+    height:40px;
+}
+.story-card .mdl-card__supporting-text {
+    padding-top:5px;
+    padding-bottom:5px;
+}
+.story-card-title, .story-card-title:hover {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+}
+.story-card-info-block {
+    padding-left:0px;
+}
+
+.story-card-submitter, .story-card-submitter:hover {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: 500;
+    color: #ff5252;
+}
+.story-card-domain {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.54);
+}
+.instagram-image-card .mdl-card__supporting-text {
+    width:100%;
+}
+.instagram-image-display {
+    background-size: cover;
+    cursor:pointer;
+}
+
+
+@media (max-width: 1000px) {
+    .instagram-image-display {
+        height:120px;
+    }
+}
+@media (min-width: 800px) and (max-width: 1400px) {
+    .instagram-image-display {
+        height:200px;
+    }
+}
+@media (min-width: 1400px) and (max-width: 1800px) {
+    .instagram-image-display {
+        height:240px;
+    }
+}
+@media (min-width: 1800px) {
+    .instagram-image-display {
+        height:320px;
+    }
+}
+    
+.instagram-image-submitter {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: bold;
+  color: #1d1d1d;
+  margin-left:5px;
+}
+.instagram-image-num-likes {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: normal;
+  color: #1d1d1d;
+}
+div.instagram-image-num-likes-container,
+img.instagram-image-submitter-img,
+.instagram-image-num-likes {
+    line-height:50px;
+    height:50px;
+}
+
+.vote-btn {
+    margin-left: 20px;
+}
+
+.hidden {
+    display:none;
+}

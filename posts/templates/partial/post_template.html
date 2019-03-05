@@ -1,0 +1,11 @@
+{% load el_pagination_tags %}
+{% paginate 20 posts %}
+{% for post in posts %}
+<li class="post-numbers">	    </li>
+<div class="row post">
+  <div class="col-md-12 post-col">
+    {% include "partial/post_info.html" %}
+  </div>
+</div>
+{% endfor %}
+{% show_more %}

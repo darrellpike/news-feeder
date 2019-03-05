@@ -1,0 +1,15 @@
+{% load posts_extras %}
+{% if not user.is_authenticated or not item|user_voted:user %}
+<div onclick="_gaq.push(['_trackEvent', 'Actions', 'Upvote {{item|classname}} arrow', 'Upvoting a {{item|classname}}']);$('#upvote-register-explanation').show();" class="vote"
+   {% if show_vote_popover %}data-content="<div style='padding-left:11px;color:#00662b;'>Upvote an article by clicking this arrow if you like it.</div><div id='upvote-ok' style='margin-top:5px;'><strong>OK</strong></div>" data-placement="right" {% endif %}
+
+   {% if user.is_authenticated %} item_id="{{ item.pk }}" score="1" vote_type="{{ vote_type }}" {% endif %}>
+  <img src="{{STATIC_URL}}images/upvote.png" />
+</div>
+{% if user.userprofile.count_karma >= karma_threshold %}
+<a onclick="_gaq.push(['_trackEvent', 'Actions', 'Downvote {{item|classname}} arrow', 'Downvoting a {{item|classname}}']);" {% if user.is_authenticated %}class="vote" item_id="{{ item.pk }}" score="-1" vote_type="{{ vote_type }}"{% endif %}>
+  <img src="{{STATIC_URL}}images/downvote.png" />
+</a>
+{% endif %}
+{% endif %}
+

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <link href="{{ STATIC_URL }}css/view_post.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="row post">
+  <div class="col-lg-12" style="margin-bottom:6px;">
+    {% include "partial/post_info.html" %}
+  </div>
+</div>
+<hr>
+<br>
+<div class="row post">
+  <div class="col-lg-6">
+    {% include "partial/edit_comment_form.html" with node=comment include_form=True %}
+  </div>
+</div>
+{% include "partial/comment_tree.html" %}
+{% endblock %}

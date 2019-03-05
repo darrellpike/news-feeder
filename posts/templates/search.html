@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link href="{{ STATIC_URL }}css/search.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+    {% include "partial/vote.html" %}
+{% endblock %}
+
+{% block content %}
+      <div class="row">
+        <div class="col-md-8">
+	  {% if posts %}{% include "partial/results.html" with items=posts %}{% else %}{% include "partial/results.html" with items=comments %}{% endif %}
+	  <div class="results-small">Sort by:
+	    {% ifequal 'points' sort_type %}<strong>points</strong> | <a class="sort-type" href="?q={{ query|urlencode }}&type={{ query_type|urlencode }}&sort=date">date</a>{% endifequal %}
+	    {% ifequal 'date' sort_type %}<a class="sort-type" href="?q={{ query|urlencode }}&type={{ query_type|urlencode }}&sort=points">points</a> | <strong>date</strong>{% endifequal %}
+	  </div>
+	  <div class="results-small">Searching:
+	    {% ifequal 'posts' query_type %}<strong>posts</strong> | <a class="sort-type" href="?q={{ query|urlencode }}&sort={{ sort_type|urlencode }}&type=comments">comments</a>{% endifequal %}
+	    {% ifequal 'comments' query_type %}<a class="sort-type" href="?q={{ query|urlencode }}&sort={{ sort_type|urlencode }}&type=posts">posts</a> | <strong>comments</strong>{% endifequal %}
+	  </div>
+	  <br>
+
+	  <ol start="{{ posts.start_index }}">
+	    {% for comment in comments %}
+	    <li class="post-numbers">	    </li>
+	    <div class="row post">
+	      <div class="col-md-12 post-col">
+		{% include "partial/comment.html" with node=comment post=comment.post no_indent=True include_post=True shorten=True %}
+	      </div>
+	    </div>
+	    {% endfor %}
+	    {% for post in posts %}
+	    <li class="post-numbers">	    </li>
+	      <div class="row post">
+		<div class="col-md-12 post-col">
+		  {% include "partial/post_info.html" %}
+		</div>
+	      </div>
+	    {% endfor %}
+	  </ol>
+	</div>
+      </div>
+      {% endblock %}
+      
+      {% block above-footer %}
+
+      {% if posts.has_next %}<a href="?page={{ posts.next_page_number }}&q={{ query|urlencode }}&sort={{ sort_type }}&type={{ query_type|urlencode }}" class="more-link">More</a>{% endif %}
+      {% if comments.has_next %}<a href="?page={{ comments.next_page_number }}&q={{ query|urlencode }}&sort={{ sort_type }}&type={{ query_type|urlencode }}" class="more-link">More</a>{% endif %}
+
+      {% endblock %}

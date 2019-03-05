@@ -1,0 +1,18 @@
+{% load el_pagination_tags %}
+{% load admin_urls %}
+{% paginate 16 images using "images_page" %}
+{% for image in images %}
+<div style="position:relative;" class="col-md-3 instagram-image" id="instagram-image-{{ image.pk }}">
+  <div data-toggle="lightbox" href="#{{ image.pk }}lightbox" style="position:relativea;">
+    <img class="img-responsive" src="{{ image.image_url_lowres }}" />
+  </div>
+  {% if user.is_staff %}
+  <div style="position:absolute;left:0px;top:0px;">
+    <a class="delete-image-link" img_id="{{image.pk}}" onclick="delete_img({{image.pk}})" ahref="{% url 'admin:posts_instagramimage_delete' image.id %}" atarget="_blank"><small><span class="glyphicon glyphicon-remove"></span> Delete</small></a>
+  </div>
+  {% endif %}
+</div>
+
+{% include "partial/lightbox.html" %}
+{% endfor %}
+{% show_more %}

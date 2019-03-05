@@ -1,0 +1,13 @@
+
+<form action="{% url 'email_share' %}" method="post" class="form" >    
+  {% csrf_token %}
+  send to: <br><input class="form-control col-lg-8 text-input" id="id_send_to" name="send_to" type="text" />
+  your name (optional): <br><input class="form-control col-lg-8 text-input" id="id_sender_name" name="sender_name" type="text"/>
+  your email (optional): <br><input class="form-control col-lg-8 text-input" id="id_send_from" name="send_from" type="text" />
+  message (optional): <br><input class="form-control col-lg-8 text-input" id="id_message" name="message" type="text" />
+  <input class="form-control col-lg-8 text-input" id="id_post_id_modal" name="post_id" type="hidden" />
+  
+  <div>
+    <button type="submit" class="btn btn-submit">Send Email</button>
+  </div>
+</form>

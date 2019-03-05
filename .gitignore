@@ -1,0 +1,6 @@
+venv/
+*.log
+*pot
+*~
+*.db
+*.pyc

@@ -1,0 +1,16 @@
+{# {% load mptt_tags %} I have to figure out a way to change recursetree to sort the comments.#}
+{% load posts_extras %}
+<div class="row" style="margin-right:25px;">
+    {% recursetree comments %}
+    {% if not node.author.userprofile.is_shadowbanned or node.author == user %}
+    <div class="col-lg-12" {% if not node.is_root_node %}style="padding-left:40px;"{% endif %}>
+      {% include "partial/comment.html" %}
+      {# recursion! children of a given comment #}
+      {% if not node.is_leaf_node %}
+      {{ children }}
+      {% endif %}
+    </div>
+      {% endif %}
+    {% endrecursetree %}
+</div>
+<br>

@@ -1,0 +1,51 @@
+<div id="{{ image.pk }}lightbox" class="lightbox fade"  tabindex="-1" role="dialog" aria-hidden="true">
+  <div class='lightbox-dialog'>
+    <div class='lightbox-content'>
+      <div>
+        <img src="{{ image.image_url_standardres }}">
+      </div>
+      <div class="image-sidebar" style="width:285px;float:left;padding-left:10px;style=display:none">
+	<div class="row image-info" style="margin-top:10px;">
+	  <div class="col-md-2">
+	    <img src="{{ image.submitter_picture_url }}" style="width:40px;height:40px;">
+	  </div>
+	  <div class="col-md-10" style="max-height:300px;overflow:auto;margin-left:-2px;">
+	    <a class="instagram-profile-link" href="http://instagram.com/{{ image.submitter_username }}" style="font-size:16px;">{{ image.submitter_username }}</a><br>
+	    <span class="text-muted" style="font-size:12px;"><strong>{{ image.created_time|timesince }} ago</strong></span>
+	    <br><span style="font-size:12px;" class="description">{{ image.caption }}</span>
+
+	  </div>
+	  <br>
+	  <!--div style="margin-left:5px;"><hr style="border-color:#bfbfbf;margin-right:3px;"></div-->
+	</div>
+	<div class="row" style="margin-top:10px;">
+	  <div class="col-md-12 num-likes" style="border-top:solid;border-width:1px;border-color:#ececec;padding-top:10px;">
+	    <span class="text-muted">
+	      <strong style="color:#898989">{{ image.num_likes }}</strong>
+		{% if image.num_likes == 1 %}person likes this.
+		{% else %}people like this.{% endif %}
+	    </span>
+	  </div>
+	</div>
+
+	<div class="row" style="margin-top:10px;">
+	  <div class="col-md-12 image-comments" style="position:fixed;overflow-y:scroll;background-color:#fafafa;border-top:solid;border-width:1px;border-color:#ececec;">
+	    <br>
+	    {% if user.is_staff %}
+	    <a href="{% url 'admin:posts_instagramimage_change' image.id %}"><small>(view in admin)</small></a><br>
+	    {% endif %}
+	    {% for comment in image.instagramcomment_set.all %}
+	    <img src="{{ comment.submitter_profile_picture }}" style="width:32px;height:32px;" class="pull-left">
+	    <div style="margin-left:40px;word-break:break-all;">
+	      <a class="instagram-profile-link" href="http://instagram.com/{{ comment.submitter_username }}" style="font-size:12px;">{{ comment.submitter_username }}</a><br>
+	      <span style="font-size:12px;">{{ comment.body }}</span><br>
+	    </div>
+	    {% endfor %}
+	    <br>
+	    <a target="_blank" href="{{ image.link }}">View on Instagram</a>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>

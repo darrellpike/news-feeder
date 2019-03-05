@@ -1,0 +1,10 @@
+
+<form action="{% url 'edit_comment' post.pk comment.pk %}" method="post" class="form" >
+{% csrf_token %}
+{% include "partial/form_error.html" with errors=comment_form.text.errors %}
+{{ comment_form.text }}
+<input class="btn comment-btn" type="submit" value="Save Changes">
+<input class="btn btn-danger comment-btn" type="submit" value="Delete Comment" name="delete">
+</form>
+
+

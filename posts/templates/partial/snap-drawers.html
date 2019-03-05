@@ -1,0 +1,43 @@
+<div class="snap-drawers" style="height:100%;">
+  <div class="snap-drawer snap-drawer-left" style="background-color:#ededed;padding-right:15px;padding-left:15px;-webkit-box-shadow: 3px 0px 3px 0px rgba(50, 50, 50, 0.75);
+						   -moz-box-shadow:    3px 0px 3px 0px rgba(50, 50, 50, 0.75);
+						   box-shadow:         3px 0px 3px 0px rgba(50, 50, 50, 0.75);z-index:0;position:fixed;">
+    <div class="row">
+      <div class="col-md-12" style="margin-top:25px;">
+	<span class="text-muted" style="font-size:16px;"><strong>VIEW STYLE</strong></span>
+	<hr style="margin-top:3px;margin-bottom:8px;border-color:#b1b1b1;">
+      </div>
+      <div class="col-md-12">
+	<a class="btn btn-primary view-just-stories" style="width:100%;" id="view-just-stories">Stories</a>
+      </div>
+      <div class="col-md-12">
+	<a class="btn btn-primary view-just-images" style="width:100%;margin-top:12px;" id="view-just-images">Pictures</a>
+      </div>
+      <div class="col-md-12">
+	<a class="btn btn-primary hidden-xs hidden-sm view-both" style="width:100%;margin-top:12px;" id="view-both">Both</a>
+      </div>
+      
+      <div class="col-md-12" style="margin-top:35px;">
+	<span class="text-muted" style="font-size:16px;"><strong>MENU</strong></span>
+	<hr style="margin-top:3px;margin-bottom:8px;border-color:#b1b1b1;">
+	<div class="side-drawer-links">
+	  <a href="{% url 'about' %}">About</a> <br>
+	  <a href="{% url 'guidelines' %}">Guidelines</a> <br>
+	  <a href="http://blog.plantdietlife.com/">Blog</a> <br>
+	  {% if user.is_authenticated %}<a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Feature Requests', 'Feature requests link in the side drawer.']);" href="/post/2/">Feature Requests</a> <br>{% endif %}
+	  Contact: <a href="mailto:brenden@plantdietlife.com"><small>brenden@plantdietlife.com</small></a>
+	</div>
+      </div>
+      
+      <div class="col-md-12" style="margin-top:35px;">
+	<span class="text-muted" style="font-size:16px;"><strong>GIVE US SOME LOVE</strong></span>
+	<hr style="margin-top:3px;margin-bottom:8px;border-color:#b1b1b1;">
+	<div class="fb-like" data-href="https://www.facebook.com/plantdietlife" data-width="450" data-layout="button_count" data-show-faces="false" data-send="false"></div><br><br>
+	<a href="https://twitter.com/plantdietlife" class="twitter-follow-button" data-show-count="false">Follow @plantdietlife</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	
+      </div>
+    </div>
+  </div>
+  <!--div class="snap-drawer snap-drawer-right" style="az-index:0;"></div-->
+</div>

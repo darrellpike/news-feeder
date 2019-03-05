@@ -1,0 +1,42 @@
+{% load posts_extras %}
+{% load admin_urls %}
+
+<div class="pull-left vote-arrows">
+  {% include "partial/voting.html" with item=post vote_type="post" %}
+</div>
+<div>
+  <div class="post-title">
+    {% if individual_page  and not post.article_text and post.url %}
+    <a href="{{ post.url }}" target="_blank">{{ post.title }}</a>
+    {% else %}
+    <a href="{% url 'view_post' post.pk %}" target="_blank">{{ post.title }}</a>
+    {% endif %}
+    {% if user.is_staff %}
+    <a href="{% url 'admin:posts_post_change' post.id %}"><small>(edit)</small></a>
+    {% endif %}
+  </div>
+  <div class="small-info-line">
+    <span id="{{ post.pk }}-score">{{ post.score }}</span> points by <a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Username (beneath link)', 'The username beneath links (on index page and individual post's page)']);" href="{% url 'view_profile' post.submitter.pk %}">{{ post.submitter.username }}</a>
+    {% if show_timestamp %}{{ post.submit_time|timesince }} ago {% endif %}|
+    <a href="#" class="flag-post" post_id="{{ post.pk }}"> flag</a> | 
+    <a href="{% url 'view_post' post.pk %}" class="comments-link">{{ post.comment_count }} comment{{ post.comment_count|pluralize }}</a> |
+
+    <span class="dropdown share">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" onclick="_gaq.push(['_trackEvent', 'Actions', 'Share Dropdown link', 'Clicking to open share post dropdown.']);">
+	share
+      </a>
+      <ul class="dropdown-menu">
+	<li><a onclick="_gaq.push(['_trackEvent', 'Actions', 'Share Dropdown - email', 'Clicking to share a post via the email button in the dropdown.']);" class="email-share" post_id="{{ post.id }}" href="#email-share-modal" data-toggle="modal"><img src="{{STATIC_URL}}images/email-icon.png"/> email to a friend</a></li>
+	<hr class="dropdown-sep">
+	<li><a onclick="_gaq.push(['_trackEvent', 'Actions', 'Share Dropdown - facebook', 'Clicking to share a post via the facebook button in the dropdown.']);" href="https://www.facebook.com/sharer/sharer.php?u={{ post|reverse_url_post|urlencode }}"><img  src="{{STATIC_URL}}images/facebook-icon.png"/> share on facebook</a></li>
+	<hr class="dropdown-sep">
+	<li><a onclick="_gaq.push(['_trackEvent', 'Actions', 'Share Dropdown - twitter', 'Clicking to share a post via the twitter button in the dropdown.']);" href="https://twitter.com/share?source=tweetbutton&text={{ post.title|urlencode }}&url={{ post|reverse_url_post|urlencode }}"><img src="{{STATIC_URL}}images/twitter-icon.png"/> share on twitter</a></li>
+      </ul>
+    </span>
+    {% if post.url %}<span class="url-info">({{ post.url|domainize }})</span>{% endif %}
+  </div>
+</div>
+
+<form id="flag-post-{{post.pk}}" action="{% url 'flag_post' post.pk %}" method="post" style="visibility:hidden">
+  {% csrf_token %}
+</form>
