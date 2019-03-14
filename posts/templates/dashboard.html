@@ -10,44 +10,44 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <ul class="nav nav-tabs">
-      <li {% ifequal admin_header 'scheduled_posts' %}class="active"{% endifequal %}>
-	<a href="{% url 'admin_scheduled_posts' %}">Scheduled Posts</a>
-      </li>
-      <li {% ifequal admin_header 'stats' %}class="active"{% endifequal %}>
-	<a href="{% url 'admin_stats_and_analytics' %}">Stats and Analytics</a>
-      </li>
-      <li {% ifequal admin_header 'buffer_profiles' %}class="active"{% endifequal %}>
-	<a href="{% url 'admin_buffer_profiles' %}">Buffer Profiles</a>
-      </li>
-      <li {% ifequal admin_header 'active_users' %}class="active"{% endifequal %}>
-	<a href="{% url 'admin_active_users' %}">Active Users</a>
-      </li>
-    </ul>
-    {% block inner-content %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <ul class="nav nav-tabs">
+                <li {% ifequal admin_header 'scheduled_posts' %}class="active"{% endifequal %}>
+                    <a href="{% url 'admin_scheduled_posts' %}">Scheduled Posts</a>
+                </li>
+                <li {% ifequal admin_header 'stats' %}class="active"{% endifequal %}>
+                    <a href="{% url 'admin_stats_and_analytics' %}">Stats and Analytics</a>
+                </li>
+                <li {% ifequal admin_header 'buffer_profiles' %}class="active"{% endifequal %}>
+                    <a href="{% url 'admin_buffer_profiles' %}">Buffer Profiles</a>
+                </li>
+                <li {% ifequal admin_header 'active_users' %}class="active"{% endifequal %}>
+                    <a href="{% url 'admin_active_users' %}">Active Users</a>
+                </li>
+            </ul>
+            {% block inner-content %}
 
-    <!--table class="table">
-      <thead>
-	<tr>
-	  <th>Title</th>
-	  <th>Submit</th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr>
-	  <td>t1</td>
-	  <td>s1</td>
-	</tr>
-	<tr>
-	  <td>t2</td>
-	  <td>s2</td>
-	</tr>
-      </tbody>
-    </table-->
+                <!--table class="table">
+                  <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Submit</th>
+                </tr>
+                  </thead>
+                  <tbody>
+                <tr>
+                  <td>t1</td>
+                  <td>s1</td>
+                </tr>
+                <tr>
+                  <td>t2</td>
+                  <td>s2</td>
+                </tr>
+                  </tbody>
+                </table-->
 
-    {% endblock %}
-  </div>
-</div>
+            {% endblock %}
+        </div>
+    </div>
 {% endblock %}

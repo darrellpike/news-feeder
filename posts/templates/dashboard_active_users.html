@@ -4,31 +4,34 @@
 {% load admin_urls %}
 
 {% block inner-content %}
-<h3 class="section-header">Top Users <small>(non-fake users only)</small></h3>
+    <h3 class="section-header">Top Users
+        <small>(non-fake users only)</small>
+    </h3>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Username</th>
-      <th><a href="?order=post_count">Post Count</a></th>
-      <th><a href="?order=comment_count">Comment Count</a></th>
-      <th><a href="?order=postvote_count">Postvote Count</a></th>
-      <th><a href="?order=commentvote_count">Commentvote Count</a></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for u in users %}
-    <tr>
-      <td><a href="{% url 'view_profile' u.user.pk %}">{{ u.user.username }}</a></td>
-      <td>{{ u.post_count }}</td>
-      <td>{{ u.comment_count }}</td>
-      <td>{{ u.postvote_count }}</td>
-      <td>{{ u.commentvote_count }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-Postvote and commentvote count do not include votes on the user's own post/comments, only votes the user has made on others' posts/comments
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th><a href="?order=post_count">Post Count</a></th>
+            <th><a href="?order=comment_count">Comment Count</a></th>
+            <th><a href="?order=postvote_count">Postvote Count</a></th>
+            <th><a href="?order=commentvote_count">Commentvote Count</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for u in users %}
+            <tr>
+                <td><a href="{% url 'view_profile' u.user.pk %}">{{ u.user.username }}</a></td>
+                <td>{{ u.post_count }}</td>
+                <td>{{ u.comment_count }}</td>
+                <td>{{ u.postvote_count }}</td>
+                <td>{{ u.commentvote_count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    Postvote and commentvote count do not include votes on the user's own post/comments, only votes the user has made on
+    others' posts/comments
 {% endblock %}
 
 

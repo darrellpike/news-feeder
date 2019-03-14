@@ -3,7 +3,6 @@
 import os
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     ("dave", "dncrane@gmail.com"),
@@ -83,7 +82,7 @@ STATIC_ROOT = ""
 # Example: "http://example.com/static/", "http://static.example.com/"
 
 # Additional locations of static files
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "../posts/static/"), '/var/www/news-aggregator/posts/static']
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "../posts/static/")]
 STATIC_URL = "/static/"
 
 # List of finder classes that know how to find static files in
@@ -97,12 +96,6 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "wg_j9-=0sdlf!ce_4ui1&e#unco^s9+@(^z!9@*)@bzd=6#47&"
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    "django.template.loaders.filesystem.Loader",
-    "django.template.loaders.app_directories.Loader",
-    #     'django.template.loaders.eggs.Loader',
-)
 
 MIDDLEWARE_CLASSES = (
     #'sslify.middleware.SSLifyMiddleware',#make sure this SSLify is the first middleware class
@@ -125,24 +118,29 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, '../posts/templates/')],
-        'APP_DIRS': True,
+        #'APP_DIRS': True,
         'OPTIONS': {
+            'debug': True,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'posts.custom_context_processors.config_settings'
             ],
-        },
-    },
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+                'django.template.loaders.eggs.Loader'
+            ]
+        }
+    }
 ]
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, '../posts/templates/'),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     "django.contrib.auth",
@@ -176,19 +174,6 @@ DEBUG_TOOLBAR_PANELS = (
     "debug_toolbar.panels.sql.SQLDebugPanel",
     "debug_toolbar.panels.signals.SignalDebugPanel",
     "debug_toolbar.panels.logger.LoggingPanel",
-)
-
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
-    "posts.custom_context_processors.config_settings",
 )
 
 # A sample logging configuration. The only tangible logging

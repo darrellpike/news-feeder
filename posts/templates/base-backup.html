@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
     <meta property="og:title" content="{% block meta-title %}PLANTDIETlife{% endblock %}">
-    <meta property="og:type" content="website" >
-    <meta property="og:image" content="https://www.plantdietlife.com{{ STATIC_URL }}images/pdl.png" />
-    {% block meta_description %}<meta property="og:description" content="{{ title_tagline }}">{% endblock %}
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://www.plantdietlife.com{{ STATIC_URL }}images/pdl.png"/>
+    {% block meta_description %}
+        <meta property="og:description" content="{{ title_tagline }}">{% endblock %}
     <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.png">
 
     {% block title %}<title>PLANTDIETlife</title>{% endblock %}
@@ -23,36 +24,39 @@
       <script src="../../assets/js/respond.min.js"></script>
       <![endif]-->
 
-<!--script>
-(function(){
-var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
-})("woopra");
+    <!--script>
+    (function(){
+    var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
+    })("woopra");
 
-woopra.config({
-domain: 'plantdietlife.com'
-});
-woopra.track();
-</script-->
+    woopra.config({
+    domain: 'plantdietlife.com'
+    });
+    woopra.track();
+    </script-->
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-43276444-1']);
-  _gaq.push(['_trackPageview']);
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-43276444-1']);
+        _gaq.push(['_trackPageview']);
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
 
-</script>
+    </script>
 
-  </head>
-  
-  <body>
+</head>
 
-    {% block pre-content %}{% endblock %}
+<body>
+
+{% block pre-content %}{% endblock %}
 <!--div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -63,171 +67,186 @@ woopra.track();
 }(document, 'script', 'facebook-jssdk'));</script-->
 <div id="main-content" class="snap-content">
     <div class="container-fluid" style="overflow-x:hidden;overflow-y:hidden;">
-      <div class="nav navbar navbar-fixed-top page-header" style="background-color:#ffffff;">
-	<a href="/" class="main-header text-left"><span class="main-header-caps">PLANTDIET</span><em class="main-header-life">life</em></a>&nbsp;&nbsp;<span class="subheader">{{ title_tagline }}</span>
-	<ul class="right-header nav navbar-nav navbar-right">
-	  <li class="pop-info visible-lg">
-	    <span class="pop-number">{{ settings_post_count }}</span> posts,
-	    <span class="pop-number">{{ settings_member_count }}</span> members, and
-	    <span class="pop-number">{{ settings_comment_count }}</span> comments
-	  </li>
-	  {% if not user.is_authenticated %}
-	  <li>
-	    <div class="navbar-text unregistered-btns">
-	      <a data-toggle="modal" href="#register-modal" class="btn btn-primary btn-signup" onclick="_gaq.push(['_trackEvent', 'Actions', 'Sign Up Free btn', 'The sign up button that brings up the modal.']);">Sign Up Free</a>
-	      <a href="/login/?next={{ request.get_full_path }}" class="btn btn-link btn-login">Log in</a>
-	    </div>
-	  </li>
-	  {% else %}	
+        <div class="nav navbar navbar-fixed-top page-header" style="background-color:#ffffff;">
+            <a href="/" class="main-header text-left"><span class="main-header-caps">PLANTDIET</span><em
+                    class="main-header-life">life</em></a>&nbsp;&nbsp;<span class="subheader">{{ title_tagline }}</span>
+            <ul class="right-header nav navbar-nav navbar-right">
+                <li class="pop-info visible-lg">
+                    <span class="pop-number">{{ settings_post_count }}</span> posts,
+                    <span class="pop-number">{{ settings_member_count }}</span> members, and
+                    <span class="pop-number">{{ settings_comment_count }}</span> comments
+                </li>
+                {% if not user.is_authenticated %}
+                    <li>
+                        <div class="navbar-text unregistered-btns">
+                            <a data-toggle="modal" href="#register-modal" class="btn btn-primary btn-signup"
+                               onclick="_gaq.push(['_trackEvent', 'Actions', 'Sign Up Free btn', 'The sign up button that brings up the modal.']);">Sign
+                                Up Free</a>
+                            <a href="/login/?next={{ request.get_full_path }}" class="btn btn-link btn-login">Log in</a>
+                        </div>
+                    </li>
+                {% else %}
 
-	  <span class="navbar-text loggedin-btns">
-	    <a href="{% url 'view_profile' user.pk %}" class="logged-in">{{ user.username }} ({{ user.userprofile.count_karma }})</a>
+                    <span class="navbar-text loggedin-btns">
+	    <a href="{% url 'view_profile' user.pk %}"
+           class="logged-in">{{ user.username }} ({{ user.userprofile.count_karma }})</a>
 	    <a href="/logout/" class="logged-in">logout</a>
 	  </span>
 
-	  <!--small><a href="{% url 'view_profile' user.pk %}" class="btn btn-link btn-logged-in">{{ user.username }}(37)</a> <a href="/logout/" class="btn btn-link btn-logged-in">logout</a></small-->
-	  {% endif %}
-	</ul>
-      </div>
+                    <!--small><a href="{% url 'view_profile' user.pk %}" class="btn btn-link btn-logged-in">{{ user.username }}(37)</a> <a href="/logout/" class="btn btn-link btn-logged-in">logout</a></small-->
+                {% endif %}
+            </ul>
+        </div>
 
 
+        <div class="modal" id="email-share-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title text-center">Email This Post To a Friend</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                {% include "partial/email_share_modal.html" %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
 
+        <div class="modal" id="register-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title text-center">Sign Up to Submit</h4>
+                        <h5 class="modal-title text-center">Already registered? <a class="modal-link"
+                                                                                   href="/login/?next={{ request.get_full_path }}">Log
+                            in here</a>.</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <p id="upvote-register-explanation" style="display:none;">We appreciate your enthusiasm
+                                    in wanting to upvote a story, but we need you to create an account first.</p>
+                                {% include "partial/register_modal.html" %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
 
-
-
-      
-      <div class="modal" id="email-share-modal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-	    <div class="modal-header">
-	      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	      <h4 class="modal-title text-center">Email This Post To a Friend</h4>
-	    </div>
-	    <div class="modal-body">
-	      
-	      <div class="row">
-		<div class="col-md-10 col-md-offset-1">
-		  {% include "partial/email_share_modal.html" %}
-		</div>
-	      </div>
-	      
-	    </div>
-	  </div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-      
-
-	  
-	  
-	  
-	  
-      
-      
-      
-      <div class="modal" id="register-modal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-	    <div class="modal-header">
-	      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	      <h4 class="modal-title text-center">Sign Up to Submit</h4>
-	      <h5 class="modal-title text-center">Already registered? <a class="modal-link" href="/login/?next={{ request.get_full_path }}">Log in here</a>.</h5>
-	    </div>
-	    <div class="modal-body">
-	      
-	      <div class="row">
-		<div class="col-md-10 col-md-offset-1">
-		  <p id="upvote-register-explanation" style="display:none;">We appreciate your enthusiasm in wanting to upvote a story, but we need you to create an account first.</p>
-		  {% include "partial/register_modal.html" %}
-		</div>
-	      </div>
-	      
-	    </div>
-	  </div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-      
-
-      
-      
-      
-      <div class="navbar navbar-default navbar-fixed-top ahidden-xs ahidden-sm" style="margin-top:50px;">
-	<div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-	</div>
-        <div class="collapse navbar-collapse row" >
-          <ul class="nav navbar-nav col-md-8">
-	    <li><a id="drawer-btn" style="cursor: pointer; cursor: hand;"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-            <li><a onclick="_gaq.push(['_trackEvent', 'Navigation', 'New navbar link', 'New link in navbar']);" href="{% url 'index' %}" {% ifequal header 'new' %}class="active-top"{% endifequal %}>New</a></li>
-            <li><a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Popular navbar link', 'Popular link in navbar']);" href="{% url 'index_popular' %}" {% ifequal header 'popular' %}class="active-top"{% endifequal %}>Popular</a></li>
-            <li><a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Ask navbar link', 'Ask link in navbar']);" href="{% url 'index_ask' %}" {% ifequal header 'ask' %}class="active-top"{% endifequal %}>Ask</a></li>
-	    {% if user.is_staff %}
-            <li><a href="{% url 'admin_dashboard' %}" {% ifequal header 'admin_dashboard' %}class="active-top"{% endifequal %}>Admin Dashboard</a></li>
-	    {% endif %}
-          </ul>
-	  <form action="{% url 'search' %}" class="col-md-4">
-	    <div class="input-group search-box" onclick="_gaq.push(['_trackEvent', 'Actions', 'Click search box', 'Clicking the search box.']);" >
+        <div class="navbar navbar-default navbar-fixed-top ahidden-xs ahidden-sm" style="margin-top:50px;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse row">
+                <ul class="nav navbar-nav col-md-8">
+                    <li><a id="drawer-btn" style="cursor: pointer; cursor: hand;"><span
+                            class="glyphicon glyphicon-chevron-right"></span></a></li>
+                    <li><a onclick="_gaq.push(['_trackEvent', 'Navigation', 'New navbar link', 'New link in navbar']);"
+                           href="{% url 'index' %}" {% ifequal header 'new' %}class="active-top"{% endifequal %}>New</a>
+                    </li>
+                    <li>
+                        <a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Popular navbar link', 'Popular link in navbar']);"
+                           href="{% url 'index_popular' %}"
+                           {% ifequal header 'popular' %}class="active-top"{% endifequal %}>Popular</a></li>
+                    <li><a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Ask navbar link', 'Ask link in navbar']);"
+                           href="{% url 'index_ask' %}"
+                           {% ifequal header 'ask' %}class="active-top"{% endifequal %}>Ask</a></li>
+                    {% if user.is_staff %}
+                        <li><a href="{% url 'admin_dashboard' %}"
+                               {% ifequal header 'admin_dashboard' %}class="active-top"{% endifequal %}>Admin
+                            Dashboard</a></li>
+                    {% endif %}
+                </ul>
+                <form action="{% url 'search' %}" class="col-md-4">
+                    <div class="input-group search-box"
+                         onclick="_gaq.push(['_trackEvent', 'Actions', 'Click search box', 'Clicking the search box.']);">
 	      <span class="search-inner">
 		<img style="padding-left:8px;padding-top:4px;" src="/static/images/search-icon.png" alt="search"/>
 	      </span>
-              <input class="search-inner" type="search" name="q">
-	    </div>
-          </form>
-	  <div class="visible-xs visible-sm">&nbsp;</div>
-        </div><!--/.nav-collapse -->
-      </div>
-      
-      <div class="wrap">
-	<div class="content">
-	  {% if messages %}
-	  <div class="row">
-	    {% for message in messages %}
-	    <div{% if message.tags %} class="col-md-6 col-md-offset-3 alert {% ifequal message.tags 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endifequal %}"{% endif %}>{{ message }}</div>
-	    {% endfor %}
-	  </div>
-	  {% endif %}
-	  {% block content %}{% endblock %}
-	</div>
-	
-	{% if not hide_footer %}
-	<div class="footer">
-	  <div class="row footer-row">
-	    <div class="col-md-12">
-	      {% block above-footer %}{% endblock %}
-	      <div class="footer-links text-center">
-		<a href="{% url 'about' %}">About</a> | 
-		<a href="{% url 'guidelines' %}">Guidelines</a> |
-		<a href="http://blog.plantdietlife.com/">Blog</a>
-		{% if user.is_authenticated %} | <a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Feature Requests', 'Feature requests link in the footer.']);" href="/post/2/">Feature Requests</a>{% endif %} |
-		Contact: <a href="mailto:ranger@motoranger.io">ranger@motoranger.io</a>
+                        <input class="search-inner" type="search" name="q">
+                    </div>
+                </form>
+                <div class="visible-xs visible-sm">&nbsp;</div>
+            </div><!--/.nav-collapse -->
+        </div>
 
-	      </div>
-	      <div class="text-center">
-		<div class="fb-like" data-href="https://www.facebook.com/plantdietlife" data-width="450" data-layout="button_count" data-show-faces="false" data-send="false"></div>
-		<a href="https://twitter.com/plantdiet" class="twitter-follow-button" data-show-count="false">Follow @plantdiet</a>
-		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	{% endif %}
-	
-      </div><!--wrap-->
+        <div class="wrap">
+            <div class="content">
+                {% if messages %}
+                    <div class="row">
+                        {% for message in messages %}
+                            <div{% if message.tags %}
+                                class="col-md-6 col-md-offset-3 alert {% ifequal message.tags 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endifequal %}"{% endif %}>{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+
+            {% if not hide_footer %}
+                <div class="footer">
+                    <div class="row footer-row">
+                        <div class="col-md-12">
+                            {% block above-footer %}{% endblock %}
+                            <div class="footer-links text-center">
+                                <a href="{% url 'about' %}">About</a> |
+                                <a href="{% url 'guidelines' %}">Guidelines</a> |
+                                <a href="http://blog.plantdietlife.com/">Blog</a>
+                                {% if user.is_authenticated %} |
+                                    <a onclick="_gaq.push(['_trackEvent', 'Navigation', 'Feature Requests', 'Feature requests link in the footer.']);"
+                                       href="/post/2/">Feature Requests</a>{% endif %} |
+                                Contact: <a href="mailto:ranger@motoranger.io">ranger@motoranger.io</a>
+
+                            </div>
+                            <div class="text-center">
+                                <div class="fb-like" data-href="https://www.facebook.com/plantdietlife" data-width="450"
+                                     data-layout="button_count" data-show-faces="false" data-send="false"></div>
+                                <a href="https://twitter.com/plantdiet" class="twitter-follow-button"
+                                   data-show-count="false">Follow @plantdiet</a>
+                                <script>!function (d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0],
+                                        p = /^http:/.test(d.location) ? 'http' : 'https';
+                                    if (!d.getElementById(id)) {
+                                        js = d.createElement(s);
+                                        js.id = id;
+                                        js.src = p + '://platform.twitter.com/widgets.js';
+                                        fjs.parentNode.insertBefore(js, fjs);
+                                    }
+                                }(document, 'script', 'twitter-wjs');</script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div><!--wrap-->
 
 
     </div><!-- /.container -->
-</div>    
-    <!-- Bootstrap core JavaScript
-	 ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap-3.0.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/base.js"></script>
-    {% block js %} {% endblock %}
-  </body>
+</div>
+<!-- Bootstrap core JavaScript
+ ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/base.js"></script>
+{% block js %} {% endblock %}
+</body>
 </html>

@@ -1,6 +1,9 @@
+.idea/
+__pycache__/
 venv/
-*.log
-*pot
-*~
-*.db
+env/
+db.sqlite3
+.DS_Store
 *.pyc
+*.log
+

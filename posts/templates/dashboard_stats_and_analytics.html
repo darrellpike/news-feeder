@@ -4,14 +4,22 @@
 {% load admin_urls %}
 
 {% block inner-content %}
-<h3 class="section-header">Stats And Analytics</h3>
-<div class="stats">
-  <span class="stat-title">Number of non-fake accounts:</span> {{ real_user_count }} <br>
-  <span class="stat-title">New users signed up 0-7 days ago:</span> {{ last_week_user_count }} <br>
-  <span class="stat-title">New users signed up 7-14 days ago:</span> {{ last_last_week_user_count }} <br>
-  <span class="stat-title">Weekly join ratio:</span> {{ weekly_join_ratio }} <small>(this is a ratio of the above two numbers)</small><br>
-  <span class="stat-title">New posts submitted 0-7 days ago:</span> {{ last_week_post_count }} <small>(only includes posts by non-fake users)</small> <br>
-  <span class="stat-title">New posts submitted 7-14 days ago:</span> {{ last_last_week_post_count }} <small>(only includes posts by non-fake users)</small><br>
-  <span class="stat-title">Weekly post ratio:</span> {{ weekly_post_ratio }} <small>(this is a ratio of the above two numbers)</small><br>
-</div>    
+    <h3 class="section-header">Stats And Analytics</h3>
+    <div class="stats">
+        <span class="stat-title">Number of non-fake accounts:</span> {{ real_user_count }} <br>
+        <span class="stat-title">New users signed up 0-7 days ago:</span> {{ last_week_user_count }} <br>
+        <span class="stat-title">New users signed up 7-14 days ago:</span> {{ last_last_week_user_count }} <br>
+        <span class="stat-title">Weekly join ratio:</span> {{ weekly_join_ratio }}
+        <small>(this is a ratio of the above two numbers)</small>
+        <br>
+        <span class="stat-title">New posts submitted 0-7 days ago:</span> {{ last_week_post_count }}
+        <small>(only includes posts by non-fake users)</small>
+        <br>
+        <span class="stat-title">New posts submitted 7-14 days ago:</span> {{ last_last_week_post_count }}
+        <small>(only includes posts by non-fake users)</small>
+        <br>
+        <span class="stat-title">Weekly post ratio:</span> {{ weekly_post_ratio }}
+        <small>(this is a ratio of the above two numbers)</small>
+        <br>
+    </div>
 {% endblock %}
