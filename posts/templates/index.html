@@ -65,27 +65,30 @@
         {% endcomment %}
     </script>
     <script src="{{ STATIC_URL }}js/images-filter.js"></script>
-    {#<script src="{{ STATIC_URL }}js/snap.js"></script>#}
-    {#<script>#}
-    {#var snapper = new Snap({#}
-    {#element: document.getElementById('main-content'),#}
-    {#dragger: document.getElementById('drag-handle'),#}
-    {#touchToDrag: isSmallScreen,#}
-    {#tapToClose: true,#}
-    {#});#}
-    {#</script>#}
-    {#<script>#}
-    {#  $("#drawer-btn").click(function() {#}
-    {#  console.log("click!");#}
-    {#  if(snapper.state().state == "left") {#}
-    {#  $(this).html('<span class="glyphicon glyphicon-chevron-right"></span> MENU');#}
-    {#  snapper.close();#}
-    {#  } else {#}
-    {#  $(this).html('<span class="glyphicon glyphicon-chevron-left"></span> MENU');#}
-    {#  snapper.open('left');#}
-    {#  }#}
-    {#  });#}
-    {#</script>#}
+
+<!-- remove this-->
+    <script src="{{ STATIC_URL }}js/snap.js"></script>
+    <script>
+    var snapper = new Snap({
+    element: document.getElementById('main-content'),
+    dragger: document.getElementById('drag-handle'),
+    touchToDrag: isSmallScreen,
+    tapToClose: true,
+    });
+    </script>
+    <script>
+      $("#drawer-btn").click(function() {
+      console.log("click!");
+      if(snapper.state().state == "left") {
+      $(this).html('<span class="glyphicon glyphicon-chevron-right"></span> MENU');
+      snapper.close();
+      } else {
+      $(this).html('<span class="glyphicon glyphicon-chevron-left"></span> MENU');
+      snapper.open('left');
+      }
+      });
+    </script>
+<!-- -->
 
     <script>
     </script>

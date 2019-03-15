@@ -98,8 +98,6 @@
 
         <div class="mdl-layout mdl-js-layout">
             <header class="mdl-layout__header mdl-layout__header--waterfall">
-                {% block extra_header_layout %}
-                {% endblock extra_header_layout %}
 
                 <!-- Top row, always visible -->
                 <div id="top-header-row" class="mdl-layout__header-row">
@@ -143,7 +141,11 @@
                             <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Mix</a>
                         </nav>
                     </div>
-
+                    <div class="mdl-layout-spacer"></div>
+                    <div id="header-top-right1" class="header-row text-right">
+                    {% block extra_header_layout %}
+                        {% endblock extra_header_layout %}
+                    </div>
 
                 </div>
 
