@@ -66,29 +66,29 @@
     </script>
     <script src="{{ STATIC_URL }}js/images-filter.js"></script>
 
-<!-- remove this-->
+    <!-- remove this-->
     <script src="{{ STATIC_URL }}js/snap.js"></script>
     <script>
-    var snapper = new Snap({
-    element: document.getElementById('main-content'),
-    dragger: document.getElementById('drag-handle'),
-    touchToDrag: isSmallScreen,
-    tapToClose: true,
-    });
+        var snapper = new Snap({
+            element: document.getElementById('main-content'),
+            dragger: document.getElementById('drag-handle'),
+            touchToDrag: isSmallScreen,
+            tapToClose: true,
+        });
     </script>
     <script>
-      $("#drawer-btn").click(function() {
-      console.log("click!");
-      if(snapper.state().state == "left") {
-      $(this).html('<span class="glyphicon glyphicon-chevron-right"></span> MENU');
-      snapper.close();
-      } else {
-      $(this).html('<span class="glyphicon glyphicon-chevron-left"></span> MENU');
-      snapper.open('left');
-      }
-      });
+        $("#drawer-btn").click(function () {
+            console.log("click!");
+            if (snapper.state().state == "left") {
+                $(this).html('<span class="glyphicon glyphicon-chevron-right"></span> MENU');
+                snapper.close();
+            } else {
+                $(this).html('<span class="glyphicon glyphicon-chevron-left"></span> MENU');
+                snapper.open('left');
+            }
+        });
     </script>
-<!-- -->
+    <!-- -->
 
     <script>
     </script>
@@ -178,7 +178,8 @@
                 <div class="mdl-card mdl-shadow--2dp story-card">
                     <div class="mdl-card__title story-card-title-container">
                         <h2 class="mdl-card__title-text story-card-title-h2"><a href="{% url 'view_post' post.pk %}"
-                                                                                class="story-card-title">{{post.title}}</a></h2>
+                                                                                class="story-card-title">{{ post.title }}</a>
+                        </h2>
                     </div>
                     <div class="mdl-card__supporting-text">
                         <div class="col-md-8 story-card-info-block">

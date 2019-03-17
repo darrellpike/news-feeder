@@ -1,7 +1,4 @@
-# Django settings for adventure_agg project.
-
 import os
-
 DEBUG = True
 
 ADMINS = (
@@ -214,15 +211,3 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Allow all host headers
 ALLOWED_HOSTS = ["*"]
-
-# comment out the following for running locally
-
-# Static asset configuration
-# import os
-
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# STATIC_ROOT = "static"
-# STATIC_URL = "/static/"
-
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, "../posts/static"),)
-
