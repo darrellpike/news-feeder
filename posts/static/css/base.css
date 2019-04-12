@@ -332,6 +332,9 @@ form#search-form {
     margin-right:20px;
     margin-top:-25px;
 }
+#header-top-right1 {
+    transform: scale(1);
+}
 
 #profile-link-button {
     margin-top:0px;

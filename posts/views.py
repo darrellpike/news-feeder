@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -61,17 +61,16 @@ def index(request, posts=None, images=None, header='new'):
     posts_sublists = [posts[i:i+COLUMNS] for i in range(0, len(posts), COLUMNS)]
     images_sublists = [images[i:i+COLUMNS] for i in range(0, len(images), COLUMNS)]
     posts_and_images = zip(posts_sublists, images_sublists)
-    return render_to_response(template,
-                              { "posts": posts,
-                                "images": images,
-                                "posts_and_images": posts_and_images,
-                                "header": header,
-                                "new_post_form":PartialPostForm(),
-#                                "show_vote_popover":show_vote_popover,
-                                "hide_footer":True,
-                                "show_menu":True,
-                                },
-                              context_instance=RequestContext(request))
+    return render(request, template,
+                  { "posts": posts,
+                    "images": images,
+                    "posts_and_images": posts_and_images,
+                    "header": header,
+                    "new_post_form":PartialPostForm(),
+#                   "show_vote_popover":show_vote_popover,
+                    "hide_footer":True,
+                    "show_menu":True
+                  })
 
     #popular, latest, most comments, and #vegan (in this order). If the user chooses "#vegan" they should only see the most popular images with the vegan hashtag in them that has three or less total hashtags.
 #TODO: don't bother fetching posts if ?images_page is defined, or images if ?page is defined
@@ -100,13 +99,11 @@ def index_vegan(request):
 @staff_member_required
 def admin_scheduled_posts(request):
     posts = Post.objects.all().filter(submit_time__gt=timezone.now()).order_by('submit_time')
-    return render_to_response("dashboard_scheduled_posts.html",
+    return render(request, "dashboard_scheduled_posts.html",
                               {'header':'admin_dashboard',
                                'admin_header':'scheduled_posts',
                                'posts':posts,
-                               },
-                              context_instance=RequestContext(request))
-
+                               })
 
 @staff_member_required
 def admin_active_users(request):
@@ -119,12 +116,11 @@ def admin_active_users(request):
         except AttributeError:
             users = sorted(users.all(),key=operator.methodcaller('post_count'), reverse=True)
     users = users[:25]
-    return render_to_response("dashboard_active_users.html",
+    return render(request, "dashboard_active_users.html",
                               {'header':'admin_dashboard',
                                'admin_header':'active_users',
                                'users':users,
-                               },
-                              context_instance=RequestContext(request))
+                               })
 
 @staff_member_required
 def admin_stats_and_analytics(request):
@@ -147,7 +143,7 @@ def admin_stats_and_analytics(request):
     except ZeroDivisionError:
         weekly_post_ratio = "(can't divide by zero)"
         
-    return render_to_response("dashboard_stats_and_analytics.html",
+    return render(request, "dashboard_stats_and_analytics.html",
                               {'header':'admin_dashboard',
                                'admin_header':'stats',
                                'real_user_count':real_user_count,
@@ -157,8 +153,7 @@ def admin_stats_and_analytics(request):
                                'last_week_post_count':last_week_posts,
                                'last_last_week_post_count':last_last_week_posts,
                                'weekly_post_ratio':weekly_post_ratio,                                   
-                               },
-                              context_instance=RequestContext(request))
+                               })
 
 @staff_member_required
 def admin_buffer_profiles(request):
@@ -179,12 +174,11 @@ def admin_buffer_profiles(request):
         if BufferProfile.objects.filter(profile_id=r['_id']).exists():
             r['exists']=True
         r['id']=r['_id']
-    return render_to_response("dashboard_buffer_profiles.html",
+    return render(request, "dashboard_buffer_profiles.html",
                               {'header':'admin_dashboard',
                                'admin_header':'buffer_profiles',
                                'buffer_profiles':response,
-                               },
-                              context_instance=RequestContext(request))
+                               })
 
 def search(request):
     """
@@ -216,15 +210,14 @@ def search(request):
         count = len(comments)
         comments=paginate_items(request.GET.get('page'),comments,25)
 
-    return render_to_response("search.html",
+    return render(request, "search.html",
                               { "posts": posts,
                                 "comments": comments,
                                 "count":count,
                                 "query":query,
                                 "sort_type":sort_type,
                                 "query_type":query_type,
-                                },
-                              context_instance=RequestContext(request))    
+                                })
 
 def view_post(request, post_id, new_comment_form=PartialCommentForm()):
     if post_id=="2" and not request.user.is_authenticated():
@@ -237,15 +230,14 @@ def view_post(request, post_id, new_comment_form=PartialCommentForm()):
     if "<p>" in post.article_text and "</p>" in post.article_text:
         post.article_text=post.article_text.replace("<p>","<p><b>",1).replace("</p>","</b></p>",1)
     comments = Comment.objects.filter(post=post).order_by("-submit_time")
-    return render_to_response("view_post.html",
+    return render(request, "view_post.html",
                               { "post": post,
                                 "comments": comments,
                                 'new_comment_form': new_comment_form,
                                 'show_timestamp': True,
                                 "article_length":len(post.article_text),
                                 "preview_wordcount":max(int(.5*len(post.article_text.split(" "))),80)
-                                },
-                              context_instance=RequestContext(request))
+                                })
 
 def share_now(request, post_id):
     if not request.user.is_staff:
@@ -260,13 +252,12 @@ def view_comment(request, post_id, comment_id, new_comment_form=PartialCommentFo
     post.score=post.get_score()
     comment = get_object_or_404(Comment, pk=comment_id)
     comments = comment.get_descendants(include_self=False)
-    return render_to_response("view_comment.html",
+    return render(request, "view_comment.html",
                               { "post": post,
                                 "comment": comment,
                                 "comments": comments,
                                 'new_comment_form': new_comment_form,
-                                },
-                              context_instance=RequestContext(request))
+                                })
 
 @login_required
 def edit_comment(request, post_id, comment_id):
@@ -289,13 +280,12 @@ def edit_comment(request, post_id, comment_id):
             return HttpResponseRedirect(reverse('view_post', args=(post.pk,)))
     else:
         comment_form = PartialCommentForm(instance=comment)
-    return render_to_response("edit_comment.html",
+    return render(request, "edit_comment.html",
                               { "post": post,
                                 "comment": comment,
                                 "comments": comments,
                                 "comment_form": comment_form,
-                                },
-                              context_instance=RequestContext(request))
+                                })
 
 def view_profile(request, user_id):
     if request.method == 'POST':
@@ -304,12 +294,11 @@ def view_profile(request, user_id):
     form = None
     if request.user == profile_owner:
         form = PartialUserProfileForm(initial={'email':profile_owner.email,},instance=profile_owner.userprofile)
-    return render_to_response("view_profile.html",
+    return render(request, "view_profile.html",
                               { "profile_owner": profile_owner,
                                 "form": form,
                                 "owns_page": request.user==profile_owner
-                                },
-                              context_instance=RequestContext(request))
+                                })
 
 @login_required
 def edit_profile(request,user_id):
@@ -323,12 +312,10 @@ def edit_profile(request,user_id):
             messages.success(request, "Profile changes saved!")
     else:
         form = PartialUserProfileForm(initial={'email':request.user.email,},instance=request.user.userprofile)
-    return render_to_response("view_profile.html",
+    return render(request, "view_profile.html",
                               {'profile_owner': profile_owner,
                                'form': form,
-                               'owns_page': request.user==profile_owner},
-                              context_instance=RequestContext(request))   
-
+                               'owns_page': request.user==profile_owner})
     
 
 
@@ -336,21 +323,19 @@ def view_user_submissions(request,user_id):
     user = get_object_or_404(User, pk=user_id)
     posts = Post.objects.filter(submitter=user).order_by('-submit_time').annotate(score=Sum('postvote__score'))
     posts=paginate_items(request.GET.get('page'),posts,25)
-    return render_to_response("view_user_submissions.html",
+    return render(request, "view_user_submissions.html",
                               { "show_user": user,
                                 "posts": posts,
-                                },
-                              context_instance=RequestContext(request))
+                                })
 
 def view_user_comments(request,user_id):
     user = get_object_or_404(User, pk=user_id)
     comments = Comment.objects.filter(author=user).order_by('-submit_time')
     comments=paginate_items(request.GET.get('page'),comments,25)
-    return render_to_response("view_user_comments.html",
+    return render(request, "view_user_comments.html",
                               { "show_user": user,
                                 "comments": comments,
-                                },
-                              context_instance=RequestContext(request))
+                                })
 
 
 @login_required
@@ -409,10 +394,9 @@ def submit_post(request):
             return HttpResponseRedirect(next_url)
     else:
         new_post_form = PartialPostForm()
-    return render_to_response("submit_post.html",
+    return render(request, "submit_post.html",
                               {'new_post_form': new_post_form,
-                               },
-                              context_instance=RequestContext(request))   
+                               })
 
 @csrf_exempt
 def admin_submit_post(request):
@@ -556,11 +540,10 @@ def guidelines(request):
 """
 #These used to use the configstore module
 def about(request):
-    return render_to_response("about.html",
-                              context_instance=RequestContext(request))
+    return render(request, "about.html")
+
 def guidelines(request):
-    return render_to_response("guidelines.html",
-                              context_instance=RequestContext(request))
+    return render(request, "guidelines.html")
 
 
 #PLAN: on every hour, fetch the top 33 of each tag. Of those, keep the top 3 of each (in terms of number of comments/likes)

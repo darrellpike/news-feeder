@@ -9,21 +9,23 @@
 {% endblock %}
 
 {% block content %}
-      <div class="row">
+    <div class="row">
         <div class="col-lg-8">
-	  <ol>
-	    {% if posts %}All submissions from {{ show_user.username }}:{% else %}{{ show_user.username }} has not submitted anything yet!{% endif %}
-	    {% for post in posts %}
-	      <div class="row post">
-		<div class="col-md-12 post-col" >
-		  {% include "partial/post_info.html" %}
-		</div>
-	      </div>
-	    {% endfor %}
-	  </ol>
-	</div>
-      </div>
+            <ol>
+                {% if posts %}All submissions from {{ show_user.username }}:{% else %}{{ show_user.username }} has not
+                    submitted anything yet!{% endif %}
+                {% for post in posts %}
+                    <div class="row post">
+                        <div class="col-md-12 post-col">
+                            {% include "partial/post_info.html" %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
 
 {% endblock %}
 
-      {% block above-footer %}{% if posts.has_next %}<a href="?page={{ posts.next_page_number }}" class="more-link">More</a>{% endif %}{% endblock %}
+{% block above-footer %}{% if posts.has_next %}<a href="?page={{ posts.next_page_number }}" class="more-link">More</a>
+{% endif %}{% endblock %}

@@ -4,27 +4,27 @@
 {% load admin_urls %}
 
 {% block inner-content %}
-<h3 class="section-header">Buffer Profiles</h3>
-{% for r in buffer_profiles %}
-{% if not r.exists %}
-<form action="" method="POST" class="buffer-profile">
-  {{ r.service }}: {{ r.service_username }}
-  {% csrf_token %}
-  <input type="hidden" value="{{ r.id }}" name="profile_id">
-  <input type="hidden" value="{{ r.service }}: {{ r.service_username }}" name="profile_description">
-  <input type="hidden" value="add" name="action">
-  <input type="submit" value="Connect Account" class="btn btn-primary">
-</form>
-{% else %}
-<form action="" method="POST" class="buffer-profile">
-  {{ r.service }}: {{ r.service_username }}
-  {% csrf_token %}
-  <input type="hidden" value="delete" name="action">
-  <input type="hidden" value="{{ r.id }}" name="profile_id">
-  <input type="submit" value="Disconnect Account" class="btn btn-danger">
-</form>
-{% endif %}
-<br><br>
-{% endfor %}
-</div>
+    <h3 class="section-header">Buffer Profiles</h3>
+    {% for r in buffer_profiles %}
+        {% if not r.exists %}
+            <form action="" method="POST" class="buffer-profile">
+                {{ r.service }}: {{ r.service_username }}
+                {% csrf_token %}
+                <input type="hidden" value="{{ r.id }}" name="profile_id">
+                <input type="hidden" value="{{ r.service }}: {{ r.service_username }}" name="profile_description">
+                <input type="hidden" value="add" name="action">
+                <input type="submit" value="Connect Account" class="btn btn-primary">
+            </form>
+        {% else %}
+            <form action="" method="POST" class="buffer-profile">
+                {{ r.service }}: {{ r.service_username }}
+                {% csrf_token %}
+                <input type="hidden" value="delete" name="action">
+                <input type="hidden" value="{{ r.id }}" name="profile_id">
+                <input type="submit" value="Disconnect Account" class="btn btn-danger">
+            </form>
+        {% endif %}
+        <br><br>
+    {% endfor %}
+    </div>
 {% endblock %}

@@ -3,15 +3,15 @@
 
 {% block content %}
 
-{% if not user.is_authenticated %}
-sign up first
-{% else %}
-<div class="row">
-  <div class="col-lg-5 col-lg-offset-3">
-    <h3>Create New Post</h3>
-    {% include "partial/new_post_form.html" %}
-  </div>
-</div>
-{% endif %}
+    {% if not user.is_authenticated %}
+        sign up first
+    {% else %}
+        <div class="row">
+            <div class="col-lg-5 col-lg-offset-3">
+                <h3>Create New Post</h3>
+                {% include "partial/new_post_form.html" %}
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}
