@@ -1,0 +1,169 @@
+$primary-color: #5A1BE0
+$accent-color: #D92752
+
+
+// Base styles
+body
+  background: rgb(239,239,239)
+
+h3
+  font-size: 20px
+  line-height: 24px
+  letter-spacing: -0.02em
+  text-transform: uppercase
+  color: #111111
+
+.container-fluid
+  padding: 0 100px
+
+// Header styles
+header
+    overflow: hidden
+    background-color: $primary-color
+    padding: 28px 0
+    color: white
+
+.navbar
+  padding: 0
+
+.header-title
+    min-width: 255px
+    float: left
+    position: relative
+    font-size: 24px
+    line-height: 24px
+    letter-spacing: -0.02em
+    text-transform: uppercase
+
+.sort-buttons
+    margin: 0 auto
+    text-align: center
+
+.sort-button
+    margin-right: 40px
+    color: white
+    font-size: 14px
+    line-height: normal
+    text-align: center
+    letter-spacing: 0.2em
+    text-transform: uppercase
+    padding: 4px 0
+    background: transparent
+    border: none
+
+.sort-button.active
+    border-bottom: 4px solid $accent-color
+
+
+.btn-signup, .btn-login
+    min-width: 130px
+    position: relative
+    padding: 12px 28px
+    color: white
+    font-size: 14px
+    line-height: normal
+    text-align: center
+    letter-spacing: 0.2em
+    text-transform: uppercase
+    border: none
+    background: transparent
+    border-radius: 0.5px
+
+.btn-signup
+    margin-right: 16px
+
+.btn-signup:after, .btn-login:after, .btn-signup:before, .btn-login:before
+    content: ''
+    background: $primary-color
+    position: absolute
+    width: 2px
+    top: 38%
+    bottom: 38%
+    pointer-events: none
+    z-index: 1
+
+.btn-login-decoration:after, .btn-login-decoration:before
+    content: ''
+    background: #FAFDFE
+    opacity: 0.3
+    position: absolute
+    width: 2px
+    top: 32%
+    bottom: 32%
+    pointer-events: none
+    z-index: 1
+
+.btn-login-decoration:after
+    right: 0
+
+.btn-login-decoration:before
+    left: 0
+
+
+.btn-signup:before
+    left: 0
+
+.btn-signup:after
+    right: 0
+
+.btn-login:after
+    right: -2px
+
+.btn-login:before
+    left: -2px
+
+
+
+.btn-login
+    padding: 10px 26px
+    border: 2px solid rgb(250, 253, 254)
+    border: 2px solid rgba(250, 253, 254, 0.3)
+    -webkit-background-clip: padding-box
+    background-clip: padding-box
+
+
+.btn-signup
+    background: $accent-color
+
+.main-content
+  margin-top: 46px
+
+// Articles sryles
+.news-header
+  margin-bottom: 18px
+
+.article
+  width: 100%
+  background: white
+  min-height: 80px
+  display: flex
+  border-radius: 2px
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5)
+
+
+.article .rating
+  background: #F7F7F7
+  width: 40px
+  display: inline-block
+  height: 100%
+
+.article .rating .btn-upvote
+  background: transparent
+
+.article .news-aggregator-image
+  display: inline-block
+
+.article .article-body
+  display: inline-block
+
+.article .news-aggregator-image img
+  height: 24px
+  width: 24px
+
+.btn-link
+  display: inline-block
+  color: $primary-color
+
+.btn-link:hover
+  color: $primary-color
+  cursor: pointer
