@@ -5,12 +5,14 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
 import operator
+from django.core.paginator import InvalidPage
 
 
 class IndexView(generic.ListView):
 	template_name = 'new_index.html'
 	context_object_name = 'news'
 	model = Post
+	paginate_by = 2
 
 	def get_queryset(self):
 		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-submit_time').annotate(

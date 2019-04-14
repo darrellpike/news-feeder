@@ -243,8 +243,18 @@ header {
   position: relative;
 }
 
-.article .rating .btn-upvote img {
+.article .rating .btn-upvote.active .rating-text {
+  color: #5A1BE0;
+}
+
+.article .rating .btn-upvote.active svg path {
+  fill: #5A1BE0;
+}
+
+.article .rating .btn-upvote svg {
   margin-top: 14px;
+  margin-right: auto;
+  margin-left: auto;
   position: relative;
   line-height: 0;
   vertical-align: top;
@@ -329,6 +339,35 @@ header {
 
 .latest-news .article .article-statistics {
   align-self: flex-end;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  margin-top: 32px;
+}
+
+.pagination a {
+  color: #5A1BE0;
+}
+
+.pagination .previous a img {
+  margin-right: 8px;
+  margin-bottom: 2px;
+}
+
+.pagination .current {
+  color: #111111;
+}
+
+.pagination .next a img {
+  margin-left: 8px;
+  margin-bottom: 2px;
+}
+
+.pagination .next img {
+  transform: rotate(180deg);
 }
 
 /*# sourceMappingURL=new_base.css.map */
