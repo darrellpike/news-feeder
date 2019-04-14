@@ -29,7 +29,7 @@
                         <div class="article-body">
                             <p class="article-title">{{ article.title }}</p>
                             <div class="article-statistics">
-                                <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} •</span>
+                                <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago •</span>
                                 <span class="article-comments">{{ article.comment_count }} comments •</span>
                                 <a href="{{ article.url }}" class="news-aggregator-link">{{ article.url|cut:"http://" }}</a>
                             </div>
