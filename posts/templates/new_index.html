@@ -82,7 +82,7 @@
         <div class="col-xl-4">
             <div class="news-header">
                 <h3>Latest news</h3>
-                <span class="float-right btn-link">View all</span>
+                <a href="{% url 'index_latest' %}" class="float-right btn-link">View all</a>
             </div>
             <div class="latest-news">
                 {% for article in latest_news %}
