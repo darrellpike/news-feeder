@@ -1,0 +1,79 @@
+{% extends 'new_base.html' %}
+
+{% load posts_extras staticfiles %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="news-header">
+                <h3>Latest stories</h3>
+            </div>
+
+            <div class="news">
+                {% for article in news %}
+                    <div class="article">
+                        <div class="rating">
+                            <button class="btn-upvote active">
+                                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6.1357 0.139022L0.177109 5.49626C0.0113516 5.64519 -0.0439008 5.87877 0.0362694 6.08663C0.11644 6.29235 0.316865 6.42842 0.541125 6.42842L3.79127 6.42842L3.79127 12.4643C3.79127 12.76 4.03394 13 4.33296 13L8.66648 13C8.96549 13 9.20817 12.76 9.20817 12.4643L9.20817 6.42842L12.4583 6.42842C12.6826 6.42842 12.883 6.29234 12.9642 6.08663C12.9881 6.02341 13 5.95805 13 5.89269C13 5.74484 12.9372 5.60019 12.8223 5.49626L6.86373 0.139022C6.65789 -0.0463393 6.34154 -0.0463393 6.1357 0.139022Z" fill="#888A8C"/>
+                                </svg>
+{#                                <img alt="Upvote" class="upvote" src="{% static 'images/upvote.svg' %}"/>#}
+                                <span class="rating-text">{{ article.get_score }}</span>
+                            </button>
+                        </div>
+                        {% if article.news_site_logo %}
+                        <div class="news-aggregator-image">
+                            <img alt="{{ article.news_site_logo }}" src="{{ article.news_site_logo.url }}" />
+                        </div>
+                        {% endif %}
+                        <div class="article-body">
+                            <p class="article-title">{{ article.title }}</p>
+                            <div class="article-statistics">
+                                <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} •</span>
+                                <span class="article-comments">{{ article.comment_count }} comments •</span>
+                                <a href="{{ article.url }}" class="news-aggregator-link">{{ article.url|cut:"http://" }}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if is_paginated %}
+                        <div class="pagination">
+                                <span class="previous">
+                                    {% if page_obj.has_previous %}
+                                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">
+                                            <img alt="Previous" src="{% static 'images/Page_selector.svg' %}" />Previous</a>
+                                    {% else %}
+                                        <a href="{{ request.path }}?page=" style="opacity: 0">
+                                            <img alt="Previous" src="{% static 'images/Page_selector.svg' %}" />Previous</a>
+                                    {% endif %}
+                                </span>
+                            <span class="center">
+                            {% if page_obj.number|add:'-4' > 1 %}
+                                <a href="{{ request.path }}?page={{ page_obj.number|add:'-5' }}">&hellip;</a>
+                            {% endif %}
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == i %}
+                                        <span class="current">{{ i }} <span class="sr-only">(current)</span></span>
+                                    {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                                        <a href="{{ request.path }}?page={{ i }}">{{ i }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+                                    <a href="{{ request.path }}?page={{ page_obj.number|add:'5' }}">&hellip;</a>
+                                {% endif %}
+                                </span>
+                            <span class="next">
+                                    {% if page_obj.has_next %}
+                                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">
+                                            Next<img alt="Next" src="{% static 'images/Page_selector.svg' %}" /></a>
+                                    {% else %}
+                                        <a href="{{ request.path }}?page=" style="opacity: 0">
+                                            Next<img alt="Next" src="{% static 'images/Page_selector.svg' %}" /></a>
+                                    {% endif %}
+                                </span>
+                        </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

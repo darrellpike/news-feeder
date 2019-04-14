@@ -42,8 +42,8 @@
                     <a href="/">White hat news</a>
                 </div>
                 <div class="sort-buttons">
-                    <button class="btn sort-button active">Popular</button>
-                    <button class="btn sort-button">Latest</button>
+                    <a href="{% url 'index' %}" class="btn sort-button {% if request.path == '/' %}active{% endif %}">Popular</a>
+                    <a href="{% url 'index_latest' %}" class="btn sort-button {% if request.path == '/latest/' %}active{% endif %}">Latest</a>
                 </div>
                 <div class="search">
                     <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}"></button>

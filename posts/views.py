@@ -27,4 +27,20 @@ class IndexView(generic.ListView):
 		context = super(IndexView, self).get_context_data(**kwargs)
 		latest_news = Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')[:3]
 		context['latest_news'] = latest_news
+		context['active'] = 'active'
+		return context
+
+
+class IndexLatestView(generic.ListView):
+	template_name = 'latest_index.html'
+	context_object_name = 'news'
+	model = Post
+	paginate_by = 2
+
+	def get_queryset(self):
+		return Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')
+
+	def get_context_data(self, **kwargs):
+		context = super(IndexLatestView, self).get_context_data(**kwargs)
+		context['active'] = 'active'
 		return context
