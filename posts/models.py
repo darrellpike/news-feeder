@@ -14,6 +14,8 @@ from django.db.models import Max
 import random
 import requests
 from instagram.bind import InstagramClientError, InstagramAPIError
+from imagekit.models import ProcessedImageField, ImageSpecField
+from imagekit.processors import ResizeToFill, ResizeToFit, Adjust
 
 #BUFFER_TOKEN="1/2e1a5f4377c137037277b1018687db14"#testing
 BUFFER_TOKEN="1/a87c16b5ef67c2978b55a34eaee28078"
@@ -67,6 +69,13 @@ class Post(models.Model):
     url = models.URLField(max_length=300, blank=True)
     text = models.TextField(blank=True)
     article_text = models.TextField(blank=True)
+    news_site_logo = ProcessedImageField(upload_to='news_site_logos/',
+                                         processors=[ResizeToFit(100,100)],
+                                         format='JPEG',
+                                         null=True)
+
+    def time_since_submit(self):
+        return timezone.now() - self.submit_time
     
     def comment_count(self):
         return Comment.objects.filter(post=self).exclude(author__userprofile__is_shadowbanned=True).count()

@@ -11,8 +11,6 @@ admin.site.register(UserProfile, UserProfileAdmin)
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title','submit_time', 'url')
-    def has_add_permission(self, request):
-        return False
 
 admin.site.register(Post, PostAdmin)
 

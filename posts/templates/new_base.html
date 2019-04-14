@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load staticfiles %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +14,7 @@
     <meta property="og:image" content="https://www.plantdietlife.com{{ STATIC_URL }}images/pdl.png"/>
     {% block meta_description %}
         <meta property="og:description" content="{{ title_tagline }}">{% endblock %}
-    <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.png">
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
 
     {% block title %}<title>motoranger</title>{% endblock %}
 
@@ -36,52 +37,29 @@
 <header>
     <div class="container-fluid">
         <div class="navbar align-middle">
-            <div class="header-title float-left">White hat news</div>
-            <div class="sort-buttons">
-                <button class="sort-button active">Popular</button>
-                <button class="sort-button">Latest</button>
+            <div class="float-left">
+                <div class="header-title">
+                    <a href="/">White hat news</a>
+                </div>
+                <div class="sort-buttons">
+                    <button class="btn sort-button active">Popular</button>
+                    <button class="btn sort-button">Latest</button>
+                </div>
+                <div class="search">
+                    <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}"></button>
+                </div>
             </div>
-            <div class="float-right">
-                <button class="btn-signup">Sign up</button>
-                <button class="btn-login"><span class="btn-login-decoration">Login</span></button>
+
+            <div class="header-buttons float-right">
+                <button class="btn btn-link suggest-news">Suggest news</button>
+                <button class="btn btn-signup">Sign up</button>
+                <button class="btn btn-login"><span class="btn-login-decoration">Login</span></button>
             </div>
         </div>
     </div>
 </header>
 <div class="container-fluid main-content">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="news-header">
-                <h3>Popular stories</h3>
-            </div>
-
-            <div class="news">
-                <div class="article">
-                    <div class="rating">
-                        <button class="btn btn-upvote active"><img class="upvote" src="{{ STATIC_URL }}images/upvote.svg"/>10.8k</button>
-                    </div>
-                    <div class="news-aggregator-image">
-                        <img alt="" src="https://cdn.cnn.com/cnn/.e1mo/img/4.0/logos/CNN_logo_400x400.png" />
-                    </div>
-                    <div class="article-body">
-                        <p class="article-title">Live now bla bla bla bla bla bla bla</p>
-                        <div class="article-statistics">
-                            <span class="article-time">18 min ago</span>
-                            <span class="article-comments">54 comments</span>
-                            <span class="news-aggregator-link">CNN.com</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <h3 class="float-left">Latest news</h3>
-            <span class="float-right btn-link">View all</span>
-            <div class="news">
-
-            </div>
-        </div>
-    </div>
+{% block content %}{% endblock content %}
 </div>
 
 

@@ -1,0 +1,62 @@
+{% extends 'new_base.html' %}
+{% load posts_extras staticfiles %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="news-header">
+                <h3>Popular stories</h3>
+                <button class="btn-sort">
+                    <img src="{% static 'images/baseline-sort-24px.svg' %}" alt="sort" />
+                    <span class="btn-sort-text">Sort by</span>
+                </button>
+            </div>
+
+            <div class="news">
+                {% for article in news %}
+                    <div class="article">
+                        <div class="rating">
+                            <button class="btn-upvote active"><img alt="Upvote" class="upvote" src="{% static 'images/upvote.svg' %}"/>
+                                <span class="rating-text">{{ article.get_score }}</span>
+                            </button>
+                        </div>
+                        {% if article.news_site_logo %}
+                        <div class="news-aggregator-image">
+                            <img alt="{{ article.news_site_logo }}" src="{{ article.news_site_logo.url }}" />
+                        </div>
+                        {% endif %}
+                        <div class="article-body">
+                            <p class="article-title">{{ article.title }}</p>
+                            <div class="article-statistics">
+                                <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} •</span>
+                                <span class="article-comments">{{ article.comment_count }} comments •</span>
+                                <a href="{{ article.url }}" class="news-aggregator-link">{{ article.url|cut:"http://" }}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="news-header">
+                <h3>Latest news</h3>
+                <span class="float-right btn-link">View all</span>
+            </div>
+            <div class="latest-news">
+                {% for article in latest_news %}
+                    <div class="article">
+                        <div class="article-body">
+                            <div class="article-title">
+                                {{ article.title }}
+                            </div>
+                            <div class="article-statistics">
+                                <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} •</span>
+                                <a href="{{ article.url }}" class="news-aggregator-link">{{ article.url|cut:'http://' }}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
