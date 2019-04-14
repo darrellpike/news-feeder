@@ -12,7 +12,7 @@ class IndexView(generic.ListView):
 	template_name = 'new_index.html'
 	context_object_name = 'news'
 	model = Post
-	paginate_by = 2
+	paginate_by = 7
 
 	def get_queryset(self):
 		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-submit_time').annotate(
@@ -35,7 +35,7 @@ class IndexLatestView(generic.ListView):
 	template_name = 'latest_index.html'
 	context_object_name = 'news'
 	model = Post
-	paginate_by = 2
+	paginate_by = 7
 
 	def get_queryset(self):
 		return Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')
