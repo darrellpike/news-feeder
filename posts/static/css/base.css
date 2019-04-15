@@ -269,13 +269,12 @@ header.mdl-layout__header {
     position:relative;
 }
 header.mdl-layout__header, div.mdl-layout__tab-bar-container, div.mdl-layout__tab-bar-button {
-    background-color:#607d8b;
+    background-color:#5A1BE0;
 }
 div.mdl-layout__drawer-button {
     margin-top:15px;
 }
 div#sort-tabs-row {
-    background-color:#607d8b;
     margin-top: 59px;
 }
 li.navbar-sort-tab {
@@ -322,7 +321,6 @@ form#search-form {
 }
 
 #top-header-row {
-    background-color:#607d8b;
     height:100px;
 }
 #header-top-right {

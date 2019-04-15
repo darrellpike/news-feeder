@@ -1,0 +1,545 @@
+$primary-color: #5A1BE0
+$accent-color: #D92752
+$text-color: #111111
+
+@font-face
+  font-family: 'tt_supermolot_neueBlkIt'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_black_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_black_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueblack'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_black-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_black-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuebold_italic'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_bold_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_bold_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueextralight'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_extralight-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_extralight-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueitalic'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueLtIt'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_light_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_light_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+@font-face
+  font-family: 'tt_supermolot_neuebold'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_bold-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_bold-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuedemiBdIt'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_demibold_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_demibold_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuedemibold'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_demibold-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_demibold-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueXBdIt'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_extrabold_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_extrabold_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueextrabold'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_extrabold-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_extrabold-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueXLtIt'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_extralight_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_extralight_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuelight'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_light-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_light-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueMdIt'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_medium_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_medium_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuemedium'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_medium-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_medium-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueregular'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_regular-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_regular-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuethin_italic'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_thin_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_thin_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuethin'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_thin-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_thin-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neuebold_italic'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_bold_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_bold_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueextralight'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_extralight-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_extralight-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueitalic'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'tt_supermolot_neueLtIt'
+  src: url('/static/fonts/typetype_-_tt_supermolot_neue_light_italic-webfont.woff2') format("woff2"), url('/static/fonts/typetype_-_tt_supermolot_neue_light_italic-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+@font-face
+  font-family: 'gt_americablack'
+  src: url('/static/fonts/gt-america-black-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-black-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'gt_americaregular'
+  src: url('/static/fonts/gt-america-bold-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-bold-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'gt_americabold'
+  src: url('/static/fonts/gt-america-bold-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-bold-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'gt_americalight'
+  src: url('/static/fonts/gt-america-light-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-light-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'gt_americalight'
+  src: url('/static/fonts/gt-america-light-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-light-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'gt_americamedium'
+  src: url('/static/fonts/gt-america-medium-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-medium-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'gt_americamedium'
+  src: url('/static/fonts/gt-america-medium-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-medium-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+
+@font-face
+  font-family: 'gt_americaregular'
+  src: url('/static/fonts/gt-america-regular-webfont.woff2') format("woff2"), url('/static/fonts/gt-america-regular-webfont.woff') format("woff")
+  font-weight: normal
+  font-style: normal
+
+// Base styles
+body
+  background: rgb(239,239,239)
+  font-family: gt_americaregular
+
+h3
+  font-family: tt_supermolot_neuebold
+  font-size: 20px
+  line-height: 24px
+  letter-spacing: -0.02em
+  text-transform: uppercase
+  color: $text-color
+
+.container-fluid
+  padding: 0 100px
+
+// Header styles
+header
+    overflow: hidden
+    background-color: $primary-color
+    padding: 0
+    color: white
+
+.navbar
+  display: flex
+  flex-flow: row wrap
+  justify-content: space-between
+  align-items: center
+  padding: 0
+
+.header-title
+    padding: 38px 0
+    margin-right: 64px
+    float: left
+    position: relative
+    font-size: 24px
+    line-height: 24px
+    letter-spacing: -0.02em
+    text-transform: uppercase
+
+.header-title a
+  color: white
+  text-decoration: none
+  font-family: tt_supermolot_neuebold
+
+.sort-buttons
+  float: left
+  display: inline-block
+  text-align: center
+
+.sort-button
+    vertical-align: unset
+    height: auto
+    margin-right: 40px
+    color: white
+    font-size: 14px
+    line-height: normal
+    text-align: center
+    letter-spacing: 0.2em
+    text-transform: uppercase
+    padding: 40px 0
+    background: transparent
+    border: none
+    border-radius: 0
+    font-family: tt_supermolot_neueextrabold
+
+.sort-button.active
+    border-bottom: 4px solid $accent-color
+
+.search
+  display: inline-block
+  padding: 31px 0
+
+.search .btn
+  padding: 0
+
+.header-buttons
+  padding: 30px 0
+  display: inline-flex
+
+.btn-signup, .btn-login
+    font-family: tt_supermolot_neueextrabold
+    min-width: 130px
+    position: relative
+    padding: 12px 28px
+    color: white
+    font-size: 14px
+    line-height: normal
+    text-align: center
+    letter-spacing: 0.2em
+    text-transform: uppercase
+    border: none
+    background: transparent
+    border-radius: 0.5px
+
+.btn-signup
+    margin-right: 16px
+
+.btn-signup:after, .btn-login:after, .btn-signup:before, .btn-login:before
+    content: ''
+    background: $primary-color
+    position: absolute
+    width: 2px
+    top: 38%
+    bottom: 38%
+    pointer-events: none
+    z-index: 1
+
+.btn-login-decoration:after, .btn-login-decoration:before
+    content: ''
+    background: #FAFDFE
+    opacity: 0.3
+    position: absolute
+    width: 2px
+    top: 32%
+    bottom: 32%
+    pointer-events: none
+    z-index: 1
+
+.btn-login-decoration:after
+    right: 0
+
+.btn-login-decoration:before
+    left: 0
+
+
+.btn-signup:before
+    left: 0
+
+.btn-signup:after
+    right: 0
+
+.btn-login:after
+    right: -2px
+
+.btn-login:before
+    left: -2px
+
+
+
+.btn-login
+    padding: 10px 26px
+    border: 2px solid rgb(250, 253, 254)
+    border: 2px solid rgba(250, 253, 254, 0.3)
+    -webkit-background-clip: padding-box
+    background-clip: padding-box
+
+
+.btn-signup
+    background: $accent-color
+
+.header-buttons > .btn-link
+  font-family: tt_supermolot_neueextrabold
+  color: white
+  font-size: 14px
+  line-height: normal
+  letter-spacing: 0.2em
+  text-transform: uppercase
+  margin-right: 40px
+
+.header-buttons > .btn-link:hover
+  color: white
+  text-decoration: none
+
+
+.main-content
+  margin-top: 46px
+
+// Articles styles
+.news-header
+  margin-bottom: 18px
+
+.news-header h3
+  display: inline-block
+  margin-right: 28px
+  margin-bottom: 0
+
+.news-header .btn-sort
+  position: relative
+  display: inline-block
+  padding: 0
+  border: 1px transparent
+  background: transparent
+
+.news-header .btn-sort svg
+    width: 25px
+    height: 25px
+    top: 0
+    left: -4px
+    position: absolute
+
+.news-header .btn-sort .btn-sort-text
+  font-family: tt_supermolot_neuebold
+  margin-left: 20px
+  font-size: 16px
+  line-height: 16px
+  letter-spacing: -0.02em
+  text-transform: uppercase
+  color: #888888
+
+
+.article
+  width: 100%
+  background: white
+  min-height: 80px
+  display: flex
+  border-radius: 2px
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2)
+  margin-bottom: 12px
+
+
+.article .rating
+  background: #F7F7F7
+  width: 40px
+  display: inline-flex
+  flex-direction: column
+  justify-content: top
+
+.article .rating .btn-upvote
+  display: contents
+  background: transparent
+  border: none
+  padding-left: 0
+  padding-right: 0
+  position: relative
+
+.article .rating .btn-upvote.active .rating-text
+  color: $primary-color
+  font-family: gt_americabold
+
+.article .rating .btn-upvote.active svg path
+  fill: $primary-color
+
+.article .rating .btn-upvote svg
+  margin-top: 14px
+  margin-right: auto
+  margin-left: auto
+  position: relative
+  line-height: 0
+  vertical-align: top
+
+.article .rating .btn-upvote .rating-text
+  margin-top: 4px
+  font-size: 12px
+  line-height: 14px
+  text-align: center
+  color: $text-color
+
+
+.article .news-aggregator-image
+  display: flex
+  margin-left: 16px
+
+.article .news-aggregator-image img
+  margin-top: 20px
+  height: 24px
+  width: 24px
+
+.article .article-body
+  font-family: gt_americaregular
+  margin: 18px 8px 16px 16px
+  width: 100%
+
+.article .article-body p
+  font-size: 18px
+  line-height: 24px
+  color: $text-color
+  margin-bottom: 6px
+
+.article .article-body .article-statistics
+  font-size: 12px
+  line-height: 16px
+  color: $text-color
+
+.article .article-body .article-statistics .article-time, .article .article-body .article-statistics .article-comments
+  opacity: 0.5
+
+.article .article-statistics .news-aggregator-link
+  color: $accent-color
+
+.article .article-statistics .news-aggregator-link:hover
+  text-decoration: underline
+
+.btn-link
+  font-family: gt_americaregular
+  display: inline-block
+  color: $primary-color
+
+.btn-link:hover
+  color: $primary-color
+  cursor: pointer
+
+
+.latest-news
+  display: inline-block
+
+.latest-news .article .article-body
+  min-height: 188px
+  padding: 20px 24px
+  display: flex
+  flex-flow: row wrap
+  margin: 0
+
+.latest-news .article .article-title
+  font-family: gt_americabold
+  font-size: 24px
+  line-height: 28px
+  color: $text-color
+
+.latest-news .article .article-statistics
+  align-self: flex-end
+
+.pagination
+  display: flex
+  justify-content: space-between
+  flex-flow: row wrap
+  margin: 32px 0
+
+.pagination a
+  color: $primary-color
+
+.pagination .previous a img
+  margin-right: 8px
+  margin-bottom: 2px
+
+.pagination .current
+  color: $text-color
+
+.pagination .next a img
+  margin-left: 8px
+  margin-bottom: 2px
+
+.pagination .next img
+  transform: rotate(180deg)

@@ -4,7 +4,6 @@ Template tags for working with lists of model instances which represent
 trees.
 """
 from __future__ import unicode_literals
-from django import template
 from django.db.models.fields import FieldDoesNotExist
 try:
     from django.utils.encoding import force_text
@@ -28,6 +27,31 @@ import urlparse
 from django.core.urlresolvers import reverse
 
 register = template.Library()
+
+@register.filter()
+def smooth_timedelta(timedeltaobj):
+    """Convert a datetime.timedelta object into Days, Hours, Minutes, Seconds."""
+    secs = timedeltaobj.total_seconds()
+    timetot = ""
+    if secs > 86400: # 60sec * 60min * 24hrs
+        days = secs // 86400
+        timetot += "{} days".format(int(days))
+        # secs = secs - days*86400
+
+    if secs > 3600 and secs < 86400:
+        hrs = secs // 3600
+        timetot += " {} hours".format(int(hrs))
+        # secs = secs - hrs*3600
+
+    if secs > 60 and secs < 3600:
+        mins = secs // 60
+        timetot += " {} minutes".format(int(mins))
+        # secs = secs - mins*60
+
+    if secs > 0 and secs < 60:
+        print('sec')
+        timetot += " {} seconds".format(int(secs))
+    return timetot
 
 def domainize(value):
     domain = urlparse.urlparse(value).netloc
