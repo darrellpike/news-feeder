@@ -440,6 +440,7 @@ header {
 }
 
 .article .rating .btn-upvote svg {
+  text-align: center;
   margin-top: 14px;
   margin-right: auto;
   margin-left: auto;
@@ -559,6 +560,10 @@ header {
 
 .pagination .next img {
   transform: rotate(180deg);
+}
+
+.latest-stories {
+  padding: 0;
 }
 
 /*# sourceMappingURL=new_base.css.map */
