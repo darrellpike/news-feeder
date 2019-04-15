@@ -6,4 +6,7 @@ db.sqlite3
 .DS_Store
 *.pyc
 *.log
-
+*.sock
+manage.py
+media/
+adventure_agg/static_root/
