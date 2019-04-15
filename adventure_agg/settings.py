@@ -1,5 +1,5 @@
 import os
-DEBUG = True
+DEBUG = False # Don't run debug in production server
 
 ADMINS = (
     ("dave", "dncrane@gmail.com"),
@@ -10,13 +10,13 @@ MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        "NAME": "db.sqlite3",  # Or path to database file if using sqlite3.
+        "ENGINE": "django.db.backends.postgresql_psycopg2",  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        "NAME": "news_aggregator",  # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        "USER": "",
-        "PASSWORD": "",
-        "HOST": "",  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        "PORT": "",  # Set to empty string for default.
+        "USER": "news_aggregator_user",
+        "PASSWORD": "&?6<&MUXr3#r^,",
+        "HOST": "localhost",  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        "PORT": "5432",  # Set to empty string for default.
     }
 }
 
@@ -196,6 +196,14 @@ LOGGING = {
             "propagate": True,
         }
     },
+}
+
+# Cache staff
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '/tmp/memcached.sock',
+    }
 }
 
 LOGIN_REDIRECT_URL = "/"
