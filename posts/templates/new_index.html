@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-xl-8 col-lg-8">
+        <div class="article-container">
             <div class="news-header">
                 <h3>Popular stories</h3>
 {#                <button class="btn-sort">#}
@@ -93,7 +93,7 @@
                 {% endif %}
             </div>
         </div>
-        <div id="LatestNews" class="col-xl-4 col-lg-4">
+        <div id="LatestNews" class="latest-container ml-auto">
             <div class="news-header">
                 <h3>Latest news</h3>
                 <a href="{% url 'index_latest' %}" class="float-right btn-link">View all</a>
