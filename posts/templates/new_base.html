@@ -43,15 +43,15 @@
             <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <div class="d-flex sort-buttons align-self-stretch align-items-stretch">
+            <div class="collapse navbar-collapse flex-column flex-lg-row" id="navbarSupportedContent">
+                <div class="d-flex sort-buttons align-lg-self-stretch align-items-stretch">
                     <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                     <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
                 </div>
-                <div class="search d-flex align-self-stretch align-items-stretch">
+                <div class="search d-flex align-self-center align-self-lg-stretch align-items-stretch">
                     <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}"></button>
                 </div>
-                <div class="header-buttons ml-auto">
+                <div class="header-buttons d-flex d-lg-inline-flex ml-lg-auto flex-column flex-lg-row">
                     <button class="btn btn-link suggest-news">Suggest news</button>
                     <button class="btn btn-signup red-button">Sign up</button>
                     <button class="btn btn-login primary-button"><span class="btn-login-decoration">Login</span></button>
