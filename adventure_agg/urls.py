@@ -40,7 +40,7 @@ urlpatterns = [
     url(r'^about/$', old_views.about, name='about'),
     url(r'^guidelines/$', old_views.guidelines, name='guidelines'),
 
-    url(r'^vote_post/$', old_views.vote_post, name='vote_post'),
+    url(r'^vote_post/$', views.vote_post, name='vote_post'),
     url(r'^vote_comment/$', old_views.vote_comment, name='vote_comment'),
     
     url(r'^post/(?P<post_id>\d+)/$', old_views.view_post, name='view_post'),

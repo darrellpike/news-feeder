@@ -196,11 +196,91 @@ h3 {
   padding: 0 100px;
 }
 
+.btn:focus {
+  box-shadow: none;
+}
+
+.red-button {
+  background: #D92752;
+}
+
+.red-button:default {
+  background: #D92752;
+}
+
+.red-button:hover {
+  background: #FF4A75;
+}
+
+.red-button:active {
+  background: #B42245;
+}
+
+.red-button:disabled {
+  background: #FFCFDB;
+  color: #FF97B0;
+}
+
+.red-button:focus {
+  background: #D92752;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.primary-button {
+  background: #5A1BE0;
+}
+
+.primary-button:default {
+  background: #5A1BE0;
+}
+
+.primary-button:hover {
+  background: #7537FA;
+}
+
+.primary-button:active {
+  background: #4204C7;
+}
+
+.primary-button:focus {
+  background: #5A1BE0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.primary-button:disabled {
+  background: #AC8DEF;
+  color: #DED1F9;
+}
+
+.btn {
+  color: #FAFDFE;
+}
+
+.btn:hover {
+  color: #FAFDFE;
+}
+
+.btn:active {
+  color: #FAFDFE;
+}
+
+.btn:focus {
+  color: #FAFDFE;
+}
+
+.btn:default {
+  color: #FAFDFE;
+}
+
 header {
   overflow: hidden;
   background-color: #5A1BE0;
   padding: 0;
   color: white;
+}
+
+nav {
+  min-height: 100px;
 }
 
 .navbar {
@@ -211,8 +291,16 @@ header {
   padding: 0;
 }
 
+.navbar-toggler {
+  min-height: 100px;
+}
+
+.navbar-toggler-icon {
+  background: url("/static/images/menu_mobile.svg") no-repeat center center;
+  background-size: 100% 100%;
+}
+
 .header-title {
-  padding: 38px 0;
   margin-right: 64px;
   float: left;
   position: relative;
@@ -230,13 +318,10 @@ header {
 
 .sort-buttons {
   float: left;
-  display: inline-block;
   text-align: center;
 }
 
 .sort-button {
-  vertical-align: unset;
-  height: auto;
   margin-right: 40px;
   color: white;
   font-size: 14px;
@@ -244,20 +329,28 @@ header {
   text-align: center;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  padding: 40px 0;
+  padding: 6px 0;
   background: transparent;
   border: none;
   border-radius: 0;
   font-family: tt_supermolot_neueextrabold;
 }
 
+.sort-button:focus {
+  box-shadow: none;
+}
+
 .sort-button.active {
   border-bottom: 4px solid #D92752;
+  border-style: inset;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  padding-bottom: 2px;
 }
 
 .search {
   display: inline-block;
-  padding: 31px 0;
 }
 
 .search .btn {
@@ -265,7 +358,6 @@ header {
 }
 
 .header-buttons {
-  padding: 30px 0;
   display: inline-flex;
 }
 
@@ -281,7 +373,6 @@ header {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   border: none;
-  background: transparent;
   border-radius: 0.5px;
 }
 
@@ -344,10 +435,6 @@ header {
   background-clip: padding-box;
 }
 
-.btn-signup {
-  background: #D92752;
-}
-
 .header-buttons > .btn-link {
   font-family: tt_supermolot_neueextrabold;
   color: white;
@@ -360,7 +447,7 @@ header {
 
 .header-buttons > .btn-link:hover {
   color: white;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .main-content {
@@ -432,10 +519,17 @@ header {
 
 .article .rating .btn-upvote.active .rating-text {
   color: #5A1BE0;
-  font-family: gt_americabold;
 }
 
 .article .rating .btn-upvote.active svg path {
+  fill: #5A1BE0;
+}
+
+.article .rating .btn-upvote:active .rating-text {
+  color: #5A1BE0;
+}
+
+.article .rating .btn-upvote:active svg path {
   fill: #5A1BE0;
 }
 
@@ -450,6 +544,7 @@ header {
 }
 
 .article .rating .btn-upvote .rating-text {
+  font-family: gt_americabold;
   margin-top: 4px;
   font-size: 12px;
   line-height: 14px;
@@ -564,6 +659,24 @@ header {
 
 .latest-stories {
   padding: 0;
+}
+
+@media (max-width: 1199.98px) {
+  .header-title {
+    margin-right: 32px;
+  }
+
+  .sort-button {
+    margin-right: 20px;
+  }
+
+  .suggest-news {
+    margin-right: 20px;
+  }
+
+  .btn-signup {
+    margin-right: 8px;
+  }
 }
 
 /*# sourceMappingURL=new_base.css.map */

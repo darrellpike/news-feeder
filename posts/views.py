@@ -1,11 +1,39 @@
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404
 from posts.models import *
+from posts.forms import PostVoteForm
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
 import operator
+from django.db import IntegrityError
 from django.core.paginator import InvalidPage
+
+
+class AjaxableResponseMixin:
+	"""
+	Mixin to add AJAX support to a form.
+	Must be used with an object-based FormView (e.g. CreateView)
+	"""
+	def form_invalid(self, form):
+		response = super(AjaxableResponseMixin, self).form_invalid(form)
+		if self.request.is_ajax():
+			return JsonResponse(form.errors, status=400)
+		else:
+			return response
+
+	def form_valid(self, form):
+		# We make sure to call the parent's form_valid() method because
+		# it might do some processing (in the case of CreateView, it will
+		# call form.save() for example).
+		response = super(AjaxableResponseMixin, self).form_valid(form)
+		if self.request.is_ajax():
+			data = {
+				'pk': self.object.pk,
+			}
+			return JsonResponse(data)
+		else:
+			return response
 
 
 class IndexView(generic.ListView):
@@ -44,3 +72,20 @@ class IndexLatestView(generic.ListView):
 		context = super(IndexLatestView, self).get_context_data(**kwargs)
 		context['active'] = 'active'
 		return context
+
+
+def vote_post(request):
+	if request.user.is_authenticated() and request.method == 'POST':
+		vote = PostVote(voter=request.user)
+		if int(request.POST.get('score',0)) < 1 and request.user.userprofile.count_karma()<500:
+			return HttpResponse(0)
+		form = PostVoteForm(request.POST, instance=vote)
+		if form.is_valid():
+			try:
+				vote = form.save()
+			except IntegrityError:
+				return HttpResponse(0)
+			return HttpResponse(1)
+		else:
+			print form.errors
+	return HttpResponse(0)

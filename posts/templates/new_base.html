@@ -34,31 +34,33 @@
 
 </head>
 <body>
-<header>
-    <div class="container-fluid">
-        <div class="navbar align-middle">
-            <div class="float-left">
-                <div class="header-title">
-                    <a href="{% url 'index' %}">White hat news</a>
+<header class="d-flex align-items-stretch">
+    <div class="container d-flex align-items-stretch">
+        <nav class="navbar navbar-expand-lg flex-fill align-items-stretch">
+            <div class="header-title navbar-brand align-self-center">
+                <a href="{% url 'index' %}">White hat news</a>
+            </div>
+            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex sort-buttons align-self-stretch align-items-stretch">
+                    <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+                    <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
                 </div>
-                <div class="sort-buttons">
-                    <a href="{% url 'index' %}" class="btn sort-button {% if request.path == '/' %}active{% endif %}">Popular</a>
-                    <a href="{% url 'index_latest' %}" class="btn sort-button {% if request.path == '/latest/' %}active{% endif %}">Latest</a>
-                </div>
-                <div class="search">
+                <div class="search d-flex align-self-stretch align-items-stretch">
                     <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}"></button>
                 </div>
+                <div class="header-buttons ml-auto">
+                    <button class="btn btn-link suggest-news">Suggest news</button>
+                    <button class="btn btn-signup red-button">Sign up</button>
+                    <button class="btn btn-login primary-button"><span class="btn-login-decoration">Login</span></button>
+                </div>
             </div>
-
-            <div class="header-buttons float-right">
-                <button class="btn btn-link suggest-news">Suggest news</button>
-                <button class="btn btn-signup">Sign up</button>
-                <button class="btn btn-login"><span class="btn-login-decoration">Login</span></button>
-            </div>
-        </div>
+        </nav>
     </div>
 </header>
-<div class="container-fluid main-content">
+<div class="container main-content">
 {% block content %}{% endblock content %}
 </div>
 
@@ -69,7 +71,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{% static 'bootstrap-4.3.1/js/bootstrap.min.js' %}"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/base.js"></script>
+<script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 {% block js %} {% endblock %}
 </body>
 
