@@ -178,6 +178,16 @@
   font-weight: normal;
   font-style: normal;
 }
+html, body {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+}
+
 body {
   background: #efefef;
   font-family: gt_americaregular;
@@ -273,14 +283,9 @@ h3 {
 }
 
 header {
-  overflow: hidden;
   background-color: #5A1BE0;
   padding: 0;
   color: white;
-}
-
-nav {
-  min-height: 100px;
 }
 
 .navbar {
@@ -289,15 +294,45 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 0;
+  position: unset;
+}
+
+nav {
+  min-height: 100px;
+  position: relative;
 }
 
 .navbar-toggler {
-  min-height: 100px;
+  min-height: 66px;
+  padding-right: 0;
 }
 
 .navbar-toggler-icon {
-  background: url("/static/images/menu_mobile.svg") no-repeat center center;
+  background: url("/static/images/white bar.svg") no-repeat center center;
   background-size: 100% 100%;
+  display: block;
+  width: 20px;
+  height: 2px;
+  transition: all 0.2s;
+}
+
+.navbar-toggler-icon.top-bar {
+  margin-bottom: 0;
+  transform: rotate(45deg);
+  transform-origin: 50% 10%;
+}
+
+.navbar-toggler-icon.bottom-bar {
+  transform: rotate(-45deg);
+  transform-origin: 32%;
+}
+
+.navbar-toggler.collapsed .top-bar {
+  margin-bottom: 4px !important;
+}
+
+.navbar-toggler.collapsed .bottom-bar, .navbar-toggler.collapsed .top-bar {
+  transform: rotate(0);
 }
 
 .header-title {
@@ -656,10 +691,134 @@ nav {
   transform: rotate(180deg);
 }
 
-.latest-stories {
-  padding: 0;
+.navbar-expander {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  z-index: -1000;
 }
 
+@media (min-width: 992px) {
+  .latest-stories {
+    padding: 0;
+  }
+}
+@media screen and (max-width: 991.98px) {
+  header {
+    z-index: 1001;
+    top: 0;
+    min-width: 100%;
+  }
+
+  .navbar-collapse,
+.navbar-collapse.collapse,
+.navbar-collapse.show,
+.navbar-collapse.collapsing {
+    max-height: 100vh;
+  }
+
+  .navbar-collapse.show {
+    height: 100vh;
+  }
+
+  .navbar-collapse {
+    margin-top: 50vh;
+  }
+
+  .navbar-expander {
+    display: block;
+  }
+
+  .sort-buttons {
+    position: relative;
+    width: 100%;
+    height: 52px;
+    justify-content: space-evenly;
+    background: #FFFFFF;
+  }
+  .sort-buttons .sort-button {
+    color: #111111;
+    flex-grow: 1;
+    justify-content: center;
+    margin-right: 0;
+  }
+
+  .main-content {
+    margin-top: 12px;
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 0;
+    max-width: 100%;
+  }
+
+  .news-header {
+    display: none;
+  }
+
+  #LatestNews {
+    display: none;
+  }
+
+  .rating {
+    display: none !important;
+  }
+
+  .container {
+    max-width: unset;
+  }
+
+  .navbar {
+    padding: 0 6px;
+  }
+
+  .article .article-statistics {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .article .news-aggregator-image {
+    margin-left: 12px;
+  }
+
+  .article-rating-text {
+    opacity: 0.5;
+    margin-right: 16px;
+  }
+
+  .article-comments {
+    opacity: 1 !important;
+  }
+
+  .article-comments .dot {
+    opacity: 0.5;
+  }
+
+  .article-comments svg {
+    margin-right: 8px;
+  }
+
+  .article-comments-text {
+    opacity: 0.5;
+  }
+
+  .article-rating svg {
+    margin-bottom: 1px;
+    margin-right: 8px;
+  }
+
+  .btn-signup {
+    margin-right: 0 !important;
+    margin-bottom: 16px;
+  }
+
+  .btn-login.d-lg-none {
+    margin-top: 58px;
+  }
+}
 @media (max-width: 1199.98px) {
   .header-title {
     margin-right: 32px;
@@ -675,6 +834,10 @@ nav {
 
   .btn-signup {
     margin-right: 8px;
+  }
+
+  nav {
+    min-height: 66px;
   }
 }
 
