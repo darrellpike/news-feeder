@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^vote_post/$', views.vote_post, name='vote_post'),
     url(r'^vote_comment/$', old_views.vote_comment, name='vote_comment'),
     
-    url(r'^post/(?P<post_id>\d+)/$', old_views.view_post, name='view_post'),
+    url(r'^post/(?P<pk>\d+)/$', views.PostDetailView.as_view(), name='view_post'),
     url(r'^post/(?P<post_id>\d+)/share_now/$', old_views.share_now, name='share_now'),
     url(r'^post/(?P<post_id>\d+)/comment/(?P<comment_id>\d+)/$', old_views.view_comment, name='view_comment'),
     url(r'^post/(?P<post_id>\d+)/comment/(?P<comment_id>\d+)/edit$', old_views.edit_comment, name='edit_comment'),
@@ -75,7 +75,7 @@ urlpatterns = [
     url(r'^password_reset/done/$', 
         django.contrib.auth.views.password_reset_complete),
     
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^WHN@dm!n/', include(admin.site.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #for static files on heroku

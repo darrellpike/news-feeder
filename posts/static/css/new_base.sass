@@ -526,9 +526,9 @@ nav
 .article .rating
   background: #F7F7F7
   width: 40px
-  display: inline-flex
+  display: flex
   flex-direction: column
-  justify-content: top
+  justify-content: flex-start
 
 .article .rating .btn-upvote
   display: contents
@@ -553,8 +553,8 @@ nav
 .article .rating .btn-upvote svg
   text-align: center
   margin-top: 14px
-  margin-right: auto
-  margin-left: auto
+  margin-right: 13px
+  margin-left: 13px
   position: relative
   line-height: 0
   vertical-align: top
@@ -654,6 +654,75 @@ nav
 .pagination .next img
   transform: rotate(180deg)
 
+// Modal view
+
+.modal-content
+  width: 100%
+  border-radius: 2px
+  background: #FFFFFF
+  border: 0
+
+  .article
+    background: transparent
+    margin-bottom: 0
+    box-shadow: none
+
+    .rating
+      background: transparent
+      position: absolute
+
+    .article-header
+      display: flex
+      margin-bottom: 32px
+
+      .news-aggregator-image
+        margin: 0 16px 0 0
+
+        img
+          margin: 0
+
+      .article-title
+        display: inline-block
+        margin-bottom: 0
+
+    .article-body
+      padding: 24px 40px 28px 56px
+      margin: 0
+      display: flex
+      flex-flow: column
+      border-bottom: 1px solid #EBEBEB
+
+      .article-image
+        overflow: hidden
+        width: 724px
+        text-align: center
+        margin-bottom: 16px
+
+        img
+          max-width: 724px
+
+  .article-comments
+    display: flex
+    margin: 22px 40px 28px 56px
+    flex-flow: column wrap
+    justify-items: stretch
+
+    .article-comments-header
+      justify-content: space-between
+
+      .btn-link
+        opacity: 0.5
+        color: $text-color
+        border: none
+        padding: 0 10px
+
+      .btn-link.active
+        opacity: 1
+        color: $primary-color
+
+
+
+
 // optimized for smaller screens
 
 .navbar-expander
@@ -691,6 +760,9 @@ nav
 
   .row
     margin: 0
+
+  .modal-lg
+    max-width: 820px
 
 
 @media screen and (max-width: 991.98px)

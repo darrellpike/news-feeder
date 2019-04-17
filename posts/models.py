@@ -73,6 +73,7 @@ class Post(models.Model):
                                          processors=[ResizeToFit(100,100)],
                                          format='JPEG',
                                          null=True)
+    image = models.ImageField(blank=True)
 
     def time_since_submit(self):
         return timezone.now() - self.submit_time
