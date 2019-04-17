@@ -8,9 +8,10 @@ from django.db.models import Q
 import operator
 from django.db import IntegrityError
 from django.core.paginator import InvalidPage
+from django.template.loader import render_to_string
 
 
-class AjaxableResponseMixin:
+class AjaxableResponseMixin(object):
 	"""
 	Mixin to add AJAX support to a form.
 	Must be used with an object-based FormView (e.g. CreateView)
@@ -28,10 +29,14 @@ class AjaxableResponseMixin:
 		# call form.save() for example).
 		response = super(AjaxableResponseMixin, self).form_valid(form)
 		if self.request.is_ajax():
-			data = {
-				'pk': self.object.pk,
-			}
-			return JsonResponse(data)
+			if self.ajax_template_name:
+				html = render_to_string(self.ajax_template_name, {'object': self.object})
+				return HttpResponse(html)
+			else:
+				data = {
+					'pk': self.object.pk,
+				}
+				return JsonResponse(data)
 		else:
 			return response
 
@@ -71,6 +76,18 @@ class IndexLatestView(generic.ListView):
 	def get_context_data(self, **kwargs):
 		context = super(IndexLatestView, self).get_context_data(**kwargs)
 		context['active'] = 'active'
+		return context
+
+
+class PostDetailView(generic.DetailView):
+	ajax_template_name = 'story_modal_view.html'
+	template_name = 'story_modal_view.html'
+	model = Post
+	context_object_name = 'article'
+
+	def get_context_data(self, **kwargs):
+		context = super(PostDetailView, self).get_context_data(**kwargs)
+		context['comments'] = context['article'].comment_set
 		return context
 
 
