@@ -318,6 +318,9 @@ nav
   min-height: 66px
   padding-right: 0
 
+.article-container
+  max-width: 820px
+
 .navbar-toggler-icon
   background: url("/static/images/white bar.svg") no-repeat center center
   background-size: 100% 100%
@@ -389,6 +392,39 @@ nav
 
 .search .btn
   padding: 0
+  transform: rotate()
+
+#search-form
+  display: none
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2)
+
+#search-form
+  input
+    caret-color: $primary-color
+    width: 1240px
+    margin: auto
+    padding: 24px 100px 20px 100px
+    background: #FFFFFF
+    outline: none
+    &[type=search]
+      -webkit-appearance: textfield
+      -webkit-box-sizing: content-box
+      font-family: inherit
+      font-size: 24px
+      line-height: 36px
+      border: 0
+      -webkit-transition: all .5s
+      -moz-transition: all .5s
+      transition: all .5s
+      color: $text-color
+      cursor: auto
+      &::placeholder
+        opacity: 0.3
+    &::-webkit-search-decoration, &::-webkit-search-cancel-button
+      display: none
+
+#search-results
+  display: none
 
 .header-buttons
   display: inline-flex
@@ -523,9 +559,9 @@ nav
 .article .rating
   background: #F7F7F7
   width: 40px
-  display: inline-flex
+  display: flex
   flex-direction: column
-  justify-content: top
+  justify-content: flex-start
 
 .article .rating .btn-upvote
   display: contents
@@ -550,8 +586,8 @@ nav
 .article .rating .btn-upvote svg
   text-align: center
   margin-top: 14px
-  margin-right: auto
-  margin-left: auto
+  margin-right: 13px
+  margin-left: 13px
   position: relative
   line-height: 0
   vertical-align: top
@@ -651,6 +687,78 @@ nav
 .pagination .next img
   transform: rotate(180deg)
 
+// Modal view
+
+.article-view
+  width: 100%
+  border-radius: 2px
+  background: #FFFFFF
+  border: 0
+  display: flex
+  flex-direction: column
+  position: relative
+
+  .article
+    background: transparent
+    margin-bottom: 0
+    box-shadow: none
+
+    .rating
+      background: transparent
+      position: absolute
+
+    .article-header
+      display: flex
+      margin-bottom: 32px
+
+      .news-aggregator-image
+        margin: 0 16px 0 0
+
+        img
+          margin: 0
+
+      .article-title
+        display: inline-block
+        margin-bottom: 0
+
+    .article-body
+      padding: 24px 40px 28px 56px
+      margin: 0
+      display: flex
+      flex-flow: column
+      border-bottom: 1px solid #EBEBEB
+
+      .article-image
+        overflow: hidden
+        width: 724px
+        text-align: center
+        margin-bottom: 16px
+
+        img
+          max-width: 724px
+
+  .article-comments
+    display: flex
+    margin: 22px 40px 28px 56px
+    flex-flow: column wrap
+    justify-items: stretch
+
+    .article-comments-header
+      justify-content: space-between
+
+      .btn-link
+        opacity: 0.5
+        color: $text-color
+        border: none
+        padding: 0 10px
+
+      .btn-link.active
+        opacity: 1
+        color: $primary-color
+
+
+
+
 // optimized for smaller screens
 
 .navbar-expander
@@ -662,12 +770,41 @@ nav
     display: none
     z-index: -1000
 
-@media (min-width: 992px)
+.latest-container
+  max-width: 400px
+
+.article-container
+  max-width: 820px
+
+
+@media (min-width: 1439px)
   .latest-stories
     padding: 0
 
+  .article-container
+    width: 100%
 
-@media screen and (max-width: 991.98px)
+  .latest-container
+    width: 100%
+
+@media (min-width: 992px)
+  .suggest-news
+    margin-right: 16px!important
+
+  .article-container
+    max-width: 614px
+
+  .latest-container
+    max-width: 290px
+
+  .row
+    margin: 0
+
+  .modal-lg
+    max-width: 820px
+
+
+@media (max-width: 991.98px)
     header
       z-index: 1001
       top: 0
@@ -701,6 +838,9 @@ nav
         justify-content: center
         margin-right: 0
 
+    .suggest-news
+      display: none
+
     .main-content
       margin-top: 12px
       margin-right: 0
@@ -711,6 +851,12 @@ nav
 
     .news-header
       display: none
+
+    .article-container
+      max-width: 100%
+      width: 100%
+      padding-right: 15px
+      padding-left: 15px
 
     #LatestNews
       display: none
@@ -758,6 +904,41 @@ nav
     .btn-login.d-lg-none
       margin-top: 58px
 
+    .pagination
+      justify-content: space-around
+
+
+@media (min-width: 1200px)
+  .suggest-news
+    margin-right: 16px!important
+
+  .main-content
+    max-width: 1300px
+
+  .container
+    max-width: 1440px
+    padding: 0 100px
+
+  .article-container
+    max-width: 650px
+
+  .latest-container
+    max-width: 333px
+
+
+@media (min-width: 1400px)
+  .main-content
+    max-width: 1300px
+
+  .container
+    max-width: 1440px
+    padding: 0 100px
+
+  .article-container
+    max-width: 820px
+
+  .latest-container
+    max-width: 400px
 
 @media (max-width: 1199.98px)
   .header-title
