@@ -8,13 +8,16 @@ $(function () {
     // });
 
     let searchInput = $('#search-form input');
+    let suggestNewsButton = $('.suggest-news');
     searchInput.focus(function () {
-       $('.suggest-news').hide();
+        suggestNewsButton.fadeTo('fast', 0);
+        suggestNewsButton.hide();
     });
 
     searchInput.focusout(function () {
         setTimeout(function () {
-            $('.suggest-news').show();
+            suggestNewsButton.show();
+            suggestNewsButton.fadeTo('fast', 1);
         }, 400)
     });
 
