@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^most_comments/$', old_views.index_most_comments, name='index_most_comments'),
     url(r'^vegan/$', old_views.index_vegan, name='index_vegan'),
     
-    url(r'^search/$', old_views.search, name='search'),
+    url(r'^search/$', views.SearchView.as_view(), name='search'),
     
     url(r'^admin_dashboard/$', old_views.admin_scheduled_posts, name='admin_dashboard'),
     url(r'^admin_dashboard/scheduled_posts/$', old_views.admin_scheduled_posts, name='admin_scheduled_posts'),
@@ -75,7 +75,7 @@ urlpatterns = [
     url(r'^password_reset/done/$', 
         django.contrib.auth.views.password_reset_complete),
     
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^WHN@dm!n/', include(admin.site.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #for static files on heroku

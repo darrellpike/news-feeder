@@ -67,12 +67,14 @@ class Post(models.Model):
     submitter = models.ForeignKey(User)
     submit_time = models.DateTimeField(default=timezone.now)
     url = models.URLField(max_length=300, blank=True)
+    label_for_url = models.CharField(max_length=85, blank=True)
     text = models.TextField(blank=True)
     article_text = models.TextField(blank=True)
     news_site_logo = ProcessedImageField(upload_to='news_site_logos/',
                                          processors=[ResizeToFit(100,100)],
                                          format='JPEG',
                                          null=True)
+    image = models.ImageField(blank=True)
 
     def time_since_submit(self):
         return timezone.now() - self.submit_time

@@ -73,6 +73,34 @@ class IndexLatestView(generic.ListView):
 		context['active'] = 'active'
 		return context
 
+class SearchView(generic.ListView):
+	template_name = 'search_ajax.html'
+	context_object_name = 'search_results'
+	model = Post
+	paginate_by = 7
+
+	def get_queryset(self):
+		(posts, comments) = ([], [])
+		query = self.request.GET.get('q', '')
+		query_list = query.split(' ')
+		sort_type = self.request.GET.get('sort', 'points')
+		query_type = self.request.GET.get('type', 'posts')
+		if sort_type == 'points':
+			sort_by = '-score'
+		else:
+			sort_by = '-submit_time'
+		posts = Post.objects.all().filter(reduce(operator.or_, (Q(title__icontains=x) for x in query_list)) | \
+		                                  reduce(operator.or_, (Q(article_text__icontains=x) for x in query_list)) | \
+		                                  reduce(operator.or_, (Q(text__icontains=x) for x in query_list)))
+		posts = posts.annotate(score=Sum('postvote__score')).order_by(sort_by)
+		posts = paginate_items(self.request.GET.get('page'), posts, 25)
+		return posts
+
+
+	def get_context_data(self, **kwargs):
+		context = super(SearchView, self).get_context_data(**kwargs)
+		return context
+
 
 def vote_post(request):
 	if request.user.is_authenticated() and request.method == 'POST':
