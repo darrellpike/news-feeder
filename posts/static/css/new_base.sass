@@ -344,43 +344,6 @@ nav
 .navbar-toggler.collapsed .bottom-bar, .navbar-toggler.collapsed .top-bar
   transform: rotate(0)
 
-#search-form
-  input
-    outline: none
-    &[type=search]
-      -webkit-appearance: textfield
-      -webkit-box-sizing: content-box
-      font-family: inherit
-      font-size: 14px
-      line-height: 17px
-    &::-webkit-search-decoration, &::-webkit-search-cancel-button
-      display: none
-    &[type=search]::placeholder
-      color: transparent
-    &[type=search]
-      background: transparent url('/static/images/search.svg') no-repeat 0 center
-      border: 0
-      padding: 7px 10px 8px 42px
-      -webkit-border-radius: 2px
-      -moz-border-radius: 2px
-      border-radius: 2px
-      -webkit-transition: all .5s
-      -moz-transition: all .5s
-      transition: all .5s
-      width: 15px
-      cursor: pointer
-      &:hover
-        background-color: transparent
-      &:focus
-        &::placeholder
-          color: #797D86
-        max-width: 350px
-        background: #F7F7F7 url('/static/images/search_opened.svg') no-repeat 16px center
-        color: $text-color
-        cursor: auto
-    &:-moz-placeholder, &::-webkit-input-placeholder
-      color: transparent
-
 
 .header-title
     margin-right: 64px
@@ -429,6 +392,39 @@ nav
 
 .search .btn
   padding: 0
+  transform: rotate()
+
+#search-form
+  display: none
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2)
+
+#search-form
+  input
+    caret-color: $primary-color
+    width: 1240px
+    margin: auto
+    padding: 24px 100px 20px 100px
+    background: #FFFFFF
+    outline: none
+    &[type=search]
+      -webkit-appearance: textfield
+      -webkit-box-sizing: content-box
+      font-family: inherit
+      font-size: 24px
+      line-height: 36px
+      border: 0
+      -webkit-transition: all .5s
+      -moz-transition: all .5s
+      transition: all .5s
+      color: $text-color
+      cursor: auto
+      &::placeholder
+        opacity: 0.3
+    &::-webkit-search-decoration, &::-webkit-search-cancel-button
+      display: none
+
+#search-results
+  display: none
 
 .header-buttons
   display: inline-flex
@@ -795,9 +791,6 @@ nav
   .suggest-news
     margin-right: 16px!important
 
-  #search-form input:focus
-    width: 180px
-
   .article-container
     max-width: 614px
 
@@ -919,9 +912,6 @@ nav
   .suggest-news
     margin-right: 16px!important
 
-  #search-form input:focus
-    width: 180px
-
   .main-content
     max-width: 1300px
 
@@ -937,9 +927,6 @@ nav
 
 
 @media (min-width: 1400px)
-  #search-form input:focus
-    width: 350px
-
   .main-content
     max-width: 1300px
 

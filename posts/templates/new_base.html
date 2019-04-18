@@ -49,9 +49,7 @@
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
             <div class="search d-none d-lg-flex d-xl-flex align-self-center align-items-stretch">
-                <form id="search-form">
-                    <input type="search" placeholder="Search">
-                </form>
+                <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}" /></button>
             </div>
             <div  class="collapse navbar-collapse flex-lg-row" id="navbarSupportedContent">
                 <div class='navbar-expander'></div>
@@ -65,10 +63,16 @@
         </nav>
     </div>
 </header>
+
+<form id="search-form">
+    <input type="search" placeholder="Search News & Articles">
+</form>
+
 <div class="d-flex d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
                 <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
+<div id="search-results" class="container main-content"></div>
 <div class="container main-content">
 {% block content %}{% endblock content %}
 </div>
@@ -81,6 +85,7 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{% static 'bootstrap-4.3.1/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/js.cookie.js' %}"></script>
 <script>
     let menu = $('#navbarSupportedContent');
     menu.on('show.bs.collapse', function () {
