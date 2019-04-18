@@ -34,7 +34,7 @@
                                 <a href="{{ article.url }}" class="news-aggregator-link">{{ article.label_for_url }}</a>
                                 <span class="article-time">• {{ article.time_since_submit|smooth_timedelta }} ago</span>
                             </div>
-                            <p class="article-title">{{ article.title }}</p>
+                            <a href="{% url 'view_post' article.pk %}"><p class="article-title">{{ article.title }}</p></a>
                             <div class="article-statistics">
                                 <span class="article-rating d-inline d-lg-none d-xl-none">
                                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -101,9 +101,9 @@
                 {% for article in latest_news %}
                     <div class="article">
                         <div class="article-body">
-                            <div class="article-title">
+                            <a href="{% url 'view_post' article.pk %}"><div class="article-title">
                                 {{ article.title }}
-                            </div>
+                        </div></a>
                             <div class="article-statistics">
                                 <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago •</span>
                                 <a href="{{ article.url }}" class="news-aggregator-link">{{ article.label_for_url }}</a>
