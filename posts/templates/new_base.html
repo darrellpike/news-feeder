@@ -36,7 +36,7 @@
 <body>
 <header class="d-flex align-items-stretch">
     <div class="container d-flex align-items-stretch">
-        <nav class="navbar navbar-expand-lg flex-fill align-items-stretch">
+        <nav class="navbar navbar-expand-md flex-fill align-items-stretch">
             <div class="header-title navbar-brand align-self-center">
                 <a href="{% url 'index' %}">White hat news</a>
             </div>
@@ -44,20 +44,20 @@
                 <span class="navbar-toggler-icon top-bar"></span>
                 <span class="navbar-toggler-icon bottom-bar"></span>
             </button>
-            <div class="d-none d-lg-flex sort-buttons align-lg-self-stretch align-items-stretch">
+            <div class="d-none d-md-flex d-lg-flex sort-buttons align-lg-self-stretch align-items-stretch">
                 <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
-            <div class="search d-none d-lg-flex d-xl-flex align-self-center align-items-stretch">
+            <div class="search d-none d-md-flex d-lg-flex d-xl-flex align-self-center align-items-stretch">
                 <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}" /></button>
             </div>
-            <div  class="collapse navbar-collapse flex-lg-row" id="navbarSupportedContent">
+            <div  class="collapse navbar-collapse flex-md-row flex-lg-row" id="navbarSupportedContent">
                 <div class='navbar-expander'></div>
-                <div class="header-buttons d-flex d-lg-inline-flex ml-lg-auto flex-column flex-lg-row">
+                <div class="header-buttons d-flex d-md-inline-flex d-lg-inline-flex ml-md-auto ml-lg-auto flex-column flex-md-row flex-lg-row">
                     <button class="btn btn-link suggest-news">Suggest news</button>
                     <button class="btn btn-signup red-button">Sign up</button>
                     <button class="btn btn-login primary-button"><span class="btn-login-decoration">Login</span></button>
-                    <button class="btn btn-login primary-button d-inline-block d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
+                    <button class="btn btn-login primary-button d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
                 </div>
             </div>
         </nav>
@@ -68,7 +68,7 @@
     <input type="search" placeholder="Search News & Articles">
 </form>
 
-<div class="d-flex d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
+<div class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
                 <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
