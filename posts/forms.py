@@ -95,7 +95,7 @@ class CustomRegistrationForm(RegistrationForm):
 
 class PostVoteForm(ModelForm):
     class Meta:
-        fields = ('score', 'post')
+        fields = ('post',)
         model = PostVote
 
 

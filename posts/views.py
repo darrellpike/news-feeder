@@ -104,16 +104,21 @@ class SearchView(generic.ListView):
 
 def vote_post(request):
 	if request.user.is_authenticated() and request.method == 'POST':
-		vote = PostVote(voter=request.user)
-		if int(request.POST.get('score',0)) < 1 and request.user.userprofile.count_karma()<500:
-			return HttpResponse(0)
-		form = PostVoteForm(request.POST, instance=vote)
-		if form.is_valid():
-			try:
-				vote = form.save()
-			except IntegrityError:
-				return HttpResponse(0)
-			return HttpResponse(1)
-		else:
-			print form.errors
+		vote = PostVote(voter=request.user, score=1)
+		# if request.user.userprofile.count_karma()<500:
+		# 	return HttpResponse('Not enough carma')
+
+		post_id = request.POST.get('post', False)
+		if post_id:
+			post = get_object_or_404(Post, pk=int(post_id))
+			form = PostVoteForm(request.POST, instance=vote)
+			if form.is_valid():
+				try:
+					vote = form.save()
+				except IntegrityError:
+					post.postvote_set.filter(voter=request.user).delete()
+					return HttpResponse('unvote')
+				return HttpResponse('upvote')
+			else:
+				print form.errors
 	return HttpResponse(0)
