@@ -77,43 +77,48 @@ class SearchView(generic.ListView):
 	template_name = 'search_ajax.html'
 	context_object_name = 'search_results'
 	model = Post
-	paginate_by = 7
+	paginate_by = 3
 
 	def get_queryset(self):
-		(posts, comments) = ([], [])
 		query = self.request.GET.get('q', '')
 		query_list = query.split(' ')
-		sort_type = self.request.GET.get('sort', 'points')
-		query_type = self.request.GET.get('type', 'posts')
-		if sort_type == 'points':
-			sort_by = '-score'
-		else:
-			sort_by = '-submit_time'
 		posts = Post.objects.all().filter(reduce(operator.or_, (Q(title__icontains=x) for x in query_list)) | \
 		                                  reduce(operator.or_, (Q(article_text__icontains=x) for x in query_list)) | \
 		                                  reduce(operator.or_, (Q(text__icontains=x) for x in query_list)))
-		posts = posts.annotate(score=Sum('postvote__score')).order_by(sort_by)
-		posts = paginate_items(self.request.GET.get('page'), posts, 25)
+		posts = posts.annotate(score=Sum('postvote__score')).order_by('-submit_time')
 		return posts
 
 
 	def get_context_data(self, **kwargs):
 		context = super(SearchView, self).get_context_data(**kwargs)
+		if context['page_obj'].number == 1:
+			query = self.request.GET.get('q', '')
+			query_list = query.split(' ')
+			posts = Post.objects.all().filter(reduce(operator.or_, (Q(title__icontains=x) for x in query_list)) | \
+			                                  reduce(operator.or_, (Q(article_text__icontains=x) for x in query_list)) | \
+			                                  reduce(operator.or_, (Q(text__icontains=x) for x in query_list)))
+			posts = posts.annotate(score=Sum('postvote__score')).order_by('-score')[:3]
+			context['top_search_results'] = posts
 		return context
 
 
 def vote_post(request):
 	if request.user.is_authenticated() and request.method == 'POST':
-		vote = PostVote(voter=request.user)
-		if int(request.POST.get('score',0)) < 1 and request.user.userprofile.count_karma()<500:
-			return HttpResponse(0)
-		form = PostVoteForm(request.POST, instance=vote)
-		if form.is_valid():
-			try:
-				vote = form.save()
-			except IntegrityError:
-				return HttpResponse(0)
-			return HttpResponse(1)
-		else:
-			print form.errors
+		vote = PostVote(voter=request.user, score=1)
+		# if request.user.userprofile.count_karma()<500:
+		# 	return HttpResponse('Not enough carma')
+
+		post_id = request.POST.get('post', False)
+		if post_id:
+			post = get_object_or_404(Post, pk=int(post_id))
+			form = PostVoteForm(request.POST, instance=vote)
+			if form.is_valid():
+				try:
+					vote = form.save()
+				except IntegrityError:
+					post.postvote_set.filter(voter=request.user).delete()
+					return HttpResponse('unvote')
+				return HttpResponse('upvote')
+			else:
+				print form.errors
 	return HttpResponse(0)
