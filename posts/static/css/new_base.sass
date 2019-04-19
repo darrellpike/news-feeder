@@ -212,10 +212,8 @@ $white-text-color: #FAFDFE
 
 // Base styles
 html, body
-  height: 100%
   min-height: 100%
   width: 100%
-  height: 100%
   margin: 0px
   padding: 0px
   overflow-x: hidden
@@ -377,6 +375,9 @@ nav
   box-shadow: none
 
 .sort-button:hover span
+  opacity: 0.3
+
+.btn-search:hover img
   opacity: 0.3
 
 .sort-button.active
@@ -806,6 +807,7 @@ nav
 
 
 @media (max-width: 767.98px)
+
     header
       z-index: 1001
       top: 0
