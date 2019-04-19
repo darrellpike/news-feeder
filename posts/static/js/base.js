@@ -1,6 +1,6 @@
 $(function () {
     var csrftoken = Cookies.get('csrftoken');
-    let search = $('#search-form');
+    let search = $('.search-container');
     let searchButton = $('.btn-search');
     let searchInput = $('#search-form input');
     searchButton.click(function () {
