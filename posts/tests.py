@@ -50,3 +50,25 @@ class PostsTestCase(TestCase):
         self.assertContains(response, "New")
         self.assertQuerysetEqual(response.context['news'], ['<Post: New>', '<Post: Old popular>'])
         print('Index latest page context working correctly')
+
+
+class SearchTestCase(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(username='testuser', password='12345')
+        self.user2 = get_user_model().objects.create_user(username='testuser2', password='12345')
+        popular_post = create_post("Popular", -1, self.user)
+        vote1 = PostVote(post=popular_post, voter_id=2, score=1)
+        vote2 = PostVote(post=popular_post, voter_id=3, score=1)
+        vote1.save()
+        vote2.save()
+        create_post('Latest', 0, self.user)
+
+
+    def test_search(self):
+        response = self.client.get(reverse('search'), data={'q': "a"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Popular')
+        self.assertContains(response, 'Latest')
+        self.assertQuerysetEqual(response.context['search_results'], ['<Post: Latest>', '<Post: Popular>'])
+        self.assertQuerysetEqual(response.context['top_search_results'], ['<Post: Popular>', '<Post: Latest>'])
+        print('Search working correctly')
