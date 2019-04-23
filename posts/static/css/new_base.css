@@ -880,6 +880,7 @@ nav {
 
   .navbar-collapse.show {
     height: 100vh;
+    position: relative;
   }
 
   .navbar-expander {
@@ -887,7 +888,10 @@ nav {
   }
 
   .header-buttons {
-    margin-top: 30vh;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 24.6305vh;
   }
 
   .sort-buttons {
