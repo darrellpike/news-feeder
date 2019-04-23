@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from posts.models import *
-from posts.util import *
+from posts.utils import *
 import string
 import random
 from operator import attrgetter

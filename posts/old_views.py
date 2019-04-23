@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from posts.models import *
 from posts.forms import *
-from util import *
+from utils import *
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required

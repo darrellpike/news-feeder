@@ -4,7 +4,7 @@ from django.forms import TextInput, Textarea
 from posts.models import *
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
-from util import *
+from utils import *
 
 class PartialPostForm(ModelForm):
     class Meta:
