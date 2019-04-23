@@ -45,7 +45,7 @@
                 <span class="navbar-toggler-icon bottom-bar"></span>
             </button>
             <div class="d-none d-md-flex d-lg-flex sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
             <div class="search d-none d-md-flex d-lg-flex d-xl-flex align-self-center align-items-stretch">
@@ -74,7 +74,7 @@
 </div>
 
 <div class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
 <div id="search-results" class="container main-content"></div>

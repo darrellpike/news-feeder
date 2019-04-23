@@ -60,19 +60,39 @@ class IndexView(generic.ListView):
 		return context
 
 
-class IndexLatestView(generic.ListView):
-	template_name = 'latest_index.html'
+class IndexPopularView(generic.ListView):
+	template_name = 'index_popular.html'
 	context_object_name = 'news'
 	model = Post
-	paginate_by = 7
+	paginate_by = 20
+
+	def get_queryset(self):
+		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-submit_time').annotate(
+			score=Sum('postvote__score'))
+		posts = posts.exclude(Q(submitter__userprofile__is_shadowbanned=True) & ~Q(submitter=self.request.user.id))
+		for p in posts:
+			p.ranking = p.get_ranking(score=p.score)
+		posts = sorted(posts, key=operator.attrgetter('ranking'), reverse=True)
+		return posts
+
+	def get_context_data(self, **kwargs):
+		context = super(IndexPopularView, self).get_context_data(**kwargs)
+		return context
+
+
+class IndexLatestView(generic.ListView):
+	template_name = 'index_latest.html'
+	context_object_name = 'news'
+	model = Post
+	paginate_by = 20
 
 	def get_queryset(self):
 		return Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')
 
 	def get_context_data(self, **kwargs):
 		context = super(IndexLatestView, self).get_context_data(**kwargs)
-		context['active'] = 'active'
 		return context
+
 
 class SearchView(generic.ListView):
 	template_name = 'search_ajax.html'
@@ -80,7 +100,7 @@ class SearchView(generic.ListView):
 	model = Post
 	paginator_class = DeltaFirstPagePaginator
 	paginate_by = 10
-	deltafirst = 7
+	deltafirst = paginate_by - 3
 
 	def get_top_search_results(self):
 		query = self.request.GET.get('q', '')

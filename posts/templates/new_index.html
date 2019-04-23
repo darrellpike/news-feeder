@@ -59,34 +59,34 @@
                         <div class="pagination">
                                 <span class="previous">
                                     {% if page_obj.has_previous %}
-                                        <a href="/?page={{ page_obj.previous_page_number }}">
+                                        <a href="{% url 'index_popular' %}?page={{ page_obj.previous_page_number }}">
                                             <img alt="Previous" src="{% static 'images/Page_selector.svg' %}" />Previous</a>
                                     {% else %}
-                                        <a href="/?page=" style="opacity: 0">
+                                        <a href="{% url 'index_popular' %}?page=" style="opacity: 0">
                                             <img alt="Previous" src="{% static 'images/Page_selector.svg' %}" />Previous</a>
                                     {% endif %}
                                 </span>
                             <span class="center">
                             {% if page_obj.number|add:'-4' > 1 %}
-                                <a href="?page={{ page_obj.number|add:'-5' }}">&hellip;</a>
+                                <a href="{% url 'index_popular' %}?page={{ page_obj.number|add:'-5' }}">&hellip;</a>
                             {% endif %}
                                 {% for i in page_obj.paginator.page_range %}
                                     {% if page_obj.number == i %}
                                         <span class="current">{{ i }} <span class="sr-only">(current)</span></span>
                                     {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
-                                        <a href="?page={{ i }}">{{ i }}</a>
+                                        <a href="{% url 'index_popular' %}?page={{ i }}">{{ i }}</a>
                                     {% endif %}
                                 {% endfor %}
                                 {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
-                                    <a href="?page={{ page_obj.number|add:'5' }}">&hellip;</a>
+                                    <a href="{% url 'index_popular' %}?page={{ page_obj.number|add:'5' }}">&hellip;</a>
                                 {% endif %}
                                 </span>
                             <span class="next">
                                     {% if page_obj.has_next %}
-                                        <a href="/?page={{ page_obj.next_page_number }}">
+                                        <a href="{% url 'index_popular' %}?page={{ page_obj.next_page_number }}">
                                             Next<img alt="Next" src="{% static 'images/Page_selector.svg' %}" /></a>
                                     {% else %}
-                                        <a href="/?page=" style="opacity: 0">
+                                        <a href="{% url 'index_popular' %}?page=" style="opacity: 0">
                                             Next<img alt="Next" src="{% static 'images/Page_selector.svg' %}" /></a>
                                     {% endif %}
                                 </span>
