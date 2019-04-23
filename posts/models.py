@@ -9,7 +9,7 @@ from django.db.models import Sum
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.db import DatabaseError
-from util import *
+from utils import *
 from django.db.models import Max
 import random
 import requests
@@ -239,12 +239,6 @@ class PostVote(Vote):
         unique_together = (("voter", "post",),)
     def __unicode__(self):
         return self.voter.username + " " + str(self.score) + " " + self.post.title
-
-@receiver(post_save, sender=Post)
-def auto_upvote_post(sender, instance, created, **kwargs):
-    if created:
-        vote = PostVote(post=instance, voter=instance.submitter, score=1)
-        vote.save()
 
 
 class CommentVote(Vote):

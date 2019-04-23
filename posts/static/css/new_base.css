@@ -537,6 +537,7 @@ nav {
 
 .main-content {
   margin-top: 46px;
+  margin-bottom: 74px;
 }
 
 .news-header {
@@ -619,7 +620,7 @@ nav {
 
 .article .rating .btn-upvote svg {
   text-align: center;
-  margin-top: 14px;
+  margin-top: 19px;
   margin-right: 13px;
   margin-left: 13px;
   position: relative;
