@@ -2,6 +2,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http40
 from posts.models import *
 from posts.forms import PostVoteForm
 from django.core.urlresolvers import reverse
+from posts.utils import DeltaFirstPagePaginator
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
@@ -40,7 +41,7 @@ class IndexView(generic.ListView):
 	template_name = 'new_index.html'
 	context_object_name = 'news'
 	model = Post
-	paginate_by = 7
+	paginate_by = 20
 
 	def get_queryset(self):
 		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-submit_time').annotate(
@@ -53,31 +54,62 @@ class IndexView(generic.ListView):
 
 	def get_context_data(self, **kwargs):
 		context = super(IndexView, self).get_context_data(**kwargs)
-		latest_news = Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')[:3]
+		latest_news = Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')[:5]
 		context['latest_news'] = latest_news
 		context['active'] = 'active'
 		return context
 
 
-class IndexLatestView(generic.ListView):
-	template_name = 'latest_index.html'
+class IndexPopularView(generic.ListView):
+	template_name = 'index_popular.html'
 	context_object_name = 'news'
 	model = Post
-	paginate_by = 7
+	paginate_by = 20
+
+	def get_queryset(self):
+		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-submit_time').annotate(
+			score=Sum('postvote__score'))
+		posts = posts.exclude(Q(submitter__userprofile__is_shadowbanned=True) & ~Q(submitter=self.request.user.id))
+		for p in posts:
+			p.ranking = p.get_ranking(score=p.score)
+		posts = sorted(posts, key=operator.attrgetter('ranking'), reverse=True)
+		return posts
+
+	def get_context_data(self, **kwargs):
+		context = super(IndexPopularView, self).get_context_data(**kwargs)
+		return context
+
+
+class IndexLatestView(generic.ListView):
+	template_name = 'index_latest.html'
+	context_object_name = 'news'
+	model = Post
+	paginate_by = 20
 
 	def get_queryset(self):
 		return Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')
 
 	def get_context_data(self, **kwargs):
 		context = super(IndexLatestView, self).get_context_data(**kwargs)
-		context['active'] = 'active'
 		return context
+
 
 class SearchView(generic.ListView):
 	template_name = 'search_ajax.html'
 	context_object_name = 'search_results'
 	model = Post
-	paginate_by = 3
+	paginator_class = DeltaFirstPagePaginator
+	paginate_by = 10
+	deltafirst = paginate_by - 3
+
+	def get_top_search_results(self):
+		query = self.request.GET.get('q', '')
+		query_list = query.split(' ')
+		posts = Post.objects.all().filter(reduce(operator.or_, (Q(title__icontains=x) for x in query_list)) | \
+		                                  reduce(operator.or_, (Q(article_text__icontains=x) for x in query_list)) | \
+		                                  reduce(operator.or_, (Q(text__icontains=x) for x in query_list)))
+		posts = posts.annotate(score=Sum('postvote__score')).order_by('-score')[:3]
+		return posts
 
 	def get_queryset(self):
 		query = self.request.GET.get('q', '')
@@ -85,20 +117,22 @@ class SearchView(generic.ListView):
 		posts = Post.objects.all().filter(reduce(operator.or_, (Q(title__icontains=x) for x in query_list)) | \
 		                                  reduce(operator.or_, (Q(article_text__icontains=x) for x in query_list)) | \
 		                                  reduce(operator.or_, (Q(text__icontains=x) for x in query_list)))
-		posts = posts.annotate(score=Sum('postvote__score')).order_by('-submit_time')
+		posts = posts.exclude(id__in=self.get_top_search_results()).annotate(score=Sum('postvote__score')).order_by('-submit_time')
 		return posts
+
+
+	def get_paginator(self, queryset, per_page, orphans=0,
+                      allow_empty_first_page=True, **kwargs):
+		kwargs.update({'deltafirst': self.deltafirst})
+		return super(SearchView, self).get_paginator(queryset, per_page, orphans=0,
+                      allow_empty_first_page=True, **kwargs)
+
 
 
 	def get_context_data(self, **kwargs):
 		context = super(SearchView, self).get_context_data(**kwargs)
 		if context['page_obj'].number == 1:
-			query = self.request.GET.get('q', '')
-			query_list = query.split(' ')
-			posts = Post.objects.all().filter(reduce(operator.or_, (Q(title__icontains=x) for x in query_list)) | \
-			                                  reduce(operator.or_, (Q(article_text__icontains=x) for x in query_list)) | \
-			                                  reduce(operator.or_, (Q(text__icontains=x) for x in query_list)))
-			posts = posts.annotate(score=Sum('postvote__score')).order_by('-score')[:3]
-			context['top_search_results'] = posts
+			context['top_search_results'] = self.get_top_search_results()
 		return context
 
 

@@ -17,6 +17,7 @@ class RegistrationView(SimpleRegistrationView):
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^latest/$', views.IndexLatestView.as_view(), name='index_latest'),
+    url(r'^popular/$', views.IndexPopularView.as_view(), name='index_popular'),
     url(r'^ask/$', old_views.index_ask, name='index_ask'),
     url(r'^new/$', old_views.index_new, name='index_new'),
     url(r'^popular/$', old_views.index_popular, name='index_popular'),

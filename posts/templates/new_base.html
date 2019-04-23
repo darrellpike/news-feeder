@@ -45,7 +45,7 @@
                 <span class="navbar-toggler-icon bottom-bar"></span>
             </button>
             <div class="d-none d-md-flex d-lg-flex sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
             <div class="search d-none d-md-flex d-lg-flex d-xl-flex align-self-center align-items-stretch">
@@ -54,10 +54,14 @@
             <div  class="collapse navbar-collapse flex-md-row flex-lg-row" id="navbarSupportedContent">
                 <div class='navbar-expander'></div>
                 <div class="header-buttons d-flex d-md-inline-flex d-lg-inline-flex ml-md-auto ml-lg-auto flex-column flex-md-row flex-lg-row">
+                    {% if request.user.is_authenticated %}
                     <button class="btn btn-link suggest-news">Suggest news</button>
-                    <button class="btn btn-signup red-button">Sign up</button>
-                    <button class="btn btn-login primary-button"><span class="btn-login-decoration">Login</span></button>
+                    {% endif %}
+{#                    <button class="btn btn-signup red-button">Sign up</button>#}
+{#                    <button class="btn btn-login primary-button"><span class="btn-login-decoration">Login</span></button>#}
+                    {% if request.user.is_authenticated %}
                     <button class="btn btn-login primary-button d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
+                    {% endif %}
                 </div>
             </div>
         </nav>
@@ -70,7 +74,7 @@
 </div>
 
 <div class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
 <div id="search-results" class="container main-content"></div>
@@ -86,6 +90,9 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{% static 'bootstrap-4.3.1/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+{% if request.user.is_authenticated %}
+<script type="text/javascript" src="{% static 'js/upvote.js' %}"></script>
+{% endif %}
 <script type="text/javascript" src="{% static 'js/js.cookie.js' %}"></script>
 <script>
     let menu = $('#navbarSupportedContent');
