@@ -240,12 +240,6 @@ class PostVote(Vote):
     def __unicode__(self):
         return self.voter.username + " " + str(self.score) + " " + self.post.title
 
-@receiver(post_save, sender=Post)
-def auto_upvote_post(sender, instance, created, **kwargs):
-    if created:
-        vote = PostVote(post=instance, voter=instance.submitter, score=1)
-        vote.save()
-
 
 class CommentVote(Vote):
     comment = models.ForeignKey(Comment)
