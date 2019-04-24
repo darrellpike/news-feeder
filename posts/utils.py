@@ -34,8 +34,11 @@ class DeltaFirstPagePaginator(Paginator):
     "Returns a Page object for the given 1-based page number."
     number = self.validate_number(number)
     if number == 1:
-      bottom = 0
-      top = self.per_page - self.deltafirst
+        bottom = 0
+        if self.count > self.deltafirst:
+            top = self.per_page - self.deltafirst
+        else:
+            top = self.per_page
     else:
       bottom = (number - 1) * self.per_page - self.deltafirst
       top = bottom + self.per_page

@@ -4,6 +4,7 @@
     {% if top_search_results %}
         <div class="news-header">
             <h3>Top results</h3>
+            <span class="total-results d-md-none d-lg-none d-xl-none">{{ total_results }} total result{{ total_results|pluralize }}</span>
         </div>
         <div class="news">
             {% for article in top_search_results %}
@@ -47,9 +48,13 @@
                 </div>
             {% endfor %}
         </div>
+    {% elif not top_search_results and not search_results %}
+        <div class="news-header">
+            <h3>Nothing found</h3>
+        </div>
     {% endif %}
     {% if top_search_results and search_results %}
-        <div class="news-header">
+        <div id="other-results" class="news-header">
             <h3>Other results</h3>
         </div>
     {% endif %}

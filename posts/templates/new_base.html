@@ -40,7 +40,10 @@
             <div class="header-title navbar-brand align-self-center">
                 <a href="{% url 'index' %}">White hat news</a>
             </div>
-            <button class="btn navbar-toggler ml-auto collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="search d-flex d-md-none d-lg-none d-xl-none ml-auto align-self-center align-items-stretch">
+                <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}" /></button>
+            </div>
+            <button class="btn navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon top-bar"></span>
                 <span class="navbar-toggler-icon bottom-bar"></span>
             </button>
@@ -73,8 +76,8 @@
     </form>
 </div>
 
-<div class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+<div id="mobile-sort-buttons" class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
+                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' or request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
 <div id="search-results" class="container main-content"></div>
@@ -103,6 +106,9 @@
         $('header').css({position: 'relative'});
     });
 </script>
+<!-- Start of HubSpot Embed Code -->
+<script type=“text/javascript” id=“hs-script-loader” async defer src=“http://js.hs-scripts.com/5139372.js”></script>
+<!-- End of HubSpot Embed Code -->
 {% block js %}
 {% endblock %}
 </body>

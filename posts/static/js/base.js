@@ -3,15 +3,6 @@ $(function () {
     let search = $('.search-container');
     let searchButton = $('.btn-search');
     let searchInput = $('#search-form input');
-    searchButton.click(function () {
-        search.animate({height: 'toggle'}, 250, function () {
-            searchInput.focus();
-        });
-        if (search.css('display') !== 'none') {
-            $('.main-content').css('display', 'block');
-            $('#search-results').css('display', 'none');
-        }
-    });
 
     function searchSend(str, pageNumber=1) {
         $.ajax({
@@ -27,6 +18,17 @@ $(function () {
             }
         });
     }
+
+    searchButton.click(function () {
+        search.animate({height: 'toggle'}, 250, function () {
+            searchInput.focus();
+        });
+        if (search.css('display') !== 'none') {
+            $('.main-content').css('display', 'block');
+            $('#search-results').css('display', 'none');
+        }
+    });
+
 
     var timeoutID = null;
     let pageNumber = 1;
