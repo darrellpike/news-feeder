@@ -100,6 +100,8 @@ class SearchView(generic.ListView):
 	model = Post
 	paginator_class = DeltaFirstPagePaginator
 	paginate_by = 10
+	paginate_orphans = 5
+
 	deltafirst = paginate_by - 3
 
 	def get_top_search_results(self):
@@ -133,6 +135,9 @@ class SearchView(generic.ListView):
 		context = super(SearchView, self).get_context_data(**kwargs)
 		if context['page_obj'].number == 1:
 			context['top_search_results'] = self.get_top_search_results()
+			count_total_results = self.get_queryset().count() + context['top_search_results'].count()
+			if count_total_results > 0:
+				context['total_results'] = count_total_results
 		return context
 
 
