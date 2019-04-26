@@ -1,4 +1,4 @@
-{% extends "new_base.html" %}
+{% extends "posts/base.html" %}
 {% load i18n %}
 {% block title %}<title>Sign up | White Hat News</title>{% endblock %}
 
@@ -39,8 +39,6 @@
 	  <input class="form-control" id="password" name="password1" type="password" >
 	</div>
       </div>
-
-    {% include "partial/form_error.html" with errors=form.errors %}
 
       <div class="form-group">
 	<div class="col-lg-offset-3 col-lg-9">

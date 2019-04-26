@@ -1,12 +1,13 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404
 from posts.models import *
 from posts.forms import PostVoteForm
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from posts.utils import DeltaFirstPagePaginator
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
 import operator
+from functools import reduce
 from django.db import IntegrityError
 from django.core.paginator import InvalidPage
 
@@ -17,7 +18,7 @@ class AjaxableResponseMixin:
 	Must be used with an object-based FormView (e.g. CreateView)
 	"""
 	def form_invalid(self, form):
-		response = super(AjaxableResponseMixin, self).form_invalid(form)
+		response = super().form_invalid(form)
 		if self.request.is_ajax():
 			return JsonResponse(form.errors, status=400)
 		else:
@@ -27,7 +28,7 @@ class AjaxableResponseMixin:
 		# We make sure to call the parent's form_valid() method because
 		# it might do some processing (in the case of CreateView, it will
 		# call form.save() for example).
-		response = super(AjaxableResponseMixin, self).form_valid(form)
+		response = super().form_valid(form)
 		if self.request.is_ajax():
 			data = {
 				'pk': self.object.pk,
@@ -38,7 +39,7 @@ class AjaxableResponseMixin:
 
 
 class IndexView(generic.ListView):
-	template_name = 'new_index.html'
+	template_name = 'posts/index.html'
 	context_object_name = 'news'
 	model = Post
 	paginate_by = 20
@@ -159,5 +160,5 @@ def vote_post(request):
 					return HttpResponse('unvote')
 				return HttpResponse('upvote')
 			else:
-				print form.errors
+				print(form.errors)
 	return HttpResponse(0)

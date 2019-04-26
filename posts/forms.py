@@ -1,10 +1,13 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.forms import ModelForm
 from django.forms import TextInput, Textarea
 from posts.models import *
-from registration.forms import RegistrationForm
+from django_registration.forms import RegistrationFormUniqueEmail
 from django.utils.translation import ugettext_lazy as _
-from utils import *
+# from .utils import *
+
+User = get_user_model()
 
 class PartialPostForm(ModelForm):
     class Meta:
@@ -56,41 +59,22 @@ class PartialUserProfileForm(ModelForm):
         return user.email
 
 
-class CustomRegistrationForm(RegistrationForm):
+class CustomRegistrationForm(RegistrationFormUniqueEmail):
     """
     Subclass of ``RegistrationForm`` which enforces uniqueness of
     email addresses.
     
     """
-    mailing_signup = forms.BooleanField(required=False)
-
-    def clean_username(self):
-        """
-        Validate that the supplied username is unique for the
-        site.
-        
-        """
-        try:
-            user = User.objects.get(username__iexact=self.cleaned_data['username'])
-        except User.DoesNotExist:
-            return self.cleaned_data['username']
-        raise forms.ValidationError(_(u'Sorry, there is already another user signed up with that username. Please use another username.'))
-
-    def clean_email(self):
-        """
-        Validate that the supplied email address is unique for the
-        site.
-        
-        """
-        try:
-            user = User.objects.get(email__iexact=self.cleaned_data['email'])
-        except User.DoesNotExist:
-            return self.cleaned_data['email']
-        raise forms.ValidationError(_(u'Sorry, there is already another user signed up with that email. Please use another email.'))
-    def clean_mailing_signup(self):
-        if self.cleaned_data['mailing_signup'] and 'email' in self.cleaned_data:
-            add_to_mailchimp(self.cleaned_data['email'])
-        return self.cleaned_data['mailing_signup']
+    password2 = None
+    class Meta(RegistrationFormUniqueEmail.Meta):
+        model = User
+        fields = [
+            User.USERNAME_FIELD,
+            'first_name',
+            'last_name',
+            'password1',
+        ]
+        required_css_class = 'required'
 
 
 class PostVoteForm(ModelForm):
@@ -104,10 +88,10 @@ class CommentVoteForm(ModelForm):
         fields = ('score', 'comment')
         model = CommentVote
 
-class BufferProfileForm(ModelForm):
-    class Meta:
-        model=BufferProfile
-        exclude = []
+# class BufferProfileForm(ModelForm):
+#     class Meta:
+#         model=BufferProfile
+#         exclude = []
 """
 from configstore.configs import ConfigurationInstance, register
 from configstore.forms import ConfigurationForm

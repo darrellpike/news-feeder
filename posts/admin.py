@@ -1,6 +1,9 @@
 from django.contrib import admin
 from posts.models import *
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.utils.translation import ugettext_lazy as _
 
+admin.site.register(User)
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'post_count', 'comment_count', 'postvote_count', 'commentvote_count', 'is_fake')
@@ -23,21 +26,21 @@ admin.site.register(Comment, CommentAdmin)
 admin.site.register(PostVote)
 admin.site.register(CommentVote)
 admin.site.register(PostFlag)
-admin.site.register(RelatedArticle)
+# admin.site.register(RelatedArticle)
 
-class InstagramImageAdmin(admin.ModelAdmin):
-    list_display = ('caption', 'submitter_username', 'num_likes', 'created_time', 'tag', 'image_url_standardres')
-
-admin.site.register(InstagramImage, InstagramImageAdmin)
-
-class InstagramCommentAdmin(admin.ModelAdmin):
-    list_display = ('body', 'submitter_username', 'created_time', 'image')
-
-admin.site.register(InstagramComment, InstagramCommentAdmin)
-
-class InstagramHashtagsToFetchAdmin(admin.ModelAdmin):
-    list_display = ('tag',)
-
-admin.site.register(InstagramHashtagsToFetch, InstagramHashtagsToFetchAdmin)
-
-admin.site.register(BufferProfile)
+# class InstagramImageAdmin(admin.ModelAdmin):
+#     list_display = ('caption', 'submitter_username', 'num_likes', 'created_time', 'tag', 'image_url_standardres')
+#
+# admin.site.register(InstagramImage, InstagramImageAdmin)
+#
+# class InstagramCommentAdmin(admin.ModelAdmin):
+#     list_display = ('body', 'submitter_username', 'created_time', 'image')
+#
+# admin.site.register(InstagramComment, InstagramCommentAdmin)
+#
+# class InstagramHashtagsToFetchAdmin(admin.ModelAdmin):
+#     list_display = ('tag',)
+#
+# admin.site.register(InstagramHashtagsToFetch, InstagramHashtagsToFetchAdmin)
+#
+# admin.site.register(BufferProfile)
