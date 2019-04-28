@@ -1,6 +1,7 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404
 from posts.models import *
-from posts.forms import PostVoteForm
+from django.template.response import TemplateResponse
+from posts.forms import PostVoteForm, CustomRegistrationForm
 from django.urls import reverse
 from posts.utils import DeltaFirstPagePaginator
 from django.shortcuts import render, get_object_or_404
@@ -10,7 +11,7 @@ import operator
 from functools import reduce
 from django.db import IntegrityError
 from django.core.paginator import InvalidPage
-
+from django_registration.backends.activation.views import RegistrationView
 
 class AjaxableResponseMixin:
 	"""
@@ -162,3 +163,21 @@ def vote_post(request):
 			else:
 				print(form.errors)
 	return HttpResponse(0)
+
+
+class CustomRegistrationView(RegistrationView):
+	form_class = CustomRegistrationForm
+	success_url = '/'
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return TemplateResponse(request, 'django_registration/registration_complete.html')
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+
+

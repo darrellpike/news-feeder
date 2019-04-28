@@ -15,8 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from posts.forms import CustomRegistrationForm
-from django_registration.backends.activation.views import RegistrationView
 from posts import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -28,10 +26,7 @@ urlpatterns = [
     path('search/', views.SearchView.as_view(), name='search'),
     path('api/vote_post/', views.vote_post, name='vote_post'),
     path('accounts/register/',
-        RegistrationView.as_view(
-            form_class=CustomRegistrationForm
-        ),
-        name='django_registration_register',
+         views.CustomRegistrationView.as_view(), name='django_registration_register',
     ),
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),

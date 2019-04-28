@@ -77,7 +77,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 		"""
 		Returns the first_name plus the last_name, with a space in between.
 		"""
-		full_name = '%s %s' % (self.first_name, self.last_name)
+		full_name = '%s %s | %s' % (self.first_name, self.last_name, self.email)
 		return full_name.strip()
 
 	def get_short_name(self):
@@ -93,7 +93,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 		send_mail(subject, message, from_email, [self.email], **kwargs)
 
 	def __str__(self):
-		return (self.first_name + " " + self.last_name)
+		full_name = '%s %s | %s' % (self.first_name, self.last_name, self.email)
+		return full_name.strip()
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, primary_key=True, editable=False, on_delete=models.CASCADE)
