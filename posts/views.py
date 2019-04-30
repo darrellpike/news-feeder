@@ -168,10 +168,12 @@ def vote_post(request):
 class CustomRegistrationView(RegistrationView):
 	form_class = CustomRegistrationForm
 	success_url = '/'
+	template_name = 'django_registration/with_base/registration_form.html'
 
 	def post(self, request, *args, **kwargs):
 		response = super().post(request, *args, **kwargs)
 		if request.is_ajax():
+			self.template_name = 'django_registration/registration_form.html'
 			if response.status_code == 302:
 				return TemplateResponse(request, 'django_registration/registration_complete.html')
 			else:

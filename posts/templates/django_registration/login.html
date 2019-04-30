@@ -1,0 +1,41 @@
+{% extends 'posts/base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% if not user.is_authenticated %}
+                <form class="form-horizontal" action="/login/" method="post">{% csrf_token %}
+                    <legend>Account Login
+                        <span style="font-size:12px;">(Need an account? <a href="/register/">Sign up here</a>)</span>
+                    </legend>
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Sorry, that's not a valid username or password.
+                        </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label" for="username">Username:</label>
+                        <div class="col-lg-10">
+                            <input class="form-control" type="text" name="username" placeholder="Username" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label" for="password">Password:</label>
+                        <div class="col-lg-10">
+                            <input class="form-control" type="password" name="password" placeholder="Password">
+                            <div style="padding-top:3px;"><a href="/forgot_password">Forgot your password?</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="next" value={% if next %}{{next}}{% else %}"{% url 'index' %}"{% endif %} />
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <button type="submit" class="button primary-button">&nbsp;&nbsp;&nbsp;Log in&nbsp;&nbsp;&nbsp;</button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <p>You're already logged in. <a href="/logout/">Logout</a> first to use another account.</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

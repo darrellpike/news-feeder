@@ -18,6 +18,7 @@ from django.urls import path, include
 from posts import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('accounts/register/',
          views.CustomRegistrationView.as_view(), name='django_registration_register',
     ),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name="django_registration/login.html")),
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('WHN@dm!n/', admin.site.urls),
