@@ -5,7 +5,7 @@ $(function () {
         var button = $(this);
         $.ajax({
             method: 'POST',
-            url: '/vote_post/',
+            url: '/api/vote_post/',
             data: {
                 'csrfmiddlewaretoken': Cookies.get('csrftoken'),
                 'post': button.parents('.article').data('article')

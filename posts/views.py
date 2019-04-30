@@ -146,7 +146,7 @@ class SearchView(generic.ListView):
 
 
 def vote_post(request):
-	if request.user.is_authenticated() and request.method == 'POST':
+	if request.user.is_authenticated and request.method == 'POST':
 		vote = PostVote(voter=request.user, score=1)
 		# if request.user.userprofile.count_karma()<500:
 		# 	return HttpResponse('Not enough carma')
