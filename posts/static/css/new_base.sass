@@ -887,10 +887,30 @@ nav
     &:-webkit-autofill
       -webkit-box-shadow: 0 0 0 100px white inset
 
+.password-reset-link
+  position: absolute
+  right: 0
+  bottom: -28px
+
+.login button
+  margin-top: 32px
+
 #register_form .input-group:last-of-type
   margin-bottom: 40px
 
+.error-text
+  display: block
+  color: #FF1F1F
+  margin-top: 8px
+  margin-bottom: 8px
+  font-size: 16px
+  line-height: 16px
+
 // Error in field
+.input-with-label
+  .error-text
+     display: inline
+
 .input-with-label.error
   position: relative
   label
@@ -906,8 +926,6 @@ nav
     margin-top: 8px
     font-size: 12px
     line-height: 14px
-
-
 // optimized for smaller screens
 
 .navbar-expander

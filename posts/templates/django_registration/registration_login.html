@@ -1,0 +1,65 @@
+<h5 class="modal-title">Login</h5>
+<form class="login" id="register_form" method="POST" action="{% url 'django_registration_login' %}">
+    {% csrf_token %}
+    <div class="input-group">
+        <div class="input-with-label {% if form.username.errors %}error{% endif %}">
+            <input id="id_email" type="email" name="username">
+            <label for="id_email">Email</label>
+            {% include 'partial/form_error.html' with errors=form.email.errors %}
+            <span class="error-text"></span>
+        </div>
+    </div>
+    <div class="input-group">
+        <div class="input-with-label {% if form.password.errors %}error{% endif %}">
+            <input id="register-password" type="password" name="password">
+            <label for="register-password">Password</label>
+            {% include 'partial/form_error.html' with errors=form.password1.errors %}
+            <span class="error-text"></span>
+        </div>
+        <a class="password-reset-link btn-link" href="{% url "password_reset" %}">Reset password?</a>
+    </div>
+    <span id="non-field" class="error-text "></span>
+    <button type="submit" class="button primary-button" id="register-submit">Login</button>
+</form>
+<p><span class="text-opacity">New to White Hats News? </span> <a class="btn-link" href="{% url 'django_registration_register' %}">Sign Up</a></p>
+
+<script>
+    $(function () {
+        $(document).on('submit', '#register_form', function (e) {
+            let register_form = $('#register_form');
+            e.preventDefault();
+            $('.error-text').html('');
+            $('.input-with-label').removeClass('error');
+            $.ajax({
+                method: 'POST',
+                url: register_form.attr('action'),
+                data: {
+                    'csrfmiddlewaretoken': Cookies.get('csrftoken'),
+                    'password': register_form.find('#register-password').val(),
+                    'username': register_form.find('#id_email').val()
+                },
+                success: function (data) {
+                    window.location.href = data.index;
+                },
+                error: function (data) {
+                    let errors = $.parseJSON(data.responseText);
+                    for (error in errors) {
+                        if (errors.hasOwnProperty(error)) {
+                            if (error === '__all__') {
+                                $('#non-field').html(errors[error]);
+                            } else {
+                                if (error === 'username') {
+                                    var input = $('#id_email');
+                                } else if (error === 'password') {
+                                    var input = $('#register-password');
+                                }
+                                input.closest('.input-with-label').find('.error-text').html(errors[error]);
+                                input.closest('.input-with-label').addClass('error');
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    })
+</script>

@@ -67,6 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	last_name = models.CharField(_('last name'), max_length=30)
 	is_staff = models.BooleanField(default=False)
 	date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+	is_active = models.BooleanField(default=False)
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['first_name', 'last_name']

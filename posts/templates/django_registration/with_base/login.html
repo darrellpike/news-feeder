@@ -3,26 +3,34 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             {% if not user.is_authenticated %}
-                <form class="form-horizontal" action="/login/" method="post">{% csrf_token %}
+                <form class="form-horizontal" action="{% url 'django_registration_login' %}" method="post">{% csrf_token %}
                     <legend>Account Login
-                        <span style="font-size:12px;">(Need an account? <a href="/register/">Sign up here</a>)</span>
+                        <span style="font-size:12px;">(Need an account? <a class="btn-link" href="{% url 'django_registration_register' %}">Sign up here</a>)</span>
                     </legend>
                     {% if form.errors %}
                         <div class="alert alert-danger">
-                            Sorry, that's not a valid username or password.
-                        </div>
+                                    <strong>{{ form.non_field_errors }}</strong>
+                                </div>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
                     {% endif %}
+
                     <div class="form-group">
-                        <label class="col-lg-2 control-label" for="username">Username:</label>
+                        <label class="col-lg-2 control-label" for="username">Email:</label>
                         <div class="col-lg-10">
-                            <input class="form-control" type="text" name="username" placeholder="Username" >
+                            <input class="form-control" type="email" name="username" placeholder="Email" >
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-2 control-label" for="password">Password:</label>
                         <div class="col-lg-10">
                             <input class="form-control" type="password" name="password" placeholder="Password">
-                            <div style="padding-top:3px;"><a href="/forgot_password">Forgot your password?</a></div>
+                            <div style="padding-top:3px;"><a class="btn-link" href="/forgot_password">Forgot your password?</a></div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,7 +41,7 @@
                     </div>
                 </form>
             {% else %}
-                <p>You're already logged in. <a href="/logout/">Logout</a> first to use another account.</p>
+                <p>You're already logged in. <a class="btn-link" href="{% url 'logout' %}">Logout</a> first to use another account.</p>
             {% endif %}
         </div>
     </div>

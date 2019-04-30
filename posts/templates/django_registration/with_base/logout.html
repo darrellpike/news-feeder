@@ -1,0 +1,7 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+    <h3>Logged out</h3>
+    <p>Thanks for spending some quality time with WHITE HAT NEWS today.</p>
+    <a class="btn-link" href="{% url 'django_registration_login' %}">Log in again</a>
+{% endblock content %}

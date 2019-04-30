@@ -12,6 +12,8 @@ from functools import reduce
 from django.db import IntegrityError
 from django.core.paginator import InvalidPage
 from django_registration.backends.activation.views import RegistrationView
+from django.contrib.auth.views import LoginView
+from django.template.loader import render_to_string
 
 class AjaxableResponseMixin:
 	"""
@@ -169,17 +171,53 @@ class CustomRegistrationView(RegistrationView):
 	form_class = CustomRegistrationForm
 	success_url = '/'
 	template_name = 'django_registration/with_base/registration_form.html'
+	ajax_template_name = 'django_registration/registration_form.html'
+	success_template = 'django_registration/registration_complete.html'
+
+
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
 
 	def post(self, request, *args, **kwargs):
 		response = super().post(request, *args, **kwargs)
 		if request.is_ajax():
-			self.template_name = 'django_registration/registration_form.html'
 			if response.status_code == 302:
-				return TemplateResponse(request, 'django_registration/registration_complete.html')
+				return TemplateResponse(request, self.success_template)
 			else:
 				errors = response.context_data['form'].errors
 				response = JsonResponse(errors)
 				response.status_code = 422
 				return response
+		else:
+			return response
 
+class CustomLoginView(LoginView):
+	template_name = 'django_registration/with_base/login.html'
+	ajax_template_name = 'django_registration/registration_login.html'
 
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				index = reverse('index')
+				return JsonResponse({'index': index})
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
