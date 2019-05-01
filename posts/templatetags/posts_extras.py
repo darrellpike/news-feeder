@@ -23,8 +23,8 @@ import operator
 
 
 from django import template
-import urlparse
-from django.core.urlresolvers import reverse
+# import urlparse
+from django.urls import reverse
 
 register = template.Library()
 
@@ -53,11 +53,11 @@ def smooth_timedelta(timedeltaobj):
         timetot += " {} seconds".format(int(secs))
     return timetot
 
-def domainize(value):
-    domain = urlparse.urlparse(value).netloc
-    return domain.strip("www.")
-
-register.filter('domainize', domainize)
+# def domainize(value):
+#     domain = urlparse.urlparse(value).netloc
+#     return domain.strip("www.")
+#
+# register.filter('domainize', domainize)
 
 
 def user_voted(item, user):

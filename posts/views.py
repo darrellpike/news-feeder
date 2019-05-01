@@ -1,15 +1,19 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404
 from posts.models import *
-from posts.forms import PostVoteForm
-from django.core.urlresolvers import reverse
+from django.template.response import TemplateResponse
+from posts.forms import PostVoteForm, CustomRegistrationForm
+from django.urls import reverse
 from posts.utils import DeltaFirstPagePaginator
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
 import operator
+from functools import reduce
 from django.db import IntegrityError
 from django.core.paginator import InvalidPage
-
+from django_registration.backends.activation.views import RegistrationView
+from django.contrib.auth.views import LoginView
+from django.template.loader import render_to_string
 
 class AjaxableResponseMixin:
 	"""
@@ -17,7 +21,7 @@ class AjaxableResponseMixin:
 	Must be used with an object-based FormView (e.g. CreateView)
 	"""
 	def form_invalid(self, form):
-		response = super(AjaxableResponseMixin, self).form_invalid(form)
+		response = super().form_invalid(form)
 		if self.request.is_ajax():
 			return JsonResponse(form.errors, status=400)
 		else:
@@ -27,7 +31,7 @@ class AjaxableResponseMixin:
 		# We make sure to call the parent's form_valid() method because
 		# it might do some processing (in the case of CreateView, it will
 		# call form.save() for example).
-		response = super(AjaxableResponseMixin, self).form_valid(form)
+		response = super().form_valid(form)
 		if self.request.is_ajax():
 			data = {
 				'pk': self.object.pk,
@@ -38,7 +42,7 @@ class AjaxableResponseMixin:
 
 
 class IndexView(generic.ListView):
-	template_name = 'new_index.html'
+	template_name = 'posts/index.html'
 	context_object_name = 'news'
 	model = Post
 	paginate_by = 20
@@ -142,7 +146,7 @@ class SearchView(generic.ListView):
 
 
 def vote_post(request):
-	if request.user.is_authenticated() and request.method == 'POST':
+	if request.user.is_authenticated and request.method == 'POST':
 		vote = PostVote(voter=request.user, score=1)
 		# if request.user.userprofile.count_karma()<500:
 		# 	return HttpResponse('Not enough carma')
@@ -159,5 +163,61 @@ def vote_post(request):
 					return HttpResponse('unvote')
 				return HttpResponse('upvote')
 			else:
-				print form.errors
+				print(form.errors)
 	return HttpResponse(0)
+
+
+class CustomRegistrationView(RegistrationView):
+	form_class = CustomRegistrationForm
+	success_url = '/'
+	template_name = 'django_registration/with_base/registration_form.html'
+	ajax_template_name = 'django_registration/registration_form.html'
+	success_template = 'django_registration/registration_complete.html'
+
+
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return TemplateResponse(request, self.success_template)
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
+
+class CustomLoginView(LoginView):
+	template_name = 'django_registration/with_base/login.html'
+	ajax_template_name = 'django_registration/registration_login.html'
+
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				index = reverse('index')
+				return JsonResponse({'index': index})
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response

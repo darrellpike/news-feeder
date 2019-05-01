@@ -1,0 +1,79 @@
+<h5 class="modal-title">Sign up</h5>
+<form id="register_form" method="POST" action="{% url 'django_registration_register' %}">
+    {% csrf_token %}
+    <div class="input-group">
+        <div class="input-with-label first-name {% if form.first_name.errors %}error{% endif %}">
+            <input id="register-first-name" type="text" name="first_name">
+            <label for="register-first-name">First name</label>
+            {% include 'partial/form_error.html' with errors=form.first_name.errors %}
+            <span class="error-text"></span>
+        </div>
+        <div class="input-with-label {% if form.last_name.errors %}error{% endif %}">
+            <input id="register-last-name" type="text" name="last_name">
+            <label for="register-last-name">Last name</label>
+            {% include 'partial/form_error.html' with errors=form.last_name.errors %}
+            <span class="error-text"></span>
+        </div>
+    </div>
+    <div class="input-group">
+        <div class="input-with-label {% if form.email.errors %}error{% endif %}">
+            <input id="id_email" type="email" name="email">
+            <label for="id_email">Email</label>
+            {% include 'partial/form_error.html' with errors=form.email.errors %}
+            <span class="error-text"></span>
+        </div>
+    </div>
+    <div class="input-group">
+        <div class="input-with-label {% if form.password1.errors %}error{% endif %}">
+            <input id="register-password" type="password" name="password1">
+            <label for="register-password">Password</label>
+            {% include 'partial/form_error.html' with errors=form.password1.errors %}
+            <span class="error-text"></span>
+        </div>
+    </div>
+    <button type="submit" class="button primary-button" id="register-submit">Sign up</button>
+</form>
+<p><span class="text-opacity">Have an account?</span> <a class="btn-link" href="{% url 'django_registration_login' %}">Login</a></p>
+
+<script>
+    $(function () {
+        $(document).on('submit', '#register_form', function (e) {
+            let register_form = $('#register_form');
+            e.preventDefault();
+            $('.error-text').html('');
+            $('.input-with-label').removeClass('error');
+            $.ajax({
+                method: 'POST',
+                url: register_form.attr('action'),
+                data: {
+                    'csrfmiddlewaretoken': Cookies.get('csrftoken'),
+                    'first_name': register_form.find('#register-first-name').val(),
+                    'last_name': register_form.find('#register-last-name').val(),
+                    'password1': register_form.find('#register-password').val(),
+                    'email': register_form.find('#id_email').val()
+                },
+                success: function (data) {
+                    register_form.html(data);
+                },
+                error: function (data) {
+                    let errors = $.parseJSON(data.responseText);
+                    for (error in errors) {
+                        if (errors.hasOwnProperty(error)) {
+                            if (error === 'email') {
+                                var input = $('#id_email');
+                            } else if (error === 'last_name') {
+                                var input = $('#register-last-name');
+                            } else if (error === 'first_name') {
+                                var input = $('#register-first-name');
+                            } else if (error === 'password1') {
+                                var input = $('#register-password');
+                            }
+                            input.closest('.input-with-label').find('.error-text').html(errors[error]);
+                            input.closest('.input-with-label').addClass('error');
+                        }
+                    }
+                }
+            });
+        });
+    })
+</script>

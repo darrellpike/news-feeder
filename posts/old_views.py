@@ -50,7 +50,7 @@ def index(request, posts=None, images=None, header='new'):
         else:
             template = "partial/post_template.html"
     else:
-        template = "new_index.html"
+        template = "index.html"
 
     if images is None:
         images=InstagramImage.objects.all()
