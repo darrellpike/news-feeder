@@ -16,7 +16,7 @@
             {% include 'partial/form_error.html' with errors=form.password1.errors %}
             <span class="error-text"></span>
         </div>
-        <a class="password-reset-link btn-link" href="{% url "password_reset" %}">Reset password?</a>
+        <a id="password-reset" class="password-reset-link btn-link" href="{% url 'password_reset' %}">Reset password?</a>
     </div>
     <span id="non-field" class="error-text "></span>
     <button type="submit" class="button primary-button" id="register-submit">Login</button>
@@ -25,6 +25,19 @@
 
 <script>
     $(function () {
+        $(document).on('click', '#password-reset', function (e) {
+            $.ajax({
+                method: "GET",
+                url: "{% url 'password_reset' %}",
+                success: function (data) {
+                    $('#register-modal .modal-body').html(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            e.preventDefault();
+        });
         $(document).on('submit', '#register_form', function (e) {
             let register_form = $('#register_form');
             e.preventDefault();

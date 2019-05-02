@@ -2,8 +2,8 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http40
 from posts.models import *
 from django.template.response import TemplateResponse
 from posts.forms import PostVoteForm, CustomRegistrationForm
-from django.urls import reverse
-from posts.utils import DeltaFirstPagePaginator
+from django.urls import reverse, reverse_lazy
+from posts.utils import DeltaFirstPagePaginator, create_new_contact_hubspot
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
@@ -12,7 +12,7 @@ from functools import reduce
 from django.db import IntegrityError
 from django.core.paginator import InvalidPage
 from django_registration.backends.activation.views import RegistrationView
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordResetView
 from django.template.loader import render_to_string
 
 class AjaxableResponseMixin:
@@ -174,6 +174,20 @@ class CustomRegistrationView(RegistrationView):
 	ajax_template_name = 'django_registration/registration_form.html'
 	success_template = 'django_registration/registration_complete.html'
 
+	def create_inactive_user(self, form):
+		"""
+		Create the inactive user account and send an email containing
+		activation instructions.
+
+		"""
+		new_user = form.save(commit=False)
+		new_user.is_active = False
+		new_user.save()
+
+		create_new_contact_hubspot(new_user.id, self.get_activation_key(new_user))
+
+		return new_user
+
 
 	def get(self, request, *args, **kwargs):
 		response = super().get(request, *args, **kwargs)
@@ -221,3 +235,29 @@ class CustomLoginView(LoginView):
 				return response
 		else:
 			return response
+
+
+class CustomPasswordResetView(PasswordResetView):
+	ajax_template_name = 'django_registration/password_reset.html'
+	template_name = 'django_registration/with_base/password_reset.html'
+
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
+
+	# def post(self, request, *args, **kwargs):
+	# 	response = super().post(request, *args, **kwargs)
+	# 	if request.is_ajax():
+	# 		if response.status_code == 302:
+	# 			return reverse_lazy('password_reset_done')
+	# 		else:
+	# 			errors = response.context_data['form'].errors
+	# 			response = JsonResponse(errors)
+	# 			response.status_code = 422
+	# 			return response
+	# 	else:
+	# 		return response
