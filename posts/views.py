@@ -65,7 +65,7 @@ class IndexView(generic.ListView):
 
 
 class IndexPopularView(generic.ListView):
-	template_name = 'index_popular.html'
+	template_name = 'posts/index_popular.html'
 	context_object_name = 'news'
 	model = Post
 	paginate_by = 20
@@ -85,7 +85,7 @@ class IndexPopularView(generic.ListView):
 
 
 class IndexLatestView(generic.ListView):
-	template_name = 'index_latest.html'
+	template_name = 'posts/index_latest.html'
 	context_object_name = 'news'
 	model = Post
 	paginate_by = 20
@@ -99,7 +99,7 @@ class IndexLatestView(generic.ListView):
 
 
 class SearchView(generic.ListView):
-	template_name = 'search_ajax.html'
+	template_name = 'posts/search_ajax.html'
 	context_object_name = 'search_results'
 	model = Post
 	paginator_class = DeltaFirstPagePaginator
@@ -248,16 +248,3 @@ class CustomPasswordResetView(PasswordResetView):
 			return render(request, self.template_name, context=self.get_context_data())
 		else:
 			return response
-
-	# def post(self, request, *args, **kwargs):
-	# 	response = super().post(request, *args, **kwargs)
-	# 	if request.is_ajax():
-	# 		if response.status_code == 302:
-	# 			return reverse_lazy('password_reset_done')
-	# 		else:
-	# 			errors = response.context_data['form'].errors
-	# 			response = JsonResponse(errors)
-	# 			response.status_code = 422
-	# 			return response
-	# 	else:
-	# 		return response
