@@ -2,8 +2,9 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http40
 from posts.models import *
 from django.template.response import TemplateResponse
 from posts.forms import PostVoteForm, CustomRegistrationForm
+from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
-from posts.utils import DeltaFirstPagePaginator, create_new_contact_hubspot
+from posts.utils import DeltaFirstPagePaginator, create_new_contact_hubspot, update_contact_property_hubspot
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
@@ -184,7 +185,9 @@ class CustomRegistrationView(RegistrationView):
 		new_user.is_active = False
 		new_user.save()
 
-		create_new_contact_hubspot(new_user.id, self.get_activation_key(new_user))
+		response = create_new_contact_hubspot(new_user.id, self.get_activation_key(new_user))
+		self.send_activation_email(new_user)
+
 
 		return new_user
 
@@ -248,3 +251,9 @@ class CustomPasswordResetView(PasswordResetView):
 			return render(request, self.template_name, context=self.get_context_data())
 		else:
 			return response
+
+class CustomActivationView(ActivationView):
+	def activate(self, *args, **kwargs):
+		user = super().activate(*args, **kwargs)
+		update_contact_property_hubspot(user.email, 'email_confirmed', True)
+		return user

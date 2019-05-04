@@ -886,6 +886,9 @@ nav {
   font-family: tt_supermolot_neuebold;
   margin-bottom: 30px;
 }
+.modal .modal-content .modal-body .reset-title {
+  margin-bottom: 0;
+}
 .modal .modal-content .modal-body p {
   margin-top: 36px;
   margin-bottom: 0;
@@ -893,6 +896,18 @@ nav {
 }
 .modal .modal-content .modal-body p .text-opacity {
   opacity: 0.6;
+}
+.modal p.grey-text {
+  font-size: 18px;
+  line-height: 24px;
+  color: #888888;
+  text-align: left !important;
+  margin-top: 12px !important;
+  margin-bottom: 30px !important;
+}
+
+.button-without-bottom-text {
+  margin-bottom: 24px;
 }
 
 .input-group {

@@ -44,7 +44,6 @@ class CustomUserManager(BaseUserManager):
 		return user
 
 	def get_by_natural_key(self, email_):
-		print(email_)
 		return self.get(email=email_)
 
 

@@ -2,6 +2,7 @@ from .base import *
 
 ALLOWED_HOSTS = ["news.viceroy.tech"]
 
+# Database settings
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -13,3 +14,11 @@ DATABASES = {
         "PORT": "5432",  # Set to empty string for default.
     }
 }
+
+# Email settings
+# We are using HubSpot as email backend
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = ''
+# EMAIL_PORT = ''
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''

@@ -42,6 +42,7 @@
             e.preventDefault();
             $('.error-text').html('');
             $('.input-with-label').removeClass('error');
+            $('#register-submit').hide();
             $.ajax({
                 method: 'POST',
                 url: register_form.attr('action'),
@@ -56,6 +57,7 @@
                     register_form.html(data);
                 },
                 error: function (data) {
+                    $('#register-submit').show();
                     let errors = $.parseJSON(data.responseText);
                     for (error in errors) {
                         if (errors.hasOwnProperty(error)) {

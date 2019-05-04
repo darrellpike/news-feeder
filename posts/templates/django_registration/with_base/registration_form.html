@@ -62,9 +62,11 @@
                     'email': register_form.find('#id_email').val()
                 },
                 success: function (data) {
+                    console.log(data);
                     register_form.html(data);
                 },
                 error: function (data) {
+                    console.log(data);
                     let errors = $.parseJSON(data.responseText);
                     for (error in errors) {
                         if (errors.hasOwnProperty(error)) {
