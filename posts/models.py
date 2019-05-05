@@ -97,7 +97,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 		return full_name.strip()
 
 class UserProfile(models.Model):
-	user = models.OneToOneField(User, primary_key=True, editable=False, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, primary_key=True, editable=False, on_delete=models.CASCADE, related_name='userprofile')
+	image = models.ImageField(default='../static/images/favicon.png', upload_to='user_images/', blank=True)
+	image_thumbnail = ImageSpecField(source='image',
+	                                processors=[ResizeToFit(100,100)],
+	                                format='PNG')
 	description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 	is_email_public = models.BooleanField(default=False)
 	is_shadowbanned = models.BooleanField(default=False)

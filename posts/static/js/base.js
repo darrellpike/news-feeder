@@ -46,4 +46,51 @@ $(function () {
         clearTimeout(timeoutID);
       timeoutID = setTimeout(() => searchSend(e.target.value, pageNumber), 250);
     });
+
+    $(document).on('submit', '.form', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        form.preventDoubleSubmit();
+        $('.error-text').html('');
+        $('.input-with-label').removeClass('error');
+
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (data) {
+                this.beenSubmitted = false;
+                window.location.href = data.url;
+            },
+            error: function (data) {
+                this.beenSubmitted = false;
+                var errors;
+                if (data.statusText === "Unprocessable Entity"){
+                    errors = $.parseJSON(data.responseText);
+                } else if (data.status === 500) {
+                    errors = {"__all__": data.statusText};
+                }
+                for (error in errors) {
+                    if (errors.hasOwnProperty(error)) {
+                        if (error === '__all__') {
+                            $('#non-field').html(errors[error]);
+                        } else {
+                            var input = $('input[name=' + error + ']');
+                            input.closest('.input-with-label').find('.error-text').html(errors[error]);
+                            input.closest('.input-with-label').addClass('error');
+                        }
+                    }
+                }
+            }
+        });
+    });
 });
+
+jQuery.fn.preventDoubleSubmit = function() {
+    jQuery(this).submit(function() {
+        if (this.beenSubmitted)
+            return false;
+        else
+            this.beenSubmitted = true;
+    });
+};

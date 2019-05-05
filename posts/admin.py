@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 admin.site.register(User)
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'post_count', 'comment_count', 'postvote_count', 'commentvote_count', 'is_fake')
+    list_display = ('user', 'post_count', 'comment_count', 'postvote_count', 'commentvote_count', 'is_fake')
     #def has_add_permission(self, request):
     #    return False
 

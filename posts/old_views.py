@@ -171,7 +171,7 @@ def admin_buffer_profiles(request):
     url = "https://api.bufferapp.com/1/profiles.json?access_token="+BUFFER_TOKEN
     response = requests.get(url).json()
     for r in response:
-        if BufferProfile.objects.filter(profile_id=r['_id']).exists():
+        if BufferProfile.objects.filter(userprofile_id=r['_id']).exists():
             r['exists']=True
         r['id']=r['_id']
     return render(request, "dashboard_buffer_profiles.html",
@@ -306,7 +306,7 @@ def edit_profile(request,user_id):
     if request.user!=profile_owner:
         raise PermissionDenied
     if request.method == 'POST':
-        form = PartialUserProfileForm(request.POST,instance=request.user.userprofile)
+        form = PartialprofileForm(request.POST,instance=request.user.userprofile)
         if form.is_valid():
             form.save()
             messages.success(request, "Profile changes saved!")

@@ -49,36 +49,23 @@
         $(document).on('submit', '#register_form', function (e) {
             let register_form = $('#register_form');
             e.preventDefault();
+            register_form.preventDoubleSubmit();
             $('.error-text').html('');
             $('.input-with-label').removeClass('error');
             $.ajax({
                 method: 'POST',
                 url: register_form.attr('action'),
-                data: {
-                    'csrfmiddlewaretoken': Cookies.get('csrftoken'),
-                    'first_name': register_form.find('#register-first-name').val(),
-                    'last_name': register_form.find('#register-last-name').val(),
-                    'password1': register_form.find('#register-password').val(),
-                    'email': register_form.find('#id_email').val()
-                },
+                data: register_form.serialize(),
                 success: function (data) {
-                    console.log(data);
+                    this.beenSubmitted = false;
                     register_form.html(data);
                 },
                 error: function (data) {
-                    console.log(data);
+                    this.beenSubmitted = false;
                     let errors = $.parseJSON(data.responseText);
                     for (error in errors) {
                         if (errors.hasOwnProperty(error)) {
-                            if (error === 'email') {
-                                var input = $('#id_email');
-                            } else if (error === 'last_name') {
-                                var input = $('#register-last-name');
-                            } else if (error === 'first_name') {
-                                var input = $('#register-first-name');
-                            } else if (error === 'password1') {
-                                var input = $('#register-password');
-                            }
+                            var input = $('input[name=' + error + ']');
                             input.closest('.input-with-label').find('.error-text').html(errors[error]);
                             input.closest('.input-with-label').addClass('error');
                         }

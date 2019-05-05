@@ -489,6 +489,16 @@ nav {
   display: inline-flex;
 }
 
+.btn.profile-image {
+  padding: 0;
+  border: none;
+}
+.btn.profile-image img {
+  width: 44px;
+  height: 44px;
+  border-radius: 2px;
+}
+
 .btn-signup, .btn-login {
   font-family: tt_supermolot_neueextrabold;
   min-width: 130px;
@@ -1304,9 +1314,6 @@ nav {
 @media (min-width: 768px) and (max-width: 1024px) {
   header .sort-button {
     margin-right: 40px;
-  }
-  header .suggest-news {
-    display: none;
   }
   header .btn-signup {
     margin-right: 16px;

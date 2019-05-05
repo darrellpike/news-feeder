@@ -98,12 +98,12 @@ class CustomPasswordResetForm(PasswordResetForm):
         super().send_mail(subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None)
         url = '%s://%s/accounts/reset/%s/%s/' % (context['protocol'], context['domain'], context['uid'], context['token'])
-        responce =  update_contact_property_hubspot(to_email, 'password_reset_url_active', True,
-                                        options=[{'label': 'Yes', 'value': True},
-                                                    {'label': 'No', 'value': False}])
-        if responce == 404:
-            raise ValidationError("User doesn't exist on HubSpot")
-        r = update_contact_property_hubspot(to_email, 'password_reset_url', url)
+        # responce =  update_contact_property_hubspot(to_email, 'password_reset_url_active', True,
+        #                                 options=[{'label': 'Yes', 'value': True},
+        #                                             {'label': 'No', 'value': False}])
+        # if responce == 404:
+        #     raise ValidationError("User doesn't exist on HubSpot")
+        # r = update_contact_property_hubspot(to_email, 'password_reset_url', url)
 
 
 
