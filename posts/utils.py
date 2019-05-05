@@ -224,6 +224,17 @@ def create_new_property_hubspot(field_name, field_type, options=None, type='stri
     radio - a set of radio buttons, used with the enumeration data type.
     checkbox - a set of checkboxes, used with the enumeration data type
     booleancheckbox - a single checkbox, stores "true" (as a string) if checked.
+    :param options: Example:
+    options = [
+                {
+                    "label": "Yes",
+                    "value": True
+                },
+                {
+                    "label": "No",
+                    "value": False
+                }
+            ]
     :return: response of a request
     """
     if field_type not in ['textarea', 'text', 'date', 'file', 'number',
@@ -261,9 +272,9 @@ def create_new_property_hubspot(field_name, field_type, options=None, type='stri
     return json.loads(r.content)
 
 
-def update_contact_property_hubspot(email, property_name, value):
+def update_contact_property_hubspot(email, property_name, value, options=None):
     """
-    Updating property on Hubspot.
+    Updating or creating property on Hubspot.
     :param name: The property name, must be a string.
     :return: status code of a response
     """
@@ -283,5 +294,17 @@ def update_contact_property_hubspot(email, property_name, value):
     })
 
     r = requests.post(endpoint, data=data, headers=headers)
+
+    if r.status_code == 400:
+        field_type = 'text'
+        if isinstance(value, str):
+            field_type = 'text'
+        elif isinstance(value, bool):
+            field_type = 'booleancheckbox'
+        elif isinstance(value, int):
+            field_type = 'number'
+
+        create_new_property_hubspot(property_name, field_type=field_type, options=options)
+        r = requests.post(endpoint, data=data, headers=headers)
 
     return r.status_code

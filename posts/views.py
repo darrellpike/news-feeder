@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404
 from posts.models import *
 from django.template.response import TemplateResponse
-from posts.forms import PostVoteForm, CustomRegistrationForm
+from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
 from posts.utils import DeltaFirstPagePaginator, create_new_contact_hubspot, update_contact_property_hubspot
@@ -243,6 +243,7 @@ class CustomLoginView(LoginView):
 class CustomPasswordResetView(PasswordResetView):
 	ajax_template_name = 'django_registration/password_reset.html'
 	template_name = 'django_registration/with_base/password_reset.html'
+	form_class = CustomPasswordResetForm
 
 	def get(self, request, *args, **kwargs):
 		response = super().get(request, *args, **kwargs)
@@ -251,6 +252,20 @@ class CustomPasswordResetView(PasswordResetView):
 			return render(request, self.template_name, context=self.get_context_data())
 		else:
 			return response
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return JsonResponse({'url': response.url})
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
+
 
 class CustomActivationView(ActivationView):
 	def activate(self, *args, **kwargs):

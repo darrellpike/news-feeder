@@ -148,6 +148,7 @@ MEDIA_URL = "/media/"
 # Registration settings
 AUTH_USER_MODEL = 'posts.User'
 ACCOUNT_ACTIVATION_DAYS = 2
+REGISTRATION_SALT = SECRET_KEY
 
 
 # Logging

@@ -19,6 +19,7 @@ from posts import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
@@ -33,6 +34,10 @@ urlpatterns = [
          name='django_registration_login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(template_name="django_registration/with_base/logout.html")),
     path('accounts/password_reset/', views.CustomPasswordResetView.as_view(), name='password_reset'),
+    path('accounts/activate/complete/', TemplateView.as_view(
+            template_name='django_registration/activation_complete.html'
+        ),
+        name='django_registration_activation_complete'),
     re_path(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$', views.CustomActivationView.as_view(),
          name='django_registration_activate'),
     path('accounts/', include('django_registration.backends.activation.urls')),

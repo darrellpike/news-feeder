@@ -4,7 +4,10 @@ from django.forms import ModelForm
 from django.forms import TextInput, Textarea
 from posts.models import *
 from django_registration.forms import RegistrationFormUniqueEmail
+from django.contrib.auth.forms import PasswordResetForm
 from django.utils.translation import ugettext_lazy as _
+from posts.utils import update_contact_property_hubspot
+from django.forms import ValidationError
 # from .utils import *
 
 User = get_user_model()
@@ -88,10 +91,36 @@ class CommentVoteForm(ModelForm):
         fields = ('score', 'comment')
         model = CommentVote
 
-# class BufferProfileForm(ModelForm):
-#     class Meta:
-#         model=BufferProfile
-#         exclude = []
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def send_mail(self, subject_template_name, email_template_name,
+                  context, from_email, to_email, html_email_template_name=None):
+        super().send_mail(subject_template_name, email_template_name,
+                  context, from_email, to_email, html_email_template_name=None)
+        url = '%s://%s/accounts/reset/%s/%s/' % (context['protocol'], context['domain'], context['uid'], context['token'])
+        responce =  update_contact_property_hubspot(to_email, 'password_reset_url_active', True,
+                                        options=[{'label': 'Yes', 'value': True},
+                                                    {'label': 'No', 'value': False}])
+        if responce == 404:
+            raise ValidationError("User doesn't exist on HubSpot")
+        r = update_contact_property_hubspot(to_email, 'password_reset_url', url)
+
+
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        User = get_user_model()
+        try:
+            User.objects.get(email=email)
+            return email
+        except User.DoesNotExist:
+            raise ValidationError(
+                _('User with this email doesn\'t exist.'),
+                code='invalid'
+            )
+
+
+
 """
 from configstore.configs import ConfigurationInstance, register
 from configstore.forms import ConfigurationForm
