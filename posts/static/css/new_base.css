@@ -1202,6 +1202,11 @@ nav {
     margin-left: 12px;
   }
 
+  .article .news-aggregator-link {
+    opacity: 1 !important;
+    color: #D92752 !important;
+  }
+
   .article-rating-text {
     opacity: 0.5;
     margin-right: 16px;
@@ -1209,6 +1214,7 @@ nav {
 
   .article-comments {
     opacity: 1 !important;
+    text-decoration-line: none !important;
   }
 
   .article-comments .dot {
@@ -1217,10 +1223,6 @@ nav {
 
   .article-comments svg {
     margin-right: 8px;
-  }
-
-  .article-comments-text {
-    opacity: 0.5;
   }
 
   .article-rating svg {
