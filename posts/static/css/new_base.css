@@ -251,7 +251,6 @@ button:focus {
   width: 100%;
   background: #5A1BE0;
   min-height: 52px;
-  min-width: 244px;
   position: relative;
   border: none;
   border-radius: 2px;
@@ -969,6 +968,12 @@ nav {
   display: table;
   width: 100%;
 }
+.input-with-label.first-name {
+  width: 210px;
+}
+.input-with-label.first-name ~ .input-with-label {
+  width: 210px;
+}
 .input-with-label label {
   display: table-header-group;
   margin-bottom: 0;
@@ -981,12 +986,14 @@ nav {
 }
 .input-with-label input {
   display: table-row-group;
+  background: transparent;
   line-height: 22px;
   padding: 0;
   padding-bottom: 8px;
   padding-top: 6px;
   border: none;
   border-bottom: 1px solid #D9DCE2;
+  border-radius: 0;
   width: 100%;
 }
 .input-with-label input:focus {
@@ -1285,7 +1292,28 @@ nav {
   }
 
   .modal-dialog {
-    margin: 2rem auto;
+    margin: 9vh auto;
+    padding: 0 20px;
+  }
+
+  .modal .modal-header {
+    height: 55px;
+    position: relative;
+  }
+  .modal .close {
+    position: absolute;
+    top: -41px;
+    right: -6px;
+    opacity: 1;
+  }
+  .modal .modal-content .modal-body {
+    padding: 0 20px 16px 20px;
+  }
+  .modal .modal-content .modal-body .login button {
+    margin-top: 0;
+  }
+  .modal .modal-content .input-with-label {
+    width: 100%;
   }
 
   .input-group {

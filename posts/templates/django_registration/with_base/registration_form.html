@@ -1,9 +1,9 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<div class="row">
+<div class="container bg-white">
 <div class="col-md-6 col-md-offset-3">
-    <h5 class="modal-title">Sign up</h5>
+    <h3 class="modal-title">Sign up</h3>
 <form id="register_form" method="POST" action="{% url 'django_registration_register' %}">
     {% csrf_token %}
     <div class="input-group">

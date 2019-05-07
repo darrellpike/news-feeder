@@ -271,7 +271,6 @@ button:focus
   width: 100%
   background: $primary-color
   min-height: 52px
-  min-width: 244px
   position: relative
   border: none
   border-radius: 2px
@@ -903,8 +902,11 @@ nav
 
 .input-with-label
   display: table
-  //flex-flow: column nowrap
   width: 100%
+  &.first-name
+    width: 210px
+    &~ .input-with-label
+      width: 210px
   label
     display: table-header-group
     margin-bottom: 0
@@ -917,12 +919,14 @@ nav
 
   input
     display: table-row-group
+    background: transparent
     line-height: 22px
     padding: 0
     padding-bottom: 8px
     padding-top: 6px
     border: none
     border-bottom: 1px solid #D9DCE2
+    border-radius: 0
     width: 100%
     &:focus
       outline: none
@@ -1171,7 +1175,30 @@ nav
           color: #888888
 
     .modal-dialog
-      margin: 2rem auto
+      margin: 9vh auto
+      padding: 0 20px
+
+    .modal
+      .modal-header
+        height: 55px
+        position: relative
+      .close
+        position: absolute
+        top: -41px
+        right: -6px
+        opacity: 1
+      .modal-content
+        .modal-body
+          padding: 0 20px 16px 20px
+          .login
+            button
+              margin-top: 0
+        .input-with-label
+          width: 100%
+          //&.first-name
+          //  width: 210px
+          //  &~ .input-with-label
+          //    width: 210px
 
     .input-group
       flex-wrap: wrap
