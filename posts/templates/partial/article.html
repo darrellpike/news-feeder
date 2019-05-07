@@ -22,12 +22,15 @@
         </div>
         <a class="article-title" href="#">{{ article.title }}</a>
         <div class="article-statistics">
-                                <span class="article-rating d-inline d-md-none d-lg-none d-xl-none">
-                                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6.1357 0.139022L0.177109 5.49626C0.0113516 5.64519 -0.0439008 5.87877 0.0362694 6.08663C0.11644 6.29235 0.316865 6.42842 0.541125 6.42842L3.79127 6.42842L3.79127 12.4643C3.79127 12.76 4.03394 13 4.33296 13L8.66648 13C8.96549 13 9.20817 12.76 9.20817 12.4643L9.20817 6.42842L12.4583 6.42842C12.6826 6.42842 12.883 6.29234 12.9642 6.08663C12.9881 6.02341 13 5.95805 13 5.89269C13 5.74484 12.9372 5.60019 12.8223 5.49626L6.86373 0.139022C6.65789 -0.0463393 6.34154 -0.0463393 6.1357 0.139022Z" fill="#888A8C"/>
-                                    </svg>
-                                    <span class="article-rating-text">{{ article.get_score|format_count }}</span>
-                                </span>
+        <span class="d-inline d-md-none d-lg-none d-xl-none article-rating">
+                                <button class="btn-upvote {% if request.user.is_authenticated and article|user_voted:request.user %}active{% endif %}">
+                                         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.1357 0.139022L0.177109 5.49626C0.0113516 5.64519 -0.0439008 5.87877 0.0362694 6.08663C0.11644 6.29235 0.316865 6.42842 0.541125 6.42842L3.79127 6.42842L3.79127 12.4643C3.79127 12.76 4.03394 13 4.33296 13L8.66648 13C8.96549 13 9.20817 12.76 9.20817 12.4643L9.20817 6.42842L12.4583 6.42842C12.6826 6.42842 12.883 6.29234 12.9642 6.08663C12.9881 6.02341 13 5.95805 13 5.89269C13 5.74484 12.9372 5.60019 12.8223 5.49626L6.86373 0.139022C6.65789 -0.0463393 6.34154 -0.0463393 6.1357 0.139022Z" fill="#888A8C"/>
+                                        </svg>
+                                        <span class="article-rating-text rating-text">{{ article.get_score|format_count }}</span>
+
+                                </button>
+        </span>
 
             <span class="article-comments">
                                     <img alt="comments" src="{% static 'images/Comments_image.svg' %}" />

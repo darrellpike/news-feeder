@@ -645,29 +645,13 @@ nav {
   justify-content: flex-start;
 }
 
-.article .rating .btn-upvote {
+.article .btn-upvote {
   display: contents;
   background: transparent;
   border: none;
   padding-left: 0;
   padding-right: 0;
   position: relative;
-}
-
-.article .rating .btn-upvote.active .rating-text {
-  color: #5A1BE0;
-}
-
-.article .rating .btn-upvote.active svg path {
-  fill: #5A1BE0;
-}
-
-.article .rating .btn-upvote:active .rating-text {
-  color: #5A1BE0;
-}
-
-.article .rating .btn-upvote:active svg path {
-  fill: #5A1BE0;
 }
 
 .article .rating .btn-upvote svg {
@@ -704,6 +688,22 @@ nav {
   font-family: gt_americaregular;
   margin: 18px 8px 16px 16px;
   width: 100%;
+}
+
+.article .btn-upvote.active .rating-text {
+  color: #5A1BE0;
+}
+
+.article .btn-upvote.active svg path {
+  fill: #5A1BE0;
+}
+
+.article .btn-upvote:active .rating-text {
+  color: #5A1BE0;
+}
+
+.article .btn-upvote:active svg path {
+  fill: #5A1BE0;
 }
 
 .article .article-body .article-title {
@@ -745,7 +745,7 @@ nav {
   cursor: pointer;
 }
 .article .article-body .article-statistics .article-comments img {
-  margin-right: 4px;
+  margin-right: 8px;
   margin-top: 3px;
   width: 11px;
   height: 11px;
@@ -1203,6 +1203,13 @@ nav {
   .article .article-statistics {
     font-size: 12px;
     line-height: 16px;
+  }
+  .article .article-statistics .btn-upvote {
+    display: inline-flex;
+    padding: 0;
+  }
+  .article .article-statistics .btn-upvote.active .article-rating-text {
+    opacity: 1;
   }
 
   .article .news-aggregator-image {

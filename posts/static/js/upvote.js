@@ -1,6 +1,6 @@
 $(function () {
    // Upvote button
-    $(document).on('click', '.article .btn-upvote', function (e) {
+    $(document).on('click touch', '.article .btn-upvote', function (e) {
         var rating_number = $(this).find('.rating-text');
         var button = $(this);
         $.ajax({
