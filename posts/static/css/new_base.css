@@ -1330,7 +1330,7 @@ nav {
 }
 @media (max-width: 1199.98px) {
   .header-title {
-    margin-right: 32px;
+    margin-right: 0;
   }
 
   .sort-button {
