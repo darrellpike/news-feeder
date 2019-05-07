@@ -11,11 +11,16 @@ $(function () {
                 'post': button.parents('.article').data('article')
             },
             success: function (vote) {
+                var currentRatingNumber = rating_number.context.innerText;
                 if (vote === 'upvote') {
-                    rating_number.html(parseInt(rating_number.context.innerText) + 1);
+                    if (!(currentRatingNumber.indexOf('k') !== -1)) {
+                        rating_number.html(parseInt(currentRatingNumber) + 1);
+                    }
                     button.addClass('active');
                 } else if (vote === 'unvote') {
-                    rating_number.html(parseInt(rating_number.context.innerText) - 1);
+                    if (!(currentRatingNumber.indexOf('k') !== -1)) {
+                        rating_number.html(parseInt(currentRatingNumber) - 1);
+                    }
                     button.removeClass('active');
                 } else {
                     console.log(vote);

@@ -674,8 +674,8 @@ nav {
 .article .rating .btn-upvote svg {
   text-align: center;
   margin-top: 19px;
-  margin-right: 13px;
-  margin-left: 13px;
+  margin-right: 13.5px;
+  margin-left: 13.5px;
   position: relative;
   line-height: 0;
   vertical-align: top;
@@ -707,25 +707,49 @@ nav {
   width: 100%;
 }
 
-.article .article-body p {
+.article .article-body .article-title {
+  display: flex;
   font-size: 18px;
   line-height: 24px;
   color: #111111;
   margin-bottom: 6px;
+}
+.article .article-body .article-title:hover {
+  cursor: pointer;
+  text-decoration-line: none;
+  opacity: 0.7;
 }
 
 .article .article-body .article-statistics {
   font-size: 12px;
   line-height: 16px;
   color: #111111;
+  display: flex;
 }
 
-.article .article-body .article-statistics .article-time, .article .article-body .article-statistics .article-comments {
+.article .article-body .article-statistics .article-time {
+  opacity: 0.5;
+  margin: 0 4px;
+}
+.article .article-body .article-statistics .news-aggregator-link {
+  color: #111111;
   opacity: 0.5;
 }
 
-.article .article-statistics .news-aggregator-link {
+.article .article-body .article-statistics .article-comments {
   color: #D92752;
+  text-decoration-line: underline;
+  display: inline-flex;
+}
+.article .article-body .article-statistics .article-comments:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+.article .article-body .article-statistics .article-comments img {
+  margin-right: 4px;
+  margin-top: 3px;
+  width: 11px;
+  height: 11px;
 }
 
 .article .article-statistics .news-aggregator-link:hover {
@@ -750,6 +774,7 @@ nav {
 .latest-news .article .article-body {
   min-height: 188px;
   padding: 20px 24px;
+  padding-top: 0;
   display: flex;
   flex-flow: column wrap;
   margin: 0;
@@ -764,6 +789,13 @@ nav {
   line-height: 28px;
   color: #111111;
   word-break: break-word;
+  height: calc(100% - 26px);
+  padding-top: 20px;
+}
+.latest-news .article .article-title:hover {
+  opacity: 0.8;
+  text-decoration-line: none;
+  cursor: pointer;
 }
 
 .latest-news .article .article-statistics {
@@ -1328,7 +1360,6 @@ nav {
   }
 
   .latest-news .article .article-title {
-    max-width: 200px;
     display: block;
   }
 
