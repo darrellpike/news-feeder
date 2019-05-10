@@ -22,6 +22,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
 
 urlpatterns = [
+    path('WHN@dm!n/', admin.site.urls),
     path('', views.IndexView.as_view(), name='index'),
     path('latest/', views.IndexLatestView.as_view(), name='index_latest'),
     path('popular/', views.IndexPopularView.as_view(), name='index_popular'),
@@ -40,9 +41,10 @@ urlpatterns = [
         name='django_registration_activation_complete'),
     re_path(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$', views.CustomActivationView.as_view(),
          name='django_registration_activate'),
+    path('accounts/profile/', views.UserProfileView.as_view(), name='profile'),
+    path('accounts/profile/change_user_image/', views.change_user_profile_image, name='change-profile-image'),
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('WHN@dm!n/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'mptt',
     'sanitizer',
     'el_pagination',
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 MIDDLEWARE = [

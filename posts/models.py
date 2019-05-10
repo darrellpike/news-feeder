@@ -98,9 +98,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, primary_key=True, editable=False, on_delete=models.CASCADE, related_name='userprofile')
-	image = models.ImageField(default='../static/images/favicon.png', upload_to='user_images/', blank=True)
-	image_thumbnail = ImageSpecField(source='image',
-	                                processors=[ResizeToFit(100,100)],
+	image = models.ImageField(default='user_images/default/default_image_profile.png', upload_to='user_images/', blank=True)
+	image_thumbnail_sm = ImageSpecField(source='image',
+	                                processors=[ResizeToFill(100,100)],
+	                                format='PNG')
+	image_thumbnail_md = ImageSpecField(source='image',
+	                                processors=[ResizeToFill(300,300)],
 	                                format='PNG')
 	description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 	is_email_public = models.BooleanField(default=False)

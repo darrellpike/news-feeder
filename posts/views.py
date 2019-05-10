@@ -1,20 +1,23 @@
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from posts.models import *
 from django.template.response import TemplateResponse
-from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm
+from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm, UserProfileUpdateForm,\
+	ChangeUserImageForm
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
 from posts.utils import DeltaFirstPagePaginator, create_new_contact_hubspot, update_contact_property_hubspot
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
-import operator
+import operator, os
 from functools import reduce
 from django.db import IntegrityError
 from django.core.paginator import InvalidPage
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.template.loader import render_to_string
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 class AjaxableResponseMixin:
 	"""
@@ -146,6 +149,7 @@ class SearchView(generic.ListView):
 		return context
 
 
+@login_required(login_url=reverse_lazy('django_registration_login'))
 def vote_post(request):
 	if request.user.is_authenticated and request.method == 'POST':
 		vote = PostVote(voter=request.user, score=1)
@@ -272,3 +276,42 @@ class CustomActivationView(ActivationView):
 		user = super().activate(*args, **kwargs)
 		update_contact_property_hubspot(user.email, 'email_confirmed', True)
 		return user
+
+
+class UserProfileView(LoginRequiredMixin, generic.UpdateView):
+	model = UserProfile
+	form_class = UserProfileUpdateForm
+	template_name = 'posts/profile.html'
+	success_url = reverse_lazy('profile')
+
+	def get_object(self, queryset=None):
+		return self.request.user
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return JsonResponse({'url': response.url})
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
+
+@login_required(login_url=reverse_lazy('django_registration_login'))
+def change_user_profile_image(request):
+	if request.user.is_authenticated and request.method == 'POST':
+		form = ChangeUserImageForm(request.POST, request.FILES)
+		if form.is_valid():
+			m = UserProfile.objects.get(user__pk=request.user.pk)
+			m.image = form.cleaned_data['new_image']
+			m.save()
+			return JsonResponse({'new_image_url': m.image_thumbnail_md.url})
+		else:
+			response = JsonResponse(form.errors)
+			response.status_code = 422
+			return response
+	else:
+		return HttpResponseForbidden('allowed only via POST')

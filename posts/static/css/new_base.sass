@@ -269,7 +269,7 @@ button:focus
 .button
   font-family: tt_supermolot_neuebold
   width: 100%
-  background: $primary-color
+  background: transparent
   min-height: 52px
   position: relative
   border: none
@@ -1001,6 +1001,82 @@ nav
   margin-right: 20px
 
 
+// Profile styles
+.profile-container
+  margin: 60px 0
+  display: flex
+  flex-flow: row nowrap
+  .input-group:last-of-type
+    margin-bottom: 0
+  .profile-image-container
+    max-width: 295px
+    max-height: 324px
+    margin-right: 20px
+    background: #FFFFFF
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2)
+    border-radius: 2px
+    padding: 40px 52px
+    .profile-image
+      margin-bottom: 20px
+      img
+        display: block
+        margin: 0 auto
+        border-radius: 2px
+        max-height: 180px
+        width: 180px
+    #change-image
+      min-width: 190px
+      min-height: 44px
+
+  .profile-settings-container
+    width: 100%
+    padding: 56px 85px 60px 80px
+    background: #FFFFFF
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2)
+    border-radius: 2px
+    display: flex
+    flex-flow: column wrap
+    .input-with-label
+      max-width: calc(50% - 20px)
+      &.first-name
+        width: 100%
+        ~ .input-with-label
+          width: 100%
+      &:last-of-type
+        align-self: flex-end
+    .input-group:last-of-type
+      justify-content: normal
+
+    input[name='new_password'] ~ .error-text
+      bottom: -26px
+      left: 0
+
+    .button
+      max-width: 190px
+      height: 44px
+      min-height: 44px
+      &:before, &:after
+        width: 4px
+    .btn-login
+      margin-left: 11px
+      &:before, &:after
+        width: 2px
+        background: white
+      color: #707070
+      border: 2px solid #D9DCE2
+      .btn-login-decoration:after, .btn-login-decoration:before
+        background: #D9DCE2
+        opacity: 1
+    .btn-admin
+      padding: 12px 5px
+      margin-left: auto
+      color: #D92752
+      border-color: #E72C59
+      .btn-login-decoration:after, .btn-login-decoration:before
+        background: #E72C59
+
+
+
 @media (min-width: 1439px)
   .latest-stories
     padding: 0
@@ -1242,7 +1318,7 @@ nav
 
 @media (max-width: 1199.98px)
   .header-title
-    margin-right: 0
+    margin-right: 20px
 
   .sort-button
     margin-right: 20px
@@ -1287,4 +1363,10 @@ nav
     .sort-button
       margin-right: 20px
 
+  .profile-settings-container
+    .input-with-label
+      max-width: none!important
 
+  .btn-admin
+    margin-left: 10px!important
+    padding: 6px 0 !important

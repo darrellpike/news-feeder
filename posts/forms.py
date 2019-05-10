@@ -8,9 +8,89 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.utils.translation import ugettext_lazy as _
 from posts.utils import update_contact_property_hubspot
 from django.forms import ValidationError
-# from .utils import *
+from django.contrib.auth import password_validation
+from django.core.validators import EmailValidator, validate_image_file_extension
+from django.core.files.images import get_image_dimensions
 
 User = get_user_model()
+
+
+class UserProfileUpdateForm(ModelForm):
+    old_password = forms.CharField(
+        label=_("Old password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autofocus': True}),
+        required=False
+    )
+    new_password = forms.CharField(
+        label=_("New password"),
+        strip=False,
+        widget=forms.PasswordInput,
+        help_text=password_validation.password_validators_help_text_html(),
+        required=False
+    )
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
+    email = forms.CharField(required=False, validators=[EmailValidator])
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        for field in cleaned_data:
+            if self.cleaned_data[field] == '' and field not in ['old_password', 'new_password']:
+                self.cleaned_data[field] = getattr(self.instance, field)
+        return self.cleaned_data
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            if user.pk == self.instance.pk:
+                return email
+        except User.DoesNotExist:
+            return email
+        raise ValidationError(_('This email address is already in use. Please supply a different email address.'),
+                              code='email_already_exists')
+
+
+    def clean_new_password(self):
+        """
+        Validate that the old_password field is exists
+        """
+        old_password = self.cleaned_data.get('old_password')
+        new_password = self.cleaned_data.get('new_password')
+        if new_password and not old_password and not self.instance.check_password(old_password):
+            raise forms.ValidationError('Please enter your old password', code='password_incorrect')
+        return new_password
+
+    def clean_old_password(self):
+        """
+        Validate that the old_password field is correct.
+        """
+        old_password = self.cleaned_data["old_password"]
+        if old_password and not self.instance.check_password(old_password):
+            raise forms.ValidationError(
+                "Incorrect password",
+                code='password_incorrect',
+            )
+        return old_password
+
+    def save(self, commit=True):
+        """Save the new password."""
+        instance = super().save()
+        password = self.cleaned_data["new_password"]
+        if password:
+            instance.set_password(password)
+        if commit:
+            instance.save()
+        return instance
+
+    class Meta:
+        model = User
+        fields = [User.USERNAME_FIELD, 'first_name', 'last_name', 'email', 'old_password', 'new_password']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        #self.fields['userprofile_defined_code'] = forms.ModelChoiceField(queryset=UserProfile.objects.filter(user=kwargs.get('instance')))
 
 class PartialPostForm(ModelForm):
     class Meta:
@@ -118,6 +198,24 @@ class CustomPasswordResetForm(PasswordResetForm):
                 _('User with this email doesn\'t exist.'),
                 code='invalid'
             )
+
+
+
+class ChangeUserImageForm(forms.Form):
+    """Profile image upload form."""
+    new_image = forms.ImageField(validators=[validate_image_file_extension])
+
+    def clean_new_image(self):
+        new_image = self.cleaned_data.get('new_image')
+        if not new_image:
+            raise forms.ValidationError("No image!")
+        else:
+            w, h = get_image_dimensions(new_image)
+            if w < 110:
+                raise forms.ValidationError("The image is %i pixel wide. It's supposed to be more than 110px" % w)
+            if h < 110:
+                raise forms.ValidationError("The image is %i pixel high. It's supposed to be more than 110px" % h)
+            return new_image
 
 
 

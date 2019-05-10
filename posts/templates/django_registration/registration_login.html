@@ -3,7 +3,7 @@
     {% csrf_token %}
     <div class="input-group">
         <div class="input-with-label {% if form.username.errors %}error{% endif %}">
-            <input id="id_email" type="email" name="username">
+            <input id="id_email" type="email" autocomplete="email" name="username">
             <label for="id_email">Email</label>
             {% include 'partial/form_error.html' with errors=form.email.errors %}
             <span class="error-text"></span>
@@ -11,7 +11,7 @@
     </div>
     <div class="input-group">
         <div class="input-with-label {% if form.password.errors %}error{% endif %}">
-            <input id="register-password" type="password" name="password">
+            <input id="register-password" type="password" autocomplete="current-password" name="password">
             <label for="register-password">Password</label>
             {% include 'partial/form_error.html' with errors=form.password1.errors %}
             <span class="error-text"></span>
