@@ -484,7 +484,7 @@ nav
     border-radius: 2px
 
 
-.btn-signup, .btn-login
+.btn-signup, .btn-login, .btn-transparent
     font-family: tt_supermolot_neueextrabold
     min-width: 130px
     position: relative
@@ -501,7 +501,7 @@ nav
 .btn-signup
     margin-right: 16px
 
-.btn-signup:after, .btn-login:after, .btn-signup:before, .btn-login:before
+.btn-signup:after, .btn-login:after, .btn-signup:before, .btn-login:before, .btn-transparent:after, .btn-transparent:before
     content: ''
     background: $primary-color
     position: absolute
@@ -535,15 +535,15 @@ nav
 .btn-signup:after
     right: 0
 
-.btn-login:after
+.btn-login:after, .btn-transparent:after
     right: -2px
 
-.btn-login:before
+.btn-login:before, .btn-transparent:before
     left: -2px
 
 
 
-.btn-login
+.btn-login, .btn-transparent
     padding: 10px 26px
     border: 2px solid rgb(250, 253, 254)
     border: 2px solid rgba(250, 253, 254, 0.3)
@@ -860,6 +860,23 @@ nav
     .modal-header
       border-bottom: none
       padding: 9px 8px 6px 8px
+    .modal-header-image-background
+      background: $primary-color
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
+      margin-bottom: 40px
+      .close
+        mix-blend-mode: exclusion
+
+      & ~ .modal-body .modal-title
+        margin-bottom: 13px
+    .modal-header-image
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
+      mix-blend-mode: overlay
+      height: 120px
+      border-bottom: none
+      padding: 9px 8px 6px 8px
 
     .modal-body
       padding: 0 40px 36px 40px
@@ -902,6 +919,11 @@ nav
   margin-bottom: 8px
   img
     margin-left: 28px
+    flex: 0
+  .center
+    text-align: center
+    flex: 1
+    padding-right: 52px
 
 .button-email
   background: transparent
@@ -1099,7 +1121,7 @@ nav
       min-height: 44px
       &:before, &:after
         width: 4px
-    .btn-login
+    .btn-login, .btn-transparent
       margin-left: 11px
       &:before, &:after
         width: 2px
@@ -1258,7 +1280,7 @@ nav
       margin-right: 0!important
       margin-bottom: 16px
 
-    .btn-login.d-lg-none
+    .btn-login.d-lg-none, .btn-transparent.d-lg-none
       margin-top: 58px
 
     .pagination
@@ -1308,6 +1330,9 @@ nav
 
     .modal
       .modal-header
+        height: 55px
+        position: relative
+      .modal-header-image
         height: 55px
         position: relative
       .close
@@ -1361,7 +1386,7 @@ nav
         padding: 40px 20px
         .button
           max-width: unset
-        .btn-login
+        .btn-login, .btn-transparent
           margin-left: 0
           margin-top: 16px
         .input-group
@@ -1404,7 +1429,7 @@ nav
 
 @media (max-width: 1199.98px)
   .header-title
-    margin-right: 20px
+    margin-right: 10px
 
   .sort-button
     margin-right: 20px

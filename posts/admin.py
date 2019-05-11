@@ -22,6 +22,12 @@ class CommentAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+class NewsSuggestionsAdmin(admin.ModelAdmin):
+    list_display = ('__str__',)
+    search_fields = ['user__first_name', 'user__last_name', 'user__email', 'url']
+
+admin.site.register(UserNewsSuggestion, NewsSuggestionsAdmin)
+
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(PostVote)
 admin.site.register(CommentVote)

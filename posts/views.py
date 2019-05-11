@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http40
 from posts.models import *
 from django.template.response import TemplateResponse
 from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm, UserProfileUpdateForm,\
-	ChangeUserImageForm
+	ChangeUserImageForm, NewNewsSuggestionForm
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
 from posts.utils import DeltaFirstPagePaginator, create_new_contact_hubspot, update_contact_property_hubspot
@@ -12,10 +12,8 @@ from django.db.models import Q
 import operator, os
 from functools import reduce
 from django.db import IntegrityError
-from django.core.paginator import InvalidPage
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.views import LoginView, PasswordResetView
-from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
@@ -315,3 +313,29 @@ def change_user_profile_image(request):
 			return response
 	else:
 		return HttpResponseForbidden('allowed only via POST')
+
+
+class NewNewsSuggestionView(LoginRequiredMixin, generic.edit.CreateView):
+	template_name = 'partial/modal_suggest_news.html'
+	ajax_template_name = 'partial/modal_suggest_news.html'
+	success_url = reverse_lazy('index')
+	success_template = 'partial/modal_suggest_news_success.html'
+	model = UserNewsSuggestion
+	form_class = NewNewsSuggestionForm
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		return super().form_valid(form)
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return TemplateResponse(request, self.success_template)
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response

@@ -233,7 +233,21 @@ class ChangeUserImageForm(forms.Form):
             return new_image
 
 
+class NewNewsSuggestionForm(ModelForm):
 
+    def clean_url(self):
+        url = self.cleaned_data.get('url')
+        try:
+            UserNewsSuggestion.objects.get(url=url)
+            raise ValidationError(_('This link has already been suggested!'), code='url_already_exists')
+        except UserNewsSuggestion.DoesNotExist:
+            return url
+        except UserNewsSuggestion.MultipleObjectsReturned:
+            raise ValidationError(_('This link has already been suggested!'), code='url_already_exists')
+
+    class Meta:
+        model = UserNewsSuggestion
+        fields = ['url',]
 """
 from configstore.configs import ConfigurationInstance, register
 from configstore.forms import ConfigurationForm

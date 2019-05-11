@@ -28,6 +28,7 @@ urlpatterns = [
     path('popular/', views.IndexPopularView.as_view(), name='index_popular'),
     path('search/', views.SearchView.as_view(), name='search'),
     path('api/vote_post/', views.vote_post, name='vote_post'),
+    path('api/suggest_news/', views.NewNewsSuggestionView.as_view(), name="suggest_news"),
     path('accounts/register/',
          views.CustomRegistrationView.as_view(), name='django_registration_register',
     ),

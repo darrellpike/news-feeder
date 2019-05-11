@@ -88,9 +88,12 @@ $(function () {
 
 jQuery.fn.preventDoubleSubmit = function() {
     jQuery(this).submit(function() {
-        if (this.beenSubmitted)
+        console.log(this.beenSubmitted);
+        if (this.beenSubmitted) {
             return false;
-        else
+        }
+        else {
             this.beenSubmitted = true;
+        }
     });
 };

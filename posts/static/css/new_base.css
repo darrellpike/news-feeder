@@ -500,7 +500,7 @@ nav {
   border-radius: 2px;
 }
 
-.btn-signup, .btn-login {
+.btn-signup, .btn-login, .btn-transparent {
   font-family: tt_supermolot_neueextrabold;
   min-width: 130px;
   position: relative;
@@ -519,7 +519,7 @@ nav {
   margin-right: 16px;
 }
 
-.btn-signup:after, .btn-login:after, .btn-signup:before, .btn-login:before {
+.btn-signup:after, .btn-login:after, .btn-signup:before, .btn-login:before, .btn-transparent:after, .btn-transparent:before {
   content: "";
   background: #5A1BE0;
   position: absolute;
@@ -558,15 +558,15 @@ nav {
   right: 0;
 }
 
-.btn-login:after {
+.btn-login:after, .btn-transparent:after {
   right: -2px;
 }
 
-.btn-login:before {
+.btn-login:before, .btn-transparent:before {
   left: -2px;
 }
 
-.btn-login {
+.btn-login, .btn-transparent {
   padding: 10px 26px;
   border: 2px solid #fafdfe;
   border: 2px solid rgba(250, 253, 254, 0.3);
@@ -917,6 +917,26 @@ nav {
   border-bottom: none;
   padding: 9px 8px 6px 8px;
 }
+.modal .modal-content .modal-header-image-background {
+  background: #5A1BE0;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  margin-bottom: 40px;
+}
+.modal .modal-content .modal-header-image-background .close {
+  mix-blend-mode: exclusion;
+}
+.modal .modal-content .modal-header-image-background ~ .modal-body .modal-title {
+  margin-bottom: 13px;
+}
+.modal .modal-content .modal-header-image {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  mix-blend-mode: overlay;
+  height: 120px;
+  border-bottom: none;
+  padding: 9px 8px 6px 8px;
+}
 .modal .modal-content .modal-body {
   padding: 0 40px 36px 40px;
 }
@@ -965,6 +985,12 @@ nav {
 }
 .button-linkedin img {
   margin-left: 28px;
+  flex: 0;
+}
+.button-linkedin .center {
+  text-align: center;
+  flex: 1;
+  padding-right: 52px;
 }
 
 .button-email {
@@ -1197,16 +1223,16 @@ nav {
 .profile-container .profile-settings-container .button:before, .profile-container .profile-settings-container .button:after {
   width: 4px;
 }
-.profile-container .profile-settings-container .btn-login {
+.profile-container .profile-settings-container .btn-login, .profile-container .profile-settings-container .btn-transparent {
   margin-left: 11px;
   color: #707070;
   border: 2px solid #D9DCE2;
 }
-.profile-container .profile-settings-container .btn-login:before, .profile-container .profile-settings-container .btn-login:after {
+.profile-container .profile-settings-container .btn-login:before, .profile-container .profile-settings-container .btn-login:after, .profile-container .profile-settings-container .btn-transparent:before, .profile-container .profile-settings-container .btn-transparent:after {
   width: 2px;
   background: white;
 }
-.profile-container .profile-settings-container .btn-login .btn-login-decoration:after, .profile-container .profile-settings-container .btn-login .btn-login-decoration:before {
+.profile-container .profile-settings-container .btn-login .btn-login-decoration:after, .profile-container .profile-settings-container .btn-login .btn-login-decoration:before, .profile-container .profile-settings-container .btn-transparent .btn-login-decoration:after, .profile-container .profile-settings-container .btn-transparent .btn-login-decoration:before {
   background: #D9DCE2;
   opacity: 1;
 }
@@ -1393,7 +1419,7 @@ nav {
     margin-bottom: 16px;
   }
 
-  .btn-login.d-lg-none {
+  .btn-login.d-lg-none, .btn-transparent.d-lg-none {
     margin-top: 58px;
   }
 
@@ -1455,6 +1481,10 @@ nav {
     height: 55px;
     position: relative;
   }
+  .modal .modal-header-image {
+    height: 55px;
+    position: relative;
+  }
   .modal .close {
     position: absolute;
     top: -41px;
@@ -1512,7 +1542,7 @@ nav {
   .profile-container .profile-settings-container .button {
     max-width: unset;
   }
-  .profile-container .profile-settings-container .btn-login {
+  .profile-container .profile-settings-container .btn-login, .profile-container .profile-settings-container .btn-transparent {
     margin-left: 0;
     margin-top: 16px;
   }
@@ -1560,7 +1590,7 @@ nav {
 }
 @media (max-width: 1199.98px) {
   .header-title {
-    margin-right: 20px;
+    margin-right: 10px;
   }
 
   .sort-button {

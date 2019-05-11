@@ -19,6 +19,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
+from urllib.parse import urlparse
 
 CHAR_FIELD_MAX_LENGTH = 85
 
@@ -145,18 +146,25 @@ def create_profile(sender, instance, created, **kwarg):
 		profile = UserProfile(user=instance)
 		profile.save()
 
+
+class NewsAggregator(models.Model):
+	name = models.CharField(max_length=CHAR_FIELD_MAX_LENGTH)
+	url = models.URLField(max_length=CHAR_FIELD_MAX_LENGTH)
+	logo = ProcessedImageField(upload_to='news_site_logos/',
+	                                     processors=[ResizeToFit(100,100)],
+	                                     format='JPEG',
+	                                     null=True)
+
+
 class Post(models.Model):
 	title = models.CharField(max_length=85)
 	submitter = models.ForeignKey(User, on_delete=models.CASCADE)
 	submit_time = models.DateTimeField(default=timezone.now)
+	news_aggregator = models.ForeignKey('NewsAggregator', on_delete=models.CASCADE, blank=True)
 	url = models.URLField(max_length=300, blank=True)
 	label_for_url = models.CharField(max_length=85, blank=True)
 	text = models.TextField(blank=True)
 	article_text = models.TextField(blank=True)
-	news_site_logo = ProcessedImageField(upload_to='news_site_logos/',
-	                                     processors=[ResizeToFit(100,100)],
-	                                     format='JPEG',
-	                                     null=True)
 	image = models.ImageField(blank=True)
 
 	def time_since_submit(self):
@@ -343,136 +351,10 @@ class PostFlag(models.Model):
 	def __unicode__(self):
 		return self.flagger.first_name + " " + self.flagger.last_name + " flagged " + self.post.title
 
-# class InstagramImage(models.Model):
-# 	tag = models.CharField(max_length=127)
-# 	tags = models.TextField()
-# 	num_tags = models.PositiveIntegerField()
-# 	image_url_lowres = models.URLField()
-# 	image_url_standardres = models.URLField()
-# 	image_url_thumbnail = models.URLField()
-# 	caption = models.TextField()
-# 	submitter_username = models.CharField(max_length=127)
-# 	submitter_full_name = models.CharField(max_length=127)
-# 	submitter_picture_url = models.URLField()
-# 	submitter_id = models.CharField(max_length=127)
-# 	instagram_id = models.CharField(max_length=127, unique=True)
-# 	num_likes = models.PositiveIntegerField()
-# 	created_time = models.DateTimeField()
-# 	link = models.URLField()
-#
-# 	def refetch_info(self):
-# 		try:
-# 			image_info, comments = parse_instagram_to_dic(get_instagram_image(self.instagram_id))
-# 			InstagramImage.objects.filter(pk=self.pk).update(**image_info)
-# 			print image_info, comments
-# 			for c in comments:
-# 				c['image']=self
-# 				comment, comment_created = InstagramComment.objects.get_or_create(instagram_id=c['instagram_id'], defaults=c)
-# 				if not comment_created:
-# 					InstagramComment.objects.filter(pk=comment.pk).update(**c)
-# 		except InstagramClientError:
-# 			print "InstagramClientError!"
-# 		except InstagramAPIError, e:
-# 			print "not found!"
-# 			if e.error_type=='APINotFoundError':
-# 				self.delete()
-#
-#
-# 	def __unicode__(self):
-# 		return '"' + self.caption + '"' + "submitted by " + self.submitter_username
-#
-# class InstagramComment(models.Model):
-# 	body = models.TextField()
-# 	submitter_username = models.CharField(max_length=127)
-# 	submitter_full_name = models.CharField(max_length=127)
-# 	submitter_profile_picture = models.URLField()
-# 	submitter_id = models.CharField(max_length=127)
-# 	instagram_id = models.CharField(max_length=127, unique=True)
-# 	image = models.ForeignKey(InstagramImage)
-# 	created_time = models.DateTimeField()
-#
-# class InstagramHashtagsToFetch(models.Model):
-# 	tag = models.CharField(max_length=127)
-# #TODO: all images for a tag are accessed via https://api.instagram.com/v1/tags/vegan/media/recent?client_id=dc4fe565bfd940dcb4f12834634b4013
-# #img id is accessed by json['images']['standard_resolution']['url'] or json['images']['low_resolution']['url']
-# #comments are json['comments']['data'], which then gives a list. each comment then has comment['text'], comment['from']['username'], comment['from']['profile_picture']
-# #example json:
-# #created_time are in "time since epoch" (in seconds)
-# """
-# json ={
-#          "attribution":null,
-#          "tags":[
-#             "vegetarian",
-#             "foodie",
-#             "vegan",
-#             "southasian"
-#          ],
-#          "location":null,
-#          "comments":{
-#             "count":1,
-#             "data":[
-#                {
-#                   "created_time":"1396822596",
-#                   "text":"#vegan #foodie #southasian #vegetarian",
-#                   "from":{
-#                      "username":"elainechandow",
-#                      "profile_picture":"http:\/\/images.ak.instagram.com\/profiles\/anonymousUser.jpg",
-#                      "id":"319310606",
-#                      "full_name":"elaine"
-#                   },
-#                   "id":"692920616911207521"
-#                }
-#             ]
-#          },
-#          "filter":"Amaro",
-#          "created_time":"1396822531",
-#          "link":"http:\/\/instagram.com\/p\/mdvyL6iX3j\/",
-#          "likes":{
-#             "count":0,
-#             "data":[
-#
-#             ]
-#          },
-#          "images":{
-#             "low_resolution":{
-#                "url":"http:\/\/distilleryimage1.s3.amazonaws.com\/cfe0a786bdd811e3afc612cd81b9cc59_6.jpg",
-#                "width":306,
-#                "height":306
-#             },
-#             "thumbnail":{
-#                "url":"http:\/\/distilleryimage1.s3.amazonaws.com\/cfe0a786bdd811e3afc612cd81b9cc59_5.jpg",
-#                "width":150,
-#                "height":150
-#             },
-#             "standard_resolution":{
-#                "url":"http:\/\/distilleryimage1.s3.amazonaws.com\/cfe0a786bdd811e3afc612cd81b9cc59_8.jpg",
-#                "width":640,
-#                "height":640
-#             }
-#          },
-#          "users_in_photo":[
-#
-#          ],
-#          "caption":{
-#             "created_time":"1396822531",
-#             "text":"Lentil Soup, Vegetarian Somosa and chutney sauce",
-#             "from":{
-#                "username":"elainechandow",
-#                "profile_picture":"http:\/\/images.ak.instagram.com\/profiles\/anonymousUser.jpg",
-#                "id":"319310606",
-#                "full_name":"elaine"
-#             },
-#             "id":"692920075082628167"
-#          },
-#          "type":"image",
-#          "id":"692920074638032355_319310606",
-#          "user":{
-#             "username":"elainechandow",
-#             "website":"",
-#             "profile_picture":"http:\/\/images.ak.instagram.com\/profiles\/anonymousUser.jpg",
-#             "full_name":"elaine",
-#             "bio":"",
-#             "id":"319310606"
-#          }
-#       }
-# """
+
+class UserNewsSuggestion(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	url = models.URLField(max_length=150)
+
+	def __str__(self):
+		return "{url} | {user}".format(url=urlparse(self.url).netloc, user=self.user.email)
