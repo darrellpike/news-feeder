@@ -160,9 +160,10 @@ class Post(models.Model):
 	title = models.CharField(max_length=85)
 	submitter = models.ForeignKey(User, on_delete=models.CASCADE)
 	submit_time = models.DateTimeField(default=timezone.now)
-	news_aggregator = models.ForeignKey('NewsAggregator', on_delete=models.CASCADE, blank=True)
+	news_aggregator = models.ForeignKey('NewsAggregator', on_delete=models.CASCADE, blank=True, null=True)
 	url = models.URLField(max_length=300, blank=True)
-	label_for_url = models.CharField(max_length=85, blank=True)
+	label_for_url = models.CharField(max_length=85, blank=True, help_text=_("If post don't have news_aggregator, "
+	                                                                        "this label will replace news aggregator name"))
 	text = models.TextField(blank=True)
 	article_text = models.TextField(blank=True)
 	image = models.ImageField(blank=True)

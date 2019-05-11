@@ -220,10 +220,10 @@ html, body
 
 body
   background: rgb(239,239,239)
-  font-family: gt_americaregular
+  font-family: gt_americaregular, Arial
 
 h3
-  font-family: tt_supermolot_neuebold
+  font-family: tt_supermolot_neuebold, "Arial Black", Arial
   font-size: 20px
   line-height: 24px
   letter-spacing: -0.02em
@@ -728,7 +728,7 @@ nav
 
 .latest-news .article .article-body
   min-height: 188px
-  padding: 20px 24px
+  padding: 20px 0
   padding-top: 0
   display: flex
   flex-flow: column wrap
@@ -744,7 +744,7 @@ nav
   color: $text-color
   word-break: break-word
   height: calc(100% - 26px)
-  padding-top: 20px
+  padding: 20px 24px
   &:hover
     opacity: 0.8
     text-decoration-line: none
@@ -752,6 +752,7 @@ nav
 
 .latest-news .article .article-statistics
   margin-top: auto
+  padding: 0 24px
 
 .pagination
   display: flex

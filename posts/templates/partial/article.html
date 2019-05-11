@@ -8,16 +8,22 @@
             <span class="rating-text">{{ article.get_score|format_count }}</span>
         </button>
     </div>
-    {% if article.news_site_logo %}
+    {% if article.news_aggregator %}
         <div class="news-aggregator-image">
-            <a href="{{ article.url }}">
-                <img alt="{{ article.news_site_logo }}" src="{{ article.news_site_logo.url }}" />
+            <a href="{{ article.news_aggregator.url }}">
+                <img alt="{{ article.news_aggregator }}" src="{{ article.news_aggregator.logo.url }}" />
             </a>
         </div>
     {% endif %}
     <div class="article-body">
         <div class="article-statistics d-md-none d-lg-none">
-            <a href="{{ article.url }}" class="news-aggregator-link">{{ article.label_for_url }}</a>
+            <a href="{{ article.url }}" class="news-aggregator-link">
+                {% if article.news_aggregator %}
+                    {{ article.news_aggregator.name }}
+                {% else %}
+                    {{ article.label_for_url }}
+                {% endif %}
+            </a>
             <span class="article-time">• {{ article.time_since_submit|smooth_timedelta }} ago</span>
         </div>
         <a class="article-title" href="#">{{ article.title }}</a>
@@ -37,7 +43,13 @@
                                     <span class="article-comments-text">{{ article.comment_count }} comments</span>
             </span>
             <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">• {{ article.time_since_submit|smooth_timedelta }} ago •</span>
-            <a href="{{ article.url }}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">{{ article.label_for_url }}</a>
+            <a href="{{ article.url }}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">
+                {% if article.news_aggregator %}
+                    {{ article.news_aggregator.name }}
+                {% else %}
+                    {{ article.label_for_url }}
+                {% endif %}
+            </a>
         </div>
     </div>
 </div>

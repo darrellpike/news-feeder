@@ -79,7 +79,13 @@
                                     <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">
                                     • {{ article.time_since_submit|smooth_timedelta }} ago •</span>
                                     <a href="{{ article.url }}" class="news-aggregator-link
-                                 d-none d-md-inline d-lg-inline d-xl-inline">{{ article.label_for_url }}</a>
+                                 d-none d-md-inline d-lg-inline d-xl-inline">
+                                        {% if article.news_aggregator %}
+                                            {{ article.news_aggregator.name }}
+                                        {% else %}
+                                            {{ article.label_for_url }}
+                                        {% endif %}
+                                    </a>
                                 </div>
                             </div>
                     </div>

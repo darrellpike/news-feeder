@@ -188,11 +188,11 @@ html, body {
 
 body {
   background: #efefef;
-  font-family: gt_americaregular;
+  font-family: gt_americaregular, Arial;
 }
 
 h3 {
-  font-family: tt_supermolot_neuebold;
+  font-family: tt_supermolot_neuebold, "Arial Black", Arial;
   font-size: 20px;
   line-height: 24px;
   letter-spacing: -0.02em;
@@ -774,7 +774,7 @@ nav {
 
 .latest-news .article .article-body {
   min-height: 188px;
-  padding: 20px 24px;
+  padding: 20px 0;
   padding-top: 0;
   display: flex;
   flex-flow: column wrap;
@@ -791,7 +791,7 @@ nav {
   color: #111111;
   word-break: break-word;
   height: calc(100% - 26px);
-  padding-top: 20px;
+  padding: 20px 24px;
 }
 .latest-news .article .article-title:hover {
   opacity: 0.8;
@@ -801,6 +801,7 @@ nav {
 
 .latest-news .article .article-statistics {
   margin-top: auto;
+  padding: 0 24px;
 }
 
 .pagination {
