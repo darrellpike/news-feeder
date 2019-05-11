@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'mptt',
     'sanitizer',
+    'social_django',
     'el_pagination',
     'django_cleanup.apps.CleanupConfig'
 ]
@@ -71,6 +72,8 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -107,6 +110,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.linkedin.LinkedinOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = '86e9htaat0ion0'
+SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = 'cMEYPPCoW7GkNIcj'
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home/'
+SOCIAL_AUTH_LOGIN_URL = '/accounts/login/'
 
 
 # Internationalization

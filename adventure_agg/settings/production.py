@@ -15,6 +15,8 @@ DATABASES = {
     }
 }
 
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
 # Email settings
 # We are using HubSpot as email backend
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

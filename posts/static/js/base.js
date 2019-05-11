@@ -59,11 +59,11 @@ $(function () {
             url: form.attr('action'),
             data: form.serialize(),
             success: function (data) {
-                this.beenSubmitted = false;
+                form.beenSubmitted = false;
                 window.location.href = data.url;
             },
             error: function (data) {
-                this.beenSubmitted = false;
+                form.beenSubmitted = false;
                 var errors;
                 if (data.statusText === "Unprocessable Entity"){
                     errors = $.parseJSON(data.responseText);

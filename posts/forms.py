@@ -40,6 +40,18 @@ class UserProfileUpdateForm(ModelForm):
                 self.cleaned_data[field] = getattr(self.instance, field)
         return self.cleaned_data
 
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name:
+            response = update_contact_property_hubspot(self.instance.email, 'firstname', first_name)
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name:
+            response = update_contact_property_hubspot(self.instance.email, 'lastname', last_name)
+        return last_name
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         try:
@@ -47,6 +59,9 @@ class UserProfileUpdateForm(ModelForm):
             if user.pk == self.instance.pk:
                 return email
         except User.DoesNotExist:
+            if email:
+                response = update_contact_property_hubspot(self.instance.email, 'email', email)
+
             return email
         raise ValidationError(_('This email address is already in use. Please supply a different email address.'),
                               code='email_already_exists')

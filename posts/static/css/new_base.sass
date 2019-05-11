@@ -267,6 +267,8 @@ button:focus
   font-family: tt_supermolot_neuebold
 
 .button
+  align-items: center
+  display: block
   font-family: tt_supermolot_neuebold
   width: 100%
   background: transparent
@@ -281,15 +283,15 @@ button:focus
     content: ''
     background: white
     position: absolute
-    width: 5px
+    width: 7px
     top: 38%
     bottom: 38%
     pointer-events: none
     z-index: 1
   &:after
-    right: -1px
+    right: -2px
   &:before
-    left: -1px
+    left: -2px
 
 .primary-button
   background: $primary-color
@@ -885,6 +887,40 @@ nav
     margin-top: 12px!important
     margin-bottom: 30px!important
 
+
+#welcome-modal
+  .modal-title
+    margin-bottom: 13px
+
+.button-linkedin
+  &:hover
+    text-decoration-line: none
+    color: #FAFDFE
+  background: #0077B5
+  color: #FAFDFE
+  display: flex
+  margin-bottom: 8px
+  img
+    margin-left: 28px
+
+.button-email
+  background: transparent
+  color: $primary-color
+  border: 2px solid #DEE1E4
+  &:hover, &:active
+    background: transparent
+  &:after, &:before
+    width: 5px
+  .btn-login-decoration
+    &:after, &:before
+      border: 2px solid #DEE1E4
+      z-index: 0
+      opacity: 1
+      top: 33%
+      bottom: 33%
+      width: 5px
+
+
 .button-without-bottom-text
   margin-bottom: 24px
 
@@ -1016,14 +1052,17 @@ nav
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2)
     border-radius: 2px
     padding: 40px 52px
+    .text-capitalize
+      display: none
     .profile-image
       margin-bottom: 20px
-      img
-        display: block
+      .image
         margin: 0 auto
-        border-radius: 2px
-        max-height: 180px
         width: 180px
+        > img:first-of-type
+          display: block
+          border-radius: 2px
+          max-height: 180px
     #change-image
       min-width: 190px
       min-height: 44px
@@ -1036,14 +1075,17 @@ nav
     border-radius: 2px
     display: flex
     flex-flow: column wrap
+    h3
+      display: none
     .input-with-label
-      max-width: calc(50% - 20px)
       &.first-name
         width: 100%
         ~ .input-with-label
           width: 100%
       &:last-of-type
         align-self: flex-end
+    .input-with-label
+      max-width: calc(50% - 20px) !important
     .input-group:last-of-type
       justify-content: normal
 
@@ -1075,7 +1117,8 @@ nav
       .btn-login-decoration:after, .btn-login-decoration:before
         background: #E72C59
 
-
+.change-image-icon
+  display: none
 
 @media (min-width: 1439px)
   .latest-stories
@@ -1143,12 +1186,13 @@ nav
       display: none
 
     .main-content
-      margin-top: 12px
-      margin-right: 0
-      margin-left: 0
+      margin: 0
       padding-right: 0
       padding-left: 0
       max-width: 100%
+
+    .row
+      margin-top: 12px
 
     .news-header
       display: none
@@ -1238,8 +1282,10 @@ nav
           font-size: 18px
           line-height: 24px
 
-    #search-results
+    #mobile-sort-buttons ~ #search-results
       margin-top: 10px
+    #search-results
+      margin-top: 60px
       #other-results
         margin: 18px 20px
       .news-header
@@ -1287,6 +1333,46 @@ nav
       .first-name
         margin-bottom: 32px
         margin-right: 0
+
+    .profile-container
+      margin: 0
+      flex-direction: column
+      .profile-image-container
+        border-bottom: 1px solid #EBEBEB
+        max-width: unset
+        width: 100%
+        margin-right: 0
+        .text-capitalize
+          text-align: center
+          font-family: gt_americabold
+          display: block
+        .profile-image
+          .image
+            position: relative
+          .change-image-icon
+            display: block
+            position: absolute
+            bottom: -6px
+            right: -6px
+        #change-image
+          display: none
+
+      .profile-settings-container
+        padding: 40px 20px
+        .button
+          max-width: unset
+        .btn-login
+          margin-left: 0
+          margin-top: 16px
+        .input-group
+
+          h3
+            display: block!important
+            font-size: 16px
+            line-height: 17px
+            margin-bottom: 33px
+          .input-with-label
+            max-width: unset!important
 
 
 
@@ -1353,6 +1439,9 @@ nav
     .article
       .article-title
           display: block
+          height: calc(100% - 38px)
+      .article-comments img
+        margin-right: 2px!important
 
   .row
     margin-right: 0
@@ -1370,3 +1459,9 @@ nav
   .btn-admin
     margin-left: 10px!important
     padding: 6px 0 !important
+
+  .profile-settings-container
+    padding: 56px 35px 60px 30px!important
+
+  .profile-image-container
+    padding: 40px 15px!important

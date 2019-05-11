@@ -1,10 +1,17 @@
 {% extends 'posts/base.html' %}
+{% load staticfiles %}
+
+{% block mobile_sort_buttons %}
+{% endblock mobile_sort_buttons %}
 
 {% block content %}
     <div class="profile-container">
         <div class="profile-image-container">
             <div class="profile-image">
-                <img src="{{ user.userprofile.image_thumbnail_md.url }}" alt="Profile image" />
+                <div class="image">
+                    <img src="{{ user.userprofile.image_thumbnail_md.url }}" alt="Profile image">
+                    <img src="{% static 'images/change_image_icon.svg' %}" class="change-image-icon" alt="Change image">
+                </div>
             </div>
             <button id="change-image" class="button primary-button">Change image</button>
             <span id="image-error" class="error-text"></span>
@@ -12,6 +19,7 @@
                 {% csrf_token %}
                 <input id="change-image-input" type="file" name="new_image">
             </form>
+            <div class="text-capitalize">{{ user.first_name }} {{ user.last_name }}</div>
         </div>
         <div class="profile-settings-container">
             <form action="{% url 'profile' %}" method="post">
@@ -39,6 +47,7 @@
                     </div>
                 </div>
                 <div class="input-group">
+                    <h3>Change password</h3>
                     <div class="input-with-label first-name {% if form.old_password.errors %}error{% endif %}">
                         <input id="register-password" type="password" autocomplete="old-password" name="old_password">
                         <label for="register-password">Old password</label>
@@ -85,7 +94,7 @@
 
             var image_input = $('#change-image-input');
 
-            $('#change-image').on('click', function (e) {
+            $('#change-image, .image').on('click touch', function (e) {
                 e.preventDefault();
                 image_input.click();
             });
@@ -101,7 +110,7 @@
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        $('.profile-image img').attr('src', data.new_image_url);
+                        $('.profile-image image > img').attr('src', data.new_image_url);
                     },
                     error: function (data) {
                         console.log(data);

@@ -115,11 +115,12 @@
         <input type="search" placeholder="Search News & Articles">
     </form>
 </div>
-
+{% block mobile_sort_buttons %}
 <div id="mobile-sort-buttons" class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
                 <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' or request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
+{% endblock mobile_sort_buttons %}
 <div id="search-results" class="container main-content"></div>
 <div class="container main-content">
 {% block content %}{% endblock content %}
@@ -163,14 +164,14 @@
         $('.btn-signup').click(function () {
             $.get("{% url 'django_registration_register' %}",
                 function (data) {
-                    $('.modal .modal-body').html(data);
+                    $('#register-modal .modal-body').html(data);
                 }
             );
         });
         $('.btn-login').click(function () {
             $.get("{% url 'django_registration_login' %}",
                 function (data) {
-                    $('.modal .modal-body').html(data);
+                    $('#register-modal .modal-body').html(data);
                 }
             );
         });
