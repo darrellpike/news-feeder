@@ -32,6 +32,7 @@
         <script src="../../assets/js/respond.min.js"></script>
         <![endif]-->
     <!-- Hotjar Tracking Code for https://news.viceroy.tech -->
+    <script type="text/javascript" src="{% static 'js/js.cookie.js' %}"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
         (function(h,o,t,j,a,r){
@@ -116,10 +117,6 @@
     </form>
 </div>
 {% block mobile_sort_buttons %}
-<div id="mobile-sort-buttons" class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' or request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
-                <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
-            </div>
 {% endblock mobile_sort_buttons %}
 <div id="search-results" class="container main-content"></div>
 <div class="container main-content">
@@ -151,7 +148,6 @@
 {% if request.user.is_authenticated %}
 <script type="text/javascript" src="{% static 'js/upvote.js' %}"></script>
 {% endif %}
-<script type="text/javascript" src="{% static 'js/js.cookie.js' %}"></script>
 <script>
     let menu = $('#navbarSupportedContent');
     menu.on('show.bs.collapse', function () {
