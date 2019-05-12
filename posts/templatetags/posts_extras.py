@@ -23,8 +23,8 @@ import operator
 
 
 from django import template
-import urlparse
-from django.core.urlresolvers import reverse
+# import urlparse
+from django.urls import reverse
 
 register = template.Library()
 
@@ -35,29 +35,41 @@ def smooth_timedelta(timedeltaobj):
     timetot = ""
     if secs > 86400: # 60sec * 60min * 24hrs
         days = secs // 86400
-        timetot += "{} days".format(int(days))
-        # secs = secs - days*86400
+        if days == 1:
+            timetot += "{} day".format(int(days))
+        else:
+            timetot += "{} days".format(int(days))
 
     if secs > 3600 and secs < 86400:
         hrs = secs // 3600
-        timetot += " {} hours".format(int(hrs))
+        if hrs == 1:
+            timetot += " {} hour".format(int(hrs))
+        else:
+            timetot += " {} hours".format(int(hrs))
         # secs = secs - hrs*3600
 
     if secs > 60 and secs < 3600:
         mins = secs // 60
-        timetot += " {} minutes".format(int(mins))
+        if mins == 1:
+            timetot += " {} minute".format(int(mins))
+        else:
+            timetot += " {} minutes".format(int(mins))
         # secs = secs - mins*60
 
     if secs > 0 and secs < 60:
-        print('sec')
         timetot += " {} seconds".format(int(secs))
     return timetot
 
-def domainize(value):
-    domain = urlparse.urlparse(value).netloc
-    return domain.strip("www.")
 
-register.filter('domainize', domainize)
+@register.filter
+def format_count(number):
+    """Format number for 10.1k"""
+    if number >= 10000:
+        formatted_number = float(number) / 1000
+        formatted_number = str(formatted_number)[:4] + 'k'
+        return formatted_number
+    else:
+        return number
 
 
 def user_voted(item, user):

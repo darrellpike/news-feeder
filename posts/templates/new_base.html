@@ -9,9 +9,9 @@
     {% endblock viewport %}
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta property="og:title" content="{% block meta-title %}PLANTDIETlife{% endblock %}">
+    <meta property="og:title" content="{% block meta-title %}WHITE HAT NEWS{% endblock %}">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://www.plantdietlife.com{{ STATIC_URL }}images/pdl.png"/>
+    <meta property="og:image" content="https://news.viceroy.tech{% static 'images/og.jpg' %}"/>
     {% block meta_description %}
         <meta property="og:description" content="{{ title_tagline }}">{% endblock %}
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
@@ -36,41 +36,89 @@
 <body>
 <header class="d-flex align-items-stretch">
     <div class="container d-flex align-items-stretch">
-        <nav class="navbar navbar-expand-lg flex-fill align-items-stretch">
+        <nav class="navbar navbar-expand-md flex-fill align-items-stretch">
             <div class="header-title navbar-brand align-self-center">
                 <a href="{% url 'index' %}">White hat news</a>
             </div>
-            <button class="btn navbar-toggler ml-auto collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="search d-flex d-md-none d-lg-none d-xl-none ml-auto align-self-center align-items-stretch">
+                <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}" /></button>
+            </div>
+            <button class="btn navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon top-bar"></span>
                 <span class="navbar-toggler-icon bottom-bar"></span>
             </button>
-            <div class="d-none d-lg-flex sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+            <div class="d-none d-md-flex d-lg-flex sort-buttons align-lg-self-stretch align-items-stretch">
+                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
-            <div class="search d-none d-lg-flex d-xl-flex align-self-center align-self-lg-stretch align-items-stretch">
-                    <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}"></button>
+            <div class="search d-none d-md-flex d-lg-flex d-xl-flex align-self-center align-items-stretch">
+                <button class="btn btn-search"><img alt="Search" src="{% static 'images/search.svg' %}" /></button>
             </div>
-            <div  class="collapse navbar-collapse flex-lg-row" id="navbarSupportedContent">
+            <div  class="collapse navbar-collapse flex-md-row flex-lg-row" id="navbarSupportedContent">
                 <div class='navbar-expander'></div>
-                <div class="header-buttons d-flex d-lg-inline-flex ml-lg-auto flex-column flex-lg-row">
-                    <button class="btn btn-link suggest-news d-none d-lg-inline-block d-xl-inline-block">Suggest news</button>
-                    <button class="btn btn-signup red-button">Sign up</button>
+                <div class="header-buttons d-flex d-md-inline-flex d-lg-inline-flex ml-md-auto ml-lg-auto flex-column flex-md-row flex-lg-row">
+                    {% if request.user.is_authenticated %}
+                    <button class="btn btn-link suggest-news">Suggest news</button>
+                    {% endif %}
+                    {% if not request.user.is_authenticated %}
+                    <button type="button" data-toggle="modal" data-target="#sign-up-modal" class="btn btn-signup red-button">Sign up</button>
+                    {% endif %}
                     <button class="btn btn-login primary-button"><span class="btn-login-decoration">Login</span></button>
-                    <button class="btn btn-login primary-button d-inline-block d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
+                    {% if request.user.is_authenticated %}
+                    <button class="btn btn-login primary-button d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
+                    {% endif %}
                 </div>
             </div>
         </nav>
     </div>
 </header>
-<div class="d-flex d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
-                <a href="{% url 'index' %}" class="btn d-flex sort-button {% if request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+<div class="search-container">
+    <form id="search-form" class="container">
+        <input type="search" placeholder="Search News & Articles">
+    </form>
+</div>
+
+<div id="mobile-sort-buttons" class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
+                <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' or request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
                 <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
             </div>
+<div id="search-results" class="container main-content"></div>
 <div class="container main-content">
 {% block content %}{% endblock content %}
 </div>
-
+{% if not request.user.is_authenticated %}
+<div class="modal fade" id="sign-up-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sign up</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'django_registration_register' %}">
+            {% csrf_token %}
+            <label for="register-first-name">First name</label>
+            <input id="register-first-name" type="text" name="first_name">
+            <label for="register-last-name">Lase name</label>
+            <input id="register-last-name" type="text" name="last_name">
+            <label for="id_email">Email</label>
+            <input id="id_email" type="email" name="email">
+            <label for="register-password">Password</label>
+            <input id="register-password" type="password" name="password1">
+            <button type="submit" id="register-submit">Sign up</button>
+        </form>
+          <p>Have an account? <a href="#">Log in</a></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 {% block bottom-of-body %}{% endblock %}
 <!-- Bootstrap core JavaScript
@@ -79,6 +127,10 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="{% static 'bootstrap-4.3.1/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+{% if request.user.is_authenticated %}
+<script type="text/javascript" src="{% static 'js/upvote.js' %}"></script>
+{% endif %}
+<script type="text/javascript" src="{% static 'js/js.cookie.js' %}"></script>
 <script>
     let menu = $('#navbarSupportedContent');
     menu.on('show.bs.collapse', function () {
@@ -88,6 +140,9 @@
         $('header').css({position: 'relative'});
     });
 </script>
+<!-- Start of HubSpot Embed Code -->
+<script type=“text/javascript” id=“hs-script-loader” async defer src=“http://js.hs-scripts.com/5139372.js”></script>
+<!-- End of HubSpot Embed Code -->
 {% block js %}
 {% endblock %}
 </body>

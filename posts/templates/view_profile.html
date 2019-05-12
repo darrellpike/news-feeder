@@ -48,7 +48,7 @@
             {% if owns_page %}
                 {{ form.description }}<br><br>
             {% else %}
-                {{ profile_owner.userprofile.description }}
+                {{ profile_owner.profile.description }}
             {% endif %}
         </div>
     </div>
@@ -57,7 +57,7 @@
             Karma:
         </div>
         <div class="col-md-4">
-            {{ profile_owner.userprofile.count_karma }}
+            {{ profile_owner.profile.count_karma }}
         </div>
     </div>
     <div class="row">
@@ -76,7 +76,7 @@
             {% if owns_page %}<a href="{% url 'auth_password_change' %}">Change password</a>{% endif %}
 
             {% if user.is_staff %}
-                <a href="{% url 'admin:posts_userprofile_change' profile_owner.id %}">
+                <a href="{% url 'admin:posts_profile_change' profile_owner.id %}">
                     <small>(edit user details as admin)</small>
                 </a>
             {% endif %}

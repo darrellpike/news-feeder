@@ -1,0 +1,75 @@
+{% extends 'new_base.html' %}
+{% load staticfiles posts_extras %}
+<<<<<<< Updated upstream:posts/templates/story_modal_view_backup.html
+
+{% block content %}
+    <div class="article-view">
+=======
+{% block content %}
+<div class="modal-content">
+>>>>>>> Stashed changes:posts/templates/story_modal_view.html
+<div data-article="{{ article.pk }}" class="article">
+    <div class="rating">
+        <button class="btn-upvote">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.1357 0.139022L0.177109 5.49626C0.0113516 5.64519 -0.0439008 5.87877 0.0362694 6.08663C0.11644 6.29235 0.316865 6.42842 0.541125 6.42842L3.79127 6.42842L3.79127 12.4643C3.79127 12.76 4.03394 13 4.33296 13L8.66648 13C8.96549 13 9.20817 12.76 9.20817 12.4643L9.20817 6.42842L12.4583 6.42842C12.6826 6.42842 12.883 6.29234 12.9642 6.08663C12.9881 6.02341 13 5.95805 13 5.89269C13 5.74484 12.9372 5.60019 12.8223 5.49626L6.86373 0.139022C6.65789 -0.0463393 6.34154 -0.0463393 6.1357 0.139022Z" fill="#888A8C"/>
+            </svg>
+            {#                                <img alt="Upvote" class="upvote" src="{% static 'images/upvote.svg' %}"/>#}
+            <span class="rating-text">{{ article.get_score }}</span>
+        </button>
+    </div>
+    <div class="article-body">
+        <div class="article-header">
+            <div class="article-statistics d-lg-none">
+                <a href="{{ article.url }}" class="news-aggregator-link">{{ article.url|cut:"http://" }}</a>
+                <span class="article-time">• {{ article.time_since_submit|smooth_timedelta }} ago</span>
+            </div>
+            {% if article.news_site_logo %}
+                <div class="news-aggregator-image">
+                    <img alt="{{ article.news_site_logo }}" src="{{ article.news_site_logo.url }}" />
+                </div>
+            {% endif %}
+            <p class="article-title">{{ article.title }}</p>
+        </div>
+        {% if article.image %}
+            <div class="article-image">
+                <img alt="{{ article.title }}" src="{{ article.image.url }}"/>
+            </div>
+        {% endif %}
+        <div class="article-statistics">
+                                <span class="article-rating d-inline d-lg-none d-xl-none">
+                                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.1357 0.139022L0.177109 5.49626C0.0113516 5.64519 -0.0439008 5.87877 0.0362694 6.08663C0.11644 6.29235 0.316865 6.42842 0.541125 6.42842L3.79127 6.42842L3.79127 12.4643C3.79127 12.76 4.03394 13 4.33296 13L8.66648 13C8.96549 13 9.20817 12.76 9.20817 12.4643L9.20817 6.42842L12.4583 6.42842C12.6826 6.42842 12.883 6.29234 12.9642 6.08663C12.9881 6.02341 13 5.95805 13 5.89269C13 5.74484 12.9372 5.60019 12.8223 5.49626L6.86373 0.139022C6.65789 -0.0463393 6.34154 -0.0463393 6.1357 0.139022Z" fill="#888A8C"/>
+                                    </svg>
+                                </span>
+            <span class="article-time d-none d-lg-inline d-xl-inline">{{ article.time_since_submit|smooth_timedelta }} ago •</span></span>
+            <a href="{{ article.url }}" class="news-aggregator-link d-none d-lg-inline d-xl-inline">{{ article.url|cut:"http://" }}</a>
+        </div>
+    </div>
+</div>
+<div class="article-comments">
+    <div class="article-comments-header d-flex">
+        <div class="comments-count align-self-start">{{ article.comment_count }} comments</div>
+        {% if comments.all %}
+            <div class="align-self-end d-inline-flex">
+                <button id="comments-newest" class="btn btn-link active">oldest</button>
+                <button id="comments-oldest" class="btn btn-link">newest</button>
+                <button id="comments-popular" class="btn btn-link">liked</button>
+            </div>
+        {% endif %}
+    </div>
+    <div class="article-comments-body d-flex flex-column">
+        {% for comment in comments.all %}
+            <div class="comment">
+                <div class="user-thumbnail">{% if comment.author.user_image_thumbnail %}<img src="{{ comment.author.user_image_thumbnail.url }}" alt="{{ comment }}" />{% endif %}</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<<<<<<< Updated upstream:posts/templates/story_modal_view_backup.html
+    </div>
+{% endblock content %}
+=======
+</div>
+{% endblock %}
+>>>>>>> Stashed changes:posts/templates/story_modal_view.html

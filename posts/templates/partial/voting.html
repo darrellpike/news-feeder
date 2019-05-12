@@ -6,7 +6,7 @@
    {% if user.is_authenticated %} item_id="{{ item.pk }}" score="1" vote_type="{{ vote_type }}" {% endif %}>
   <img src="{{STATIC_URL}}images/upvote.png" />
 </div>
-{% if user.userprofile.count_karma >= karma_threshold %}
+{% if user.profile.count_karma >= karma_threshold %}
 <a onclick="_gaq.push(['_trackEvent', 'Actions', 'Downvote {{item|classname}} arrow', 'Downvoting a {{item|classname}}']);" {% if user.is_authenticated %}class="vote" item_id="{{ item.pk }}" score="-1" vote_type="{{ vote_type }}"{% endif %}>
   <img src="{{STATIC_URL}}images/downvote.png" />
 </a>
