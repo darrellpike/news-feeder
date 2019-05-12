@@ -120,15 +120,22 @@
         </div>
         {% include 'partial/welcome_modal_first_time.html' %}
         <script>
+            let maxTimes = 5;
             let firstTimeCookie = Cookies.get('first-time');
+            let welcomeModalCookie = parseInt(Cookies.get('welcome-modal'));
             let firstTimeWelcomeModal = $('#welcome-modal-first-time');
             let welcomeModal = $('#welcome-modal');
             let timeBeforeOpen = 1000;
 
             if (firstTimeCookie) {
-                setTimeout(function () {
-                    welcomeModal.modal('show');
-                }, timeBeforeOpen);
+                if (welcomeModalCookie <= maxTimes) {
+                    if (welcomeModalCookie) times = welcomeModalCookie + 1;
+                    else times = 1;
+                    Cookies.set('welcome-modal', times, { expires: 365, path: '' });
+                    setTimeout(function () {
+                        welcomeModal.modal('show');
+                    }, timeBeforeOpen);
+                }
             } else {
                 Cookies.set('first-time', true, { expires: 365, path: '' });
                 setTimeout(function () {
