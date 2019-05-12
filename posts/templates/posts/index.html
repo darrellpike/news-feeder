@@ -93,6 +93,7 @@
             </div>
         </div>
     </div>
+    {% if not request.user.is_authenticated %}
     <div class="modal fade" id="welcome-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -111,4 +112,5 @@
   </div>
 </div>
     {% include 'partial/welcome_modal_first_time.html' %}
+    {% endif %}
 {% endblock content %}

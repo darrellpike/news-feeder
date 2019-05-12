@@ -206,7 +206,12 @@ class CustomPasswordResetForm(PasswordResetForm):
         email = self.cleaned_data['email']
         User = get_user_model()
         try:
-            User.objects.get(email=email)
+            user = User.objects.get(email=email)
+            if user.social_auth.all():
+                raise ValidationError(
+                _('User with this email was logged in via LinkedIn'),
+                code='invalid'
+            )
             return email
         except User.DoesNotExist:
             raise ValidationError(

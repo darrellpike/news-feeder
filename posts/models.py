@@ -106,6 +106,7 @@ class UserProfile(models.Model):
 	image_thumbnail_md = ImageSpecField(source='image',
 	                                processors=[ResizeToFill(300,300)],
 	                                format='PNG')
+	hubspot_contact = models.BooleanField(default=False)
 	description = models.TextField(blank=True, validators=[MaxLengthValidator(500)])
 	is_email_public = models.BooleanField(default=False)
 	is_shadowbanned = models.BooleanField(default=False)

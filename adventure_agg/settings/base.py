@@ -113,16 +113,40 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.linkedin.LinkedinOAuth2',
+    'social_core.backends.linkedin.LinkedinMobileOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+# SOCIAL_AUTH_AUTHENTICATION_BACKENDS = (
+#     'social_core.backends.linkedin.LinkedinOAuth2',
+# )
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_URL = '/accounts/login/'
 
 SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = '86e9htaat0ion0'
 SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = 'cMEYPPCoW7GkNIcj'
 
 SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = ['r_emailaddress', 'r_liteprofile']
 
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home/'
-SOCIAL_AUTH_LOGIN_URL = '/accounts/login/'
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+
+SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = ['emailAddress', 'profilePicture(displayImage~:playableStreams)']
+SOCIAL_AUTH_LINKEDIN_OAUTH2_USER_FIELDS = ['first_name', 'last_name', 'password', 'email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'posts.utils.save_profile',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'posts.utils.activate_user'
+)
 
 
 # Internationalization
@@ -164,6 +188,7 @@ MEDIA_URL = "/media/"
 
 # Registration settings
 AUTH_USER_MODEL = 'posts.User'
+SOCIAL_AUTH_USER_MODEL = 'posts.User'
 ACCOUNT_ACTIVATION_DAYS = 2
 REGISTRATION_SALT = SECRET_KEY
 

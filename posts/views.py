@@ -5,7 +5,7 @@ from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordRese
 	ChangeUserImageForm, NewNewsSuggestionForm
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
-from posts.utils import DeltaFirstPagePaginator, create_new_contact_hubspot, update_contact_property_hubspot
+from posts.utils import DeltaFirstPagePaginator, create_or_update_contact_hubspot, update_contact_property_hubspot
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
@@ -187,7 +187,7 @@ class CustomRegistrationView(RegistrationView):
 		new_user.is_active = False
 		new_user.save()
 
-		response = create_new_contact_hubspot(new_user.id, self.get_activation_key(new_user))
+		response = create_or_update_contact_hubspot(new_user.id, self.get_activation_key(new_user))
 		self.send_activation_email(new_user)
 
 
