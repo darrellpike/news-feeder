@@ -9,19 +9,14 @@ from posts.utils import DeltaFirstPagePaginator, create_or_update_contact_hubspo
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
-import operator, os
+import operator
 from functools import reduce
 from django.db import IntegrityError
-<<<<<<< HEAD
-from django.core.paginator import InvalidPage
 from django.template.loader import render_to_string
-
-=======
 from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
->>>>>>> bushmaks-dev
 
 class AjaxableResponseMixin(object):
 	"""
@@ -110,10 +105,9 @@ class IndexLatestView(generic.ListView):
 		return context
 
 
-<<<<<<< HEAD
 class PostDetailView(generic.DetailView):
-	ajax_template_name = 'story_modal_view.html'
-	template_name = 'story_modal_view.html'
+	ajax_template_name = 'posts/story_modal_view.html'
+	template_name = 'posts/story_modal_view.html'
 	model = Post
 	context_object_name = 'article'
 
@@ -123,7 +117,6 @@ class PostDetailView(generic.DetailView):
 		return context
 
 
-=======
 class SearchView(generic.ListView):
 	template_name = 'posts/search_ajax.html'
 	context_object_name = 'search_results'
@@ -172,7 +165,6 @@ class SearchView(generic.ListView):
 
 
 @login_required(login_url=reverse_lazy('django_registration_login'))
->>>>>>> bushmaks-dev
 def vote_post(request):
 	if request.user.is_authenticated and request.method == 'POST':
 		vote = PostVote(voter=request.user, score=1)

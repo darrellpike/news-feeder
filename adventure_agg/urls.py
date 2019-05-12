@@ -26,6 +26,7 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('latest/', views.IndexLatestView.as_view(), name='index_latest'),
     path('popular/', views.IndexPopularView.as_view(), name='index_popular'),
+    path('post/<pk>/', views.PostDetailView.as_view(), name='post_detail'),
     path('search/', views.SearchView.as_view(), name='search'),
     path('api/vote_post/', views.vote_post, name='vote_post'),
     path('api/suggest_news/', views.NewNewsSuggestionView.as_view(), name="suggest_news"),

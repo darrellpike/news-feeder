@@ -833,7 +833,11 @@ nav {
   transform: rotate(180deg);
 }
 
-.article-view {
+#PostModal .modal-dialog {
+  width: 820px;
+  max-width: 820px;
+}
+#PostModal .article-view {
   width: 100%;
   border-radius: 2px;
   background: #FFFFFF;
@@ -842,61 +846,80 @@ nav {
   flex-direction: column;
   position: relative;
 }
-.article-view .article {
+#PostModal .article-view .article {
   background: transparent;
   margin-bottom: 0;
   box-shadow: none;
 }
-.article-view .article .rating {
+#PostModal .article-view .article .rating {
   background: transparent;
   position: absolute;
+  width: auto;
 }
-.article-view .article .article-header {
+#PostModal .article-view .article .rating .btn-upvote svg {
+  margin: 26px 21px 0 21px;
+}
+#PostModal .article-view .article .article-header {
   display: flex;
-  margin-bottom: 32px;
+  flex-flow: row wrap;
+  margin-bottom: 20px;
 }
-.article-view .article .article-header .news-aggregator-image {
+#PostModal .article-view .article .article-header .article-header-container {
+  display: flex;
+  flex-flow: column;
+}
+#PostModal .article-view .article .article-header .news-aggregator-image {
   margin: 0 16px 0 0;
 }
-.article-view .article .article-header .news-aggregator-image img {
+#PostModal .article-view .article .article-header .news-aggregator-image img {
   margin: 0;
 }
-.article-view .article .article-header .article-title {
+#PostModal .article-view .article .article-header .article-title {
   display: inline-block;
   margin-bottom: 0;
+  flex: 1;
 }
-.article-view .article .article-body {
+#PostModal .article-view .article .article-header .article-title p {
+  margin-bottom: 8px;
+}
+#PostModal .article-view .article .article-header .article-statistics {
+  display: block;
+}
+#PostModal .article-view .article .article-header .article-statistics .article-time {
+  margin-left: 0;
+}
+#PostModal .article-view .article .article-body {
   padding: 24px 40px 28px 56px;
   margin: 0;
   display: flex;
   flex-flow: column;
   border-bottom: 1px solid #EBEBEB;
 }
-.article-view .article .article-body .article-image {
+#PostModal .article-view .article .article-body .article-image {
   overflow: hidden;
   width: 724px;
   text-align: center;
   margin-bottom: 16px;
 }
-.article-view .article .article-body .article-image img {
+#PostModal .article-view .article .article-body .article-image img {
   max-width: 724px;
 }
-.article-view .article-comments {
+#PostModal .article-view .article-comments {
   display: flex;
   margin: 22px 40px 28px 56px;
   flex-flow: column wrap;
   justify-items: stretch;
 }
-.article-view .article-comments .article-comments-header {
+#PostModal .article-view .article-comments .article-comments-header {
   justify-content: space-between;
 }
-.article-view .article-comments .article-comments-header .btn-link {
+#PostModal .article-view .article-comments .article-comments-header .btn-link {
   opacity: 0.5;
   color: #111111;
   border: none;
   padding: 0 10px;
 }
-.article-view .article-comments .article-comments-header .btn-link.active {
+#PostModal .article-view .article-comments .article-comments-header .btn-link.active {
   opacity: 1;
   color: #5A1BE0;
 }

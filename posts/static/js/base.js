@@ -19,11 +19,11 @@ $(function () {
         });
     }
 
-    $('.article .article-title').on('click', function () {
-        let url = $(this).closest('.article').data('url');
+    $(document).on('click touch', '.article .article-title', function () {
+        let slug = $(this).closest('.article').data('article');
         $.ajax({
             type: 'GET',
-            url: url,
+            url: '/post/' + slug,
             success: function (html) {
                 let modal = $('#PostModal');
                 modal.find('.modal-content').html(html);
