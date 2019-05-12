@@ -50,7 +50,6 @@ $(function () {
     $(document).on('submit', '.form', function (e) {
         e.preventDefault();
         var form = $(this);
-        form.preventDoubleSubmit();
         $('.error-text').html('');
         $('.input-with-label').removeClass('error');
 
@@ -59,11 +58,9 @@ $(function () {
             url: form.attr('action'),
             data: form.serialize(),
             success: function (data) {
-                form.beenSubmitted = false;
                 window.location.href = data.url;
             },
             error: function (data) {
-                form.beenSubmitted = false;
                 var errors;
                 if (data.statusText === "Unprocessable Entity"){
                     errors = $.parseJSON(data.responseText);

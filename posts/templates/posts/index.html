@@ -94,23 +94,40 @@
         </div>
     </div>
     {% if not request.user.is_authenticated %}
-    <div class="modal fade" id="welcome-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal fade" id="welcome-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">
               <img class="d-none d-md-block d-lg-block d-xl-block" alt="Close sign up" src="{% static 'images/close.svg' %}" />
               <img class="d-sm-block d-md-none d-lg-none d-xl-none" alt="Close sign up" src="{% static 'images/close_white.svg' %}" />
           </span>
-        </button>
-      </div>
-      <div class="modal-body">
-          {% include 'partial/welcome_modal.html' %}
-      </div>
-    </div>
-  </div>
-</div>
-    {% include 'partial/welcome_modal_first_time.html' %}
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% include 'partial/welcome_modal.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'partial/welcome_modal_first_time.html' %}
+        <script>
+            let firstTimeCookie = Cookies.get('first-time');
+            let firstTimeWelcomeModal = $('#welcome-modal-first-time');
+            let welcomeModal = $('#welcome-modal');
+            let timeBeforeOpen = 1000;
+
+            if (firstTimeCookie) {
+                setTimeout(function () {
+                    welcomeModal.modal('show');
+                }, timeBeforeOpen);
+            } else {
+                Cookies.set('first-time', true, { expires: 365, path: '' });
+                setTimeout(function () {
+                    firstTimeWelcomeModal.modal('show');
+                }, timeBeforeOpen);
+            }
+        </script>
     {% endif %}
 {% endblock content %}

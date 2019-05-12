@@ -11,6 +11,7 @@ from django.forms import ValidationError
 from django.contrib.auth import password_validation
 from django.core.validators import EmailValidator, validate_image_file_extension
 from django.core.files.images import get_image_dimensions
+from social_django.models import UserSocialAuth
 
 User = get_user_model()
 
@@ -207,17 +208,16 @@ class CustomPasswordResetForm(PasswordResetForm):
         User = get_user_model()
         try:
             user = User.objects.get(email=email)
-            if user.social_auth.all():
-                raise ValidationError(
-                _('User with this email was logged in via LinkedIn'),
-                code='invalid'
-            )
-            return email
+            try:
+                UserSocialAuth.objects.get(user_id=user.id)
+            except UserSocialAuth.DoesNotExist:
+                return email
         except User.DoesNotExist:
             raise ValidationError(
                 _('User with this email doesn\'t exist.'),
                 code='invalid'
             )
+        raise ValidationError(_('User with this email was logged in via LinkedIn'), code='invalid')
 
 
 
