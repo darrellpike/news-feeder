@@ -12,7 +12,6 @@ from django.db import DatabaseError
 from django.db.models import Max
 import random
 import requests
-from instagram.bind import InstagramClientError, InstagramAPIError
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill, ResizeToFit, Adjust
 from django.contrib.auth.models import PermissionsMixin
