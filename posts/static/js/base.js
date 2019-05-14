@@ -63,6 +63,12 @@ $(function () {
       timeoutID = setTimeout(() => searchSend(e.target.value, pageNumber), 250);
     });
 
+    $(document).on('click touch', 'form input', function () {
+       this.form.beenSubmitted = false;
+       $(this).parent().removeClass('error');
+       $(this).siblings('.error-text').html('');
+    });
+
     $(document).on('submit', '.form', function (e) {
         e.preventDefault();
         var form = $(this);
@@ -74,9 +80,11 @@ $(function () {
             url: form.attr('action'),
             data: form.serialize(),
             success: function (data) {
+                this.beenSubmitted = false;
                 window.location.href = data.url;
             },
             error: function (data) {
+                this.beenSubmitted = false;
                 var errors;
                 if (data.statusText === "Unprocessable Entity"){
                     errors = $.parseJSON(data.responseText);

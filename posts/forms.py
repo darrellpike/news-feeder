@@ -169,6 +169,7 @@ class CustomRegistrationForm(RegistrationFormUniqueEmail):
         model = User
         fields = [
             User.USERNAME_FIELD,
+            'username',
             'first_name',
             'last_name',
             'password1',
