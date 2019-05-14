@@ -110,7 +110,8 @@
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        $('.profile-image image > img').attr('src', data.new_image_url);
+                        console.log(data);
+                        $('.profile-image img:first-of-type').attr('src', data.new_image_url);
                     },
                     error: function (data) {
                         console.log(data);

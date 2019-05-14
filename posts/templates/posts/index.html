@@ -70,7 +70,7 @@
             </div>
             <div class="latest-news">
                 {% for article in latest_news %}
-                    <div class="article">
+                    <div class="article" data-article="{{ article.pk }}">
                             <div class="article-body">
                                 {#                            <a href="{% url 'view_post' article.pk %}"><p class="article-title">#}
                                 {#                                {{ article.title }}#}
