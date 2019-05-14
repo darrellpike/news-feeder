@@ -1,5 +1,7 @@
 {% if errors %}
-      <div class="alert alert-danger">
-	{{ errors }}
-      </div>
+      <span class="error-text">
+	    {% for error in errors %}
+            {{ error }}
+        {% endfor %}
+      </span>
 {% endif %}

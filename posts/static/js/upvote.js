@@ -1,21 +1,26 @@
 $(function () {
    // Upvote button
-    $(document).on('click', '.article .btn-upvote', function (e) {
+    $(document).on('click touch', '.article .btn-upvote', function (e) {
         var rating_number = $(this).find('.rating-text');
         var button = $(this);
         $.ajax({
             method: 'POST',
-            url: '/vote_post/',
+            url: '/api/vote_post/',
             data: {
                 'csrfmiddlewaretoken': Cookies.get('csrftoken'),
                 'post': button.parents('.article').data('article')
             },
             success: function (vote) {
+                var currentRatingNumber = rating_number.context.innerText;
                 if (vote === 'upvote') {
-                    rating_number.html(parseInt(rating_number.context.innerText) + 1);
+                    if (!(currentRatingNumber.indexOf('k') !== -1)) {
+                        rating_number.html(parseInt(currentRatingNumber) + 1);
+                    }
                     button.addClass('active');
                 } else if (vote === 'unvote') {
-                    rating_number.html(parseInt(rating_number.context.innerText) - 1);
+                    if (!(currentRatingNumber.indexOf('k') !== -1)) {
+                        rating_number.html(parseInt(currentRatingNumber) - 1);
+                    }
                     button.removeClass('active');
                 } else {
                     console.log(vote);

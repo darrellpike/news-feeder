@@ -1,0 +1,147 @@
+{% extends 'posts/base.html' %}
+{% load posts_extras staticfiles %}
+
+{% block mobile_sort_buttons %}
+    <div id="mobile-sort-buttons" class="d-flex d-md-none d-lg-none sort-buttons align-lg-self-stretch align-items-stretch">
+        <a href="{% url 'index_popular' %}" class="btn d-flex sort-button {% if request.path == '/popular/' or request.path == '/' %}active{% endif %}"><span class="align-self-center">Popular</span></a>
+        <a href="{% url 'index_latest' %}" class="btn d-flex sort-button {% if request.path == '/latest/' %}active{% endif %}"><span class="align-self-center">Latest</span></a>
+    </div>
+{% endblock mobile_sort_buttons %}
+
+{% block content %}
+    <div class="row">
+        <div class="article-container">
+            <div class="news-header">
+                <h3>Popular stories</h3>
+{#                <button class="btn-sort">#}
+{#                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>#}
+{#                    <img src="{% static 'images/sort-button.svg' %}" alt="sort" />#}
+{#                    <span class="btn-sort-text">Sort by</span>#}
+{#                </button>#}
+            </div>
+
+            <div class="news">
+                {% for article in news %}
+                    {% include 'partial/article.html' with article=article %}
+                {% endfor %}
+                {% if is_paginated %}
+                        <div class="pagination">
+                                <span class="previous">
+                                    {% if page_obj.has_previous %}
+                                        <a href="{% url 'index_popular' %}?page={{ page_obj.previous_page_number }}">
+                                            <img alt="Previous" src="{% static 'images/Page_selector.svg' %}" />Previous</a>
+                                    {% else %}
+                                        <a href="{% url 'index_popular' %}?page=" style="opacity: 0">
+                                            <img alt="Previous" src="{% static 'images/Page_selector.svg' %}" />Previous</a>
+                                    {% endif %}
+                                </span>
+                            <span class="center">
+                            {% if page_obj.number|add:'-4' > 1 %}
+                                <a href="{% url 'index_popular' %}?page={{ page_obj.number|add:'-5' }}">&hellip;</a>
+                            {% endif %}
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == i %}
+                                        <span class="current">{{ i }} <span class="sr-only">(current)</span></span>
+                                    {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                                        <a href="{% url 'index_popular' %}?page={{ i }}">{{ i }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+                                    <a href="{% url 'index_popular' %}?page={{ page_obj.number|add:'5' }}">&hellip;</a>
+                                {% endif %}
+                                </span>
+                            <span class="next">
+                                    {% if page_obj.has_next %}
+                                        <a href="{% url 'index_popular' %}?page={{ page_obj.next_page_number }}">
+                                            Next<img alt="Next" src="{% static 'images/Page_selector.svg' %}" /></a>
+                                    {% else %}
+                                        <a href="{% url 'index_popular' %}?page=" style="opacity: 0">
+                                            Next<img alt="Next" src="{% static 'images/Page_selector.svg' %}" /></a>
+                                    {% endif %}
+                                </span>
+                        </div>
+                {% endif %}
+            </div>
+        </div>
+        <div id="LatestNews" class="latest-container ml-auto">
+            <div class="news-header">
+                <h3>Latest news</h3>
+                <a href="{% url 'index_latest' %}" class="float-right btn-link">View all</a>
+            </div>
+            <div class="latest-news">
+                {% for article in latest_news %}
+                    <div class="article" data-article="{{ article.pk }}">
+                            <div class="article-body">
+                                {#                            <a href="{% url 'view_post' article.pk %}"><p class="article-title">#}
+                                {#                                {{ article.title }}#}
+                                {#                        </p></a>#}
+                                <a class="article-title">
+                                    {{ article.title }}
+                                </a>
+                                <div class="article-statistics">
+                                <span class="article-comments">
+                                    <img alt="comments" src="{% static 'images/Comments_image.svg' %}" />
+                                    <span class="article-comments-text">{{ article.comment_count }} comments</span>
+                                </span>
+                                    <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">
+                                    • {{ article.time_since_submit|smooth_timedelta }} ago •</span>
+                                    <a href="{{ article.url }}" class="news-aggregator-link
+                                 d-none d-md-inline d-lg-inline d-xl-inline">
+                                        {% if article.news_aggregator %}
+                                            {{ article.news_aggregator.name }}
+                                        {% else %}
+                                            {{ article.label_for_url }}
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% if not request.user.is_authenticated %}
+        <div class="modal fade" id="welcome-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">
+              <img class="d-none d-md-block d-lg-block d-xl-block" alt="Close sign up" src="{% static 'images/close.svg' %}" />
+              <img class="d-sm-block d-md-none d-lg-none d-xl-none" alt="Close sign up" src="{% static 'images/close_white.svg' %}" />
+          </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% include 'partial/welcome_modal.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'partial/welcome_modal_first_time.html' %}
+        <script>
+            let maxTimes = 5;
+            let firstTimeCookie = Cookies.get('first-time');
+            let welcomeModalCookie = parseInt(Cookies.get('welcome-modal'));
+            let firstTimeWelcomeModal = $('#welcome-modal-first-time');
+            let welcomeModal = $('#welcome-modal');
+            let timeBeforeOpen = 1000;
+
+            if (firstTimeCookie) {
+                if (welcomeModalCookie <= maxTimes) {
+                    if (welcomeModalCookie) times = welcomeModalCookie + 1;
+                    else times = 1;
+                    Cookies.set('welcome-modal', times, { expires: 365, path: '' });
+                    setTimeout(function () {
+                        welcomeModal.modal('show');
+                    }, timeBeforeOpen);
+                }
+            } else {
+                Cookies.set('first-time', true, { expires: 365, path: '' });
+                setTimeout(function () {
+                    firstTimeWelcomeModal.modal('show');
+                }, timeBeforeOpen);
+            }
+        </script>
+    {% endif %}
+{% endblock content %}
