@@ -16,6 +16,14 @@
         </div>
     </div>
     <div class="input-group">
+        <div class="input-with-label {% if form.username.errors %}error{% endif %}">
+            <input id="register-username" type="text" autocomplete="new-username" name="username">
+            <label for="register-username">Username</label>
+            {% include 'partial/form_error.html' with errors=form.username.errors %}
+            <span class="error-text"></span>
+        </div>
+    </div>
+    <div class="input-group">
         <div class="input-with-label {% if form.email.errors %}error{% endif %}">
             <input id="id_email" type="email" autocomplete="email" name="email">
             <label for="id_email">Email</label>
@@ -37,10 +45,10 @@
 
 <script>
     $(function () {
+        $('#register_form').preventDoubleSubmit();
         $(document).on('submit', '#register_form', function (e) {
-            let register_form = $('#register_form');
             e.preventDefault();
-            register_form.preventDoubleSubmit();
+            let register_form = $(this);
             $('.error-text').html('');
             $('.input-with-label').removeClass('error');
             $.ajax({
@@ -48,11 +56,11 @@
                 url: register_form.attr('action'),
                 data: register_form.serialize(),
                 success: function (data) {
-                    this.beenSubmitted = false;
+                    register_form.beenSubmitted = false;
                     register_form.html(data);
                 },
                 error: function (data) {
-                    this.beenSubmitted = false;
+                    register_form.beenSubmitted = false;
                     let errors = $.parseJSON(data.responseText);
                     for (error in errors) {
                         if (errors.hasOwnProperty(error)) {

@@ -65,7 +65,7 @@ def create_or_update_contact_hubspot(user_id, activation_key=None):
         "properties": [
             {
                 "property": "username",
-                "value": user.get_username()
+                "value": user.username
             },
             {
                 "property": "email_confirmed",
@@ -95,7 +95,7 @@ def create_or_update_contact_hubspot(user_id, activation_key=None):
     if r.status_code == 400:
         response = json.loads(r.content)
         error = response['validationResults'][0]['error']
-        if error == "PROPERTY_DOESNT_EXIST":
+        if error == "PROPERTY_DOESNT_EXIST" and response['validationResults'][0]['name'] == 'email_confirmed':
             options = [
                 {
                     "label": "Yes",
@@ -107,6 +107,9 @@ def create_or_update_contact_hubspot(user_id, activation_key=None):
                 }
             ]
             create_new_property_hubspot(response['validationResults'][0]['name'], 'booleancheckbox', options=options)
+            create_or_update_contact_hubspot(user_id, activation_key)
+        elif error == "PROPERTY_DOESNT_EXIST" and response['validationResults'][0]['name'] == 'username':
+            create_new_property_hubspot(response['validationResults'][0]['name'], 'text')
             create_or_update_contact_hubspot(user_id, activation_key)
     elif r.status_code != 200:
         raise BaseException(json.loads(r.content))
