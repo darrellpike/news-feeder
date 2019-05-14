@@ -24,3 +24,23 @@ SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 # EMAIL_PORT = ''
 # EMAIL_HOST_USER = ''
 # EMAIL_HOST_PASSWORD = ''
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django_logger/logs.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
