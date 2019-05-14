@@ -1,0 +1,43 @@
+<h5 class="modal-title">Login</h5>
+<a href="{% url 'social:begin' backend='linkedin-oauth2' %}">Login with Linkedin</a>
+<form class="form login" id="register_form" method="POST" action="{% url 'django_registration_login' %}">
+    {% csrf_token %}
+    <div class="input-group">
+        <div class="input-with-label {% if form.username.errors %}error{% endif %}">
+            <input id="id_email" type="email" autocomplete="email" name="username">
+            <label for="id_email">Email</label>
+            {% include 'partial/form_error.html' with errors=form.email.errors %}
+            <span class="error-text"></span>
+        </div>
+    </div>
+    <div class="input-group">
+        <div class="input-with-label {% if form.password.errors %}error{% endif %}">
+            <input id="register-password" type="password" autocomplete="current-password" name="password">
+            <label for="register-password">Password</label>
+            {% include 'partial/form_error.html' with errors=form.password1.errors %}
+            <span class="error-text"></span>
+        </div>
+        <a id="password-reset" class="password-reset-link btn-link" href="{% url 'password_reset' %}">Reset password?</a>
+    </div>
+    <span id="non-field" class="error-text "></span>
+    <button type="submit" class="button primary-button" id="register-submit">Login</button>
+</form>
+<p><span class="text-opacity">New to White Hats News? </span> <a class="btn-link" href="{% url 'django_registration_register' %}">Sign Up</a></p>
+
+<script>
+    $(function () {
+        $(document).on('click', '#password-reset', function (e) {
+            $.ajax({
+                method: "GET",
+                url: "{% url 'password_reset' %}",
+                success: function (data) {
+                    $('#register-modal .modal-body').html(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            e.preventDefault();
+        });
+    })
+</script>

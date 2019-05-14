@@ -1,0 +1,71 @@
+{% load staticfiles %}
+ <div class="modal fade" id="suggest_news_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">
+              <img class="d-none d-md-block d-lg-block d-xl-block" alt="Close sign up" src="{% static 'images/close.svg' %}" />
+              <img class="d-sm-block d-md-none d-lg-none d-xl-none" alt="Close sign up" src="{% static 'images/close_white.svg' %}" />
+          </span>
+        </button>
+      </div>
+        <div class="modal-body">
+            <h5 class="modal-title">Suggest News Article</h5>
+            <p class="grey-text">You can share a cool link. We’ll post it after review.</p>
+            <form method="post" action="{% url 'suggest_news' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <div class="input-with-label {% if form.link.errors %}error{% endif %}">
+                        <input id="link" name="url" type="text" autocomplete="url">
+                        <label for="link">Link</label>
+                        {% include 'partial/form_error.html' with errors=form.link.errors %}
+                        <span class="error-text"></span>
+                    </div>
+                </div>
+                <span id="non-field" class="error-text "></span>
+                <button type="submit" class="button primary-button" id="suggest-news-submit">Suggest</button>
+            </form>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $(function () {
+        $(document).on('submit', '#suggest_news_modal form', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $('.error-text').html('');
+            $('.input-with-label').removeClass('error');
+
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (data) {
+                    $('#suggest_news_modal .modal-body').html(data);
+                },
+                error: function (data) {
+                    var errors;
+                    if (data.statusText === "Unprocessable Entity"){
+                        errors = $.parseJSON(data.responseText);
+                    } else if (data.status === 500) {
+                        errors = {"__all__": data.statusText};
+                    }
+                    for (error in errors) {
+                        if (errors.hasOwnProperty(error)) {
+                            if (error === '__all__') {
+                                $('#non-field').html(errors[error]);
+                            } else {
+                                var input = $('input[name=' + error + ']');
+                                input.closest('.input-with-label').find('.error-text').html(errors[error]);
+                                input.closest('.input-with-label').addClass('error');
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>

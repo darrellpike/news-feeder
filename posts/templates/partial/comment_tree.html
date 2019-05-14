@@ -2,7 +2,7 @@
 {% load posts_extras %}
 <div class="row" style="margin-right:25px;">
     {% recursetree comments %}
-    {% if not node.author.userprofile.is_shadowbanned or node.author == user %}
+    {% if not node.author.profile.is_shadowbanned or node.author == user %}
     <div class="col-lg-12" {% if not node.is_root_node %}style="padding-left:40px;"{% endif %}>
       {% include "partial/comment.html" %}
       {# recursion! children of a given comment #}

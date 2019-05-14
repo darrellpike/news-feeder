@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "posts/base.html" %}
 {% load i18n %}
 
 {% block title %}<title>Log in | PLANTDIETlife</title>{% endblock %}
@@ -33,7 +33,7 @@
       <div class="form-group">
 	<input type="hidden" name="next" value={% if next %}{{next}}{% else %}"{% url 'index' %}"{% endif %} />
 	<div class="col-lg-offset-2 col-lg-10">
-	  <button type="submit" class="btn btn-primary">&nbsp;&nbsp;&nbsp;Log in&nbsp;&nbsp;&nbsp;</button>
+	  <button type="submit" class="button primary-button">&nbsp;&nbsp;&nbsp;Log in&nbsp;&nbsp;&nbsp;</button>
 	</div>
       </div>
     </form>

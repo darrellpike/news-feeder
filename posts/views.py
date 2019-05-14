@@ -1,23 +1,30 @@
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from posts.models import *
-from posts.forms import PostVoteForm
-from django.core.urlresolvers import reverse
-from posts.utils import DeltaFirstPagePaginator
+from django.template.response import TemplateResponse
+from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm, UserProfileUpdateForm,\
+	ChangeUserImageForm, NewNewsSuggestionForm
+from django_registration.backends.activation.views import ActivationView
+from django.urls import reverse, reverse_lazy
+from posts.utils import DeltaFirstPagePaginator, create_or_update_contact_hubspot, update_contact_property_hubspot
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
 import operator
+from functools import reduce
 from django.db import IntegrityError
-from django.core.paginator import InvalidPage
+from django.template.loader import render_to_string
+from django_registration.backends.activation.views import RegistrationView
+from django.contrib.auth.views import LoginView, PasswordResetView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
-
-class AjaxableResponseMixin:
+class AjaxableResponseMixin(object):
 	"""
 	Mixin to add AJAX support to a form.
 	Must be used with an object-based FormView (e.g. CreateView)
 	"""
 	def form_invalid(self, form):
-		response = super(AjaxableResponseMixin, self).form_invalid(form)
+		response = super().form_invalid(form)
 		if self.request.is_ajax():
 			return JsonResponse(form.errors, status=400)
 		else:
@@ -27,18 +34,22 @@ class AjaxableResponseMixin:
 		# We make sure to call the parent's form_valid() method because
 		# it might do some processing (in the case of CreateView, it will
 		# call form.save() for example).
-		response = super(AjaxableResponseMixin, self).form_valid(form)
+		response = super().form_valid(form)
 		if self.request.is_ajax():
-			data = {
-				'pk': self.object.pk,
-			}
-			return JsonResponse(data)
+			if self.ajax_template_name:
+				html = render_to_string(self.ajax_template_name, {'object': self.object})
+				return HttpResponse(html)
+			else:
+				data = {
+					'pk': self.object.pk,
+				}
+				return JsonResponse(data)
 		else:
 			return response
 
 
 class IndexView(generic.ListView):
-	template_name = 'new_index.html'
+	template_name = 'posts/index.html'
 	context_object_name = 'news'
 	model = Post
 	paginate_by = 20
@@ -61,7 +72,7 @@ class IndexView(generic.ListView):
 
 
 class IndexPopularView(generic.ListView):
-	template_name = 'index_popular.html'
+	template_name = 'posts/index_popular.html'
 	context_object_name = 'news'
 	model = Post
 	paginate_by = 20
@@ -81,7 +92,7 @@ class IndexPopularView(generic.ListView):
 
 
 class IndexLatestView(generic.ListView):
-	template_name = 'index_latest.html'
+	template_name = 'posts/index_latest.html'
 	context_object_name = 'news'
 	model = Post
 	paginate_by = 20
@@ -94,8 +105,20 @@ class IndexLatestView(generic.ListView):
 		return context
 
 
+class PostDetailView(generic.DetailView):
+	ajax_template_name = 'posts/story_modal_view.html'
+	template_name = 'posts/story_modal_view.html'
+	model = Post
+	context_object_name = 'article'
+
+	def get_context_data(self, **kwargs):
+		context = super(PostDetailView, self).get_context_data(**kwargs)
+		context['comments'] = context['article'].comment_set
+		return context
+
+
 class SearchView(generic.ListView):
-	template_name = 'search_ajax.html'
+	template_name = 'posts/search_ajax.html'
 	context_object_name = 'search_results'
 	model = Post
 	paginator_class = DeltaFirstPagePaginator
@@ -141,8 +164,9 @@ class SearchView(generic.ListView):
 		return context
 
 
+@login_required(login_url=reverse_lazy('django_registration_login'))
 def vote_post(request):
-	if request.user.is_authenticated() and request.method == 'POST':
+	if request.user.is_authenticated and request.method == 'POST':
 		vote = PostVote(voter=request.user, score=1)
 		# if request.user.userprofile.count_karma()<500:
 		# 	return HttpResponse('Not enough carma')
@@ -159,5 +183,176 @@ def vote_post(request):
 					return HttpResponse('unvote')
 				return HttpResponse('upvote')
 			else:
-				print form.errors
+				print(form.errors)
 	return HttpResponse(0)
+
+
+class CustomRegistrationView(RegistrationView):
+	form_class = CustomRegistrationForm
+	success_url = '/'
+	template_name = 'django_registration/with_base/registration_form.html'
+	ajax_template_name = 'django_registration/registration_form.html'
+	success_template = 'django_registration/registration_complete.html'
+
+	def create_inactive_user(self, form):
+		"""
+		Create the inactive user account and send an email containing
+		activation instructions.
+
+		"""
+		new_user = form.save(commit=False)
+		new_user.is_active = False
+		new_user.save()
+
+		response = create_or_update_contact_hubspot(new_user.id, self.get_activation_key(new_user))
+		self.send_activation_email(new_user)
+
+
+		return new_user
+
+
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return TemplateResponse(request, self.success_template)
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
+
+class CustomLoginView(LoginView):
+	template_name = 'django_registration/with_base/login.html'
+	ajax_template_name = 'django_registration/registration_login.html'
+
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				index = reverse('index')
+				return JsonResponse({'url': index})
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
+
+
+class CustomPasswordResetView(PasswordResetView):
+	ajax_template_name = 'django_registration/password_reset.html'
+	template_name = 'django_registration/with_base/password_reset.html'
+	form_class = CustomPasswordResetForm
+
+	def get(self, request, *args, **kwargs):
+		response = super().get(request, *args, **kwargs)
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+			return render(request, self.template_name, context=self.get_context_data())
+		else:
+			return response
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return JsonResponse({'url': response.url})
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
+
+
+class CustomActivationView(ActivationView):
+	def activate(self, *args, **kwargs):
+		user = super().activate(*args, **kwargs)
+		update_contact_property_hubspot(user.email, 'email_confirmed', True)
+		return user
+
+
+class UserProfileView(LoginRequiredMixin, generic.UpdateView):
+	model = UserProfile
+	form_class = UserProfileUpdateForm
+	template_name = 'posts/profile.html'
+	success_url = reverse_lazy('profile')
+
+	def get_object(self, queryset=None):
+		return self.request.user
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return JsonResponse({'url': response.url})
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response
+
+@login_required(login_url=reverse_lazy('django_registration_login'))
+def change_user_profile_image(request):
+	if request.user.is_authenticated and request.method == 'POST':
+		form = ChangeUserImageForm(request.POST, request.FILES)
+		if form.is_valid():
+			m = UserProfile.objects.get(user__pk=request.user.pk)
+			m.image = form.cleaned_data['new_image']
+			m.save()
+			return JsonResponse({'new_image_url': m.image_thumbnail_md.url})
+		else:
+			response = JsonResponse(form.errors)
+			response.status_code = 422
+			return response
+	else:
+		return HttpResponseForbidden('allowed only via POST')
+
+
+class NewNewsSuggestionView(LoginRequiredMixin, generic.edit.CreateView):
+	template_name = 'partial/modal_suggest_news.html'
+	ajax_template_name = 'partial/modal_suggest_news.html'
+	success_url = reverse_lazy('index')
+	success_template = 'partial/modal_suggest_news_success.html'
+	model = UserNewsSuggestion
+	form_class = NewNewsSuggestionForm
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		return super().form_valid(form)
+
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+		if request.is_ajax():
+			if response.status_code == 302:
+				return TemplateResponse(request, self.success_template)
+			else:
+				errors = response.context_data['form'].errors
+				response = JsonResponse(errors)
+				response.status_code = 422
+				return response
+		else:
+			return response

@@ -31,7 +31,7 @@
                         {% endif %}
                         <div class="article-body">
                             <div class="article-statistics d-md-none d-lg-none">
-                                <a href="{{ article.url }}" class="news-aggregator-link">{{ article.label_for_url }}</a>
+                                <a href="{{ article.url }}" target="_blank" class="news-aggregator-link">{{ article.label_for_url }}</a>
                                 <span class="article-time">• {{ article.time_since_submit|smooth_timedelta }} ago</span>
                             </div>
 {#                            <a href="{% url 'view_post' article.pk %}"><p class="article-title">{{ article.title }}</p></a>#}
@@ -50,7 +50,7 @@
                                     </svg>
                                     <span class="article-comments-text">{{ article.comment_count }} comments</span><span class="dot d-none d-md-none d-lg-inline d-xl-inline"> •</span></span>
                                 <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">{{ article.time_since_submit|smooth_timedelta }} ago •</span>
-                                <a href="{{ article.url }}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">{{ article.label_for_url }}</a>
+                                <a href="{{ article.url }}" target="_blank" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">{{ article.label_for_url }}</a>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                         </p>
                             <div class="article-statistics">
                                 <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago •</span>
-                                <a href="{{ article.url }}" class="news-aggregator-link">{{ article.label_for_url }}</a>
+                                <a href="{{ article.url }}" target="_blank" class="news-aggregator-link">{{ article.label_for_url }}</a>
                             </div>
                         </div>
                     </div>
