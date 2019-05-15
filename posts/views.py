@@ -205,7 +205,7 @@ class CustomRegistrationView(RegistrationView):
 		new_user.save()
 
 		response = create_or_update_contact_hubspot(new_user.id, self.get_activation_key(new_user))
-		self.send_activation_email(new_user)
+		#self.send_activation_email(new_user)
 
 
 		return new_user
