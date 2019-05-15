@@ -4,8 +4,6 @@ from django import forms
 import requests, json
 from django.core.paginator import Paginator, Page
 from posts.models import User
-from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
 
 
 HUBSPOT_API_KEY = '6384ea2f-48d2-4672-a92a-2d4b30a9be26'
@@ -216,32 +214,3 @@ def update_contact_property_hubspot(email, property_name, value, options=None):
         r = requests.post(endpoint, data=data, headers=headers)
 
     return r.status_code
-
-from posts.models import UserProfile
-
-def save_profile(backend, user, response, *args, **kwargs):
-    if backend.name == 'linkedin-oauth2' and response.get('profilePicture', False):
-        profile = user.userprofile
-        if profile is None:
-            profile = UserProfile(user_id=user.id)
-        if profile.image.name == 'user_images/default/default_image_profile.png':
-            image_elements = response.get('profilePicture').get('displayImage~').get('elements')
-            image_file = image_elements[len(image_elements) - 1].get('identifiers')[0]
-            image_url = image_file.get('identifier')
-            if image_url:
-                img_temp = NamedTemporaryFile(delete=True)
-                img_temp.write(requests.get(image_url).content)
-                img_temp.flush()
-
-                profile.image.save("{email}_{filename}".format(email=user.email,
-                                                               filename=image_file.get('filename',
-                                                                                       'LinkedIn_image.jpeg')),
-                                                                                                        File(img_temp))
-                profile.save()
-
-def activate_user(backend, user, response, *args, **kwargs):
-    if backend.name == 'linkedin-oauth2':
-        user.is_active = True
-        user.save()
-        if not user.userprofile.hubspot_contact:
-            create_or_update_contact_hubspot(user_id=user.id)
