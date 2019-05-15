@@ -75,7 +75,7 @@ class UserProfileUpdateForm(ModelForm):
         old_password = self.cleaned_data.get('old_password')
         new_password = self.cleaned_data.get('new_password')
         if new_password and not old_password and not self.instance.check_password(old_password):
-            raise forms.ValidationError('Please enter your old password', code='password_incorrect')
+            raise forms.ValidationError('Please enter your old password.', code='password_incorrect')
         return new_password
 
     def clean_old_password(self):
@@ -85,7 +85,7 @@ class UserProfileUpdateForm(ModelForm):
         old_password = self.cleaned_data["old_password"]
         if old_password and not self.instance.check_password(old_password):
             raise forms.ValidationError(
-                "Incorrect password",
+                "Incorrect password.",
                 code='password_incorrect',
             )
         return old_password
@@ -195,10 +195,10 @@ class CustomPasswordResetForm(PasswordResetForm):
         super().send_mail(subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None)
         url = '%s://%s/accounts/reset/%s/%s/' % (context['protocol'], context['domain'], context['uid'], context['token'])
-        responce =  update_contact_property_hubspot(to_email, 'password_reset_url_active', True,
+        response =  update_contact_property_hubspot(to_email, 'password_reset_url_active', True,
                                         options=[{'label': 'Yes', 'value': True},
                                                     {'label': 'No', 'value': False}])
-        if responce == 404:
+        if response == 404:
             raise ValidationError("User doesn't exist on HubSpot")
         r = update_contact_property_hubspot(to_email, 'password_reset_url', url)
 

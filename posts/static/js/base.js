@@ -86,16 +86,16 @@ $(function () {
             error: function (data) {
                 this.beenSubmitted = false;
                 var errors;
-                if (data.statusText === "Unprocessable Entity"){
+                if (data.status === 422){
                     errors = $.parseJSON(data.responseText);
                 } else if (data.status === 500) {
                     errors = {"__all__": data.statusText};
                 }
                 for (error in errors) {
                     if (errors.hasOwnProperty(error)) {
-                        if (error === '__all__') {
+                        if (error === '__all__' || error === 'inactive') {
                             $('#non-field').html(errors[error]);
-                        } else {
+                        } else  {
                             var input = $('input[name=' + error + ']');
                             input.closest('.input-with-label').find('.error-text').html(errors[error]);
                             input.closest('.input-with-label').addClass('error');

@@ -23,7 +23,13 @@
                         </div>
                         <a id="password-reset" class="password-reset-link btn-link" href="{% url 'password_reset' %}">Reset password?</a>
                     </div>
-                    <span id="non-field" class="error-text "></span>
+                    <span id="non-field" class="error-text ">
+                        {% if messages %}
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        {% endif %}
+                    </span>
                     <button type="submit" class="button primary-button" id="register-submit">Login</button>
                 </form>
                 <p><span class="text-opacity">New to White Hats News? </span> <a class="btn-link" href="{% url 'django_registration_register' %}">Sign Up</a></p>
