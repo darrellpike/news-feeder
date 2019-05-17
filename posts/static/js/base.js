@@ -3,7 +3,7 @@ $(function () {
     let search = $('.search-container');
     let searchButton = $('.btn-search');
     let searchInput = $('#search-form input');
-
+    
     function searchSend(str, pageNumber=1) {
         $.ajax({
             method: 'GET',

@@ -96,11 +96,17 @@
                 <div class="header-buttons d-flex d-md-inline-flex d-lg-inline-flex ml-md-auto ml-lg-auto flex-column flex-md-row flex-lg-row">
                     {% if request.user.is_authenticated %}
                         <button type="button" data-toggle="modal" data-target="#suggest_news_modal" class="btn btn-signup red-button suggest-news">Suggest news</button>
-                        <a href="{% url 'profile' %}" class="btn profile-image"><img alt="User image" src="{{ user.userprofile.image_thumbnail_sm.url }}" /></a>
+                        <div class="btn-group">
+                        <button type="button" data-toggle="dropdown" id="userMenu" class="btn profile-image" aria-haspopup="true" aria-expanded="false"><img alt="User image" src="{{ user.userprofile.image_thumbnail_sm.url }}" /></button>
+                        <div class="dropdown-menu" aria-labelledby="userMenu">
+                            <a class="dropdown-item" href="{% url 'profile' %}"><h3>Profile</h3></a>
+                            <a class="dropdown-item button-logout" href="#"><h3>Log out</h3></a>
+                        </div>
+                        </div>
                     {% endif %}
                     {% if not request.user.is_authenticated %}
                     <button type="button" data-toggle="modal" data-target="#register-modal" class="btn btn-signup red-button">Sign up</button>
-                    <button type="button" data-toggle="modal" data-target="#register-modal" class="btn btn-login btn-transparent primary-button"><span class="btn-login-decoration">Login</span></button>
+                    <button type="button" data-toggle="modal" data-target="#login-modal" class="btn btn-login btn-transparent primary-button"><span class="btn-login-decoration">Login</span></button>
                     {% endif %}
                     {% if request.user.is_authenticated %}
                     <button type="button" data-toggle="modal" data-target="#suggest_news_modal" class="btn btn-transparent primary-button d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
@@ -111,6 +117,7 @@
         </nav>
     </div>
 </header>
+<div class="logout-successful">Log out successful</div>
 <div class="search-container">
     <form id="search-form" class="container">
         <input type="search" placeholder="Search News & Articles">
@@ -122,7 +129,7 @@
 <div class="container main-content">
 {% block content %}{% endblock content %}
 </div>
-<div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="base-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -138,6 +145,111 @@
     </div>
   </div>
 </div>
+{% if not request.user.is_authenticated %}
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">
+              <img class="d-none d-md-block d-lg-block d-xl-block" alt="Close sign up" src="{% static 'images/close.svg' %}" />
+              <img class="d-sm-block d-md-none d-lg-none d-xl-none" alt="Close sign up" src="{% static 'images/close_white.svg' %}" />
+          </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="modal-title">Login</h5>
+                    <a href="{% url 'social:begin' backend='linkedin-oauth2' %}">Login with Linkedin</a>
+                    <form class="form login" id="register_form" method="POST" action="{% url 'django_registration_login' %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <div class="input-with-label {% if form.username.errors %}error{% endif %}">
+                                <input id="id_email" type="email" autocomplete="email" name="username">
+                                <label for="id_email">Email</label>
+                                {% include 'partial/form_error.html' with errors=form.email.errors %}
+                                <span class="error-text"></span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-with-label {% if form.password.errors %}error{% endif %}">
+                                <input id="register-password" type="password" autocomplete="current-password" name="password">
+                                <label for="register-password">Password</label>
+                                {% include 'partial/form_error.html' with errors=form.password1.errors %}
+                                <span class="error-text"></span>
+                            </div>
+                            <a id="password-reset" class="password-reset-link btn-link" href="{% url 'password_reset' %}">Reset password?</a>
+                        </div>
+                        <span id="non-field" class="error-text "></span>
+                        <button type="submit" class="button primary-button" id="register-submit">Login</button>
+                    </form>
+                    <p><span class="text-opacity">New to White Hats News? </span> <a class="btn-link" href="{% url 'django_registration_register' %}">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">
+              <img class="d-none d-md-block d-lg-block d-xl-block" alt="Close sign up" src="{% static 'images/close.svg' %}" />
+              <img class="d-sm-block d-md-none d-lg-none d-xl-none" alt="Close sign up" src="{% static 'images/close_white.svg' %}" />
+          </span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <h5 class="modal-title">Sign up</h5>
+          <form id="register_form" method="POST" action="{% url 'django_registration_register' %}">
+              {% csrf_token %}
+              <div class="input-group">
+                  <div class="input-with-label first-name {% if form.first_name.errors %}error{% endif %}">
+                      <input id="register-first-name" type="text" autocomplete="given-name" name="first_name">
+                      <label for="register-first-name">First name</label>
+                      {% include 'partial/form_error.html' with errors=form.first_name.errors %}
+                      <span class="error-text"></span>
+                  </div>
+                  <div class="input-with-label {% if form.last_name.errors %}error{% endif %}">
+                      <input id="register-last-name" type="text" autocomplete="family-name" name="last_name">
+                      <label for="register-last-name">Last name</label>
+                      {% include 'partial/form_error.html' with errors=form.last_name.errors %}
+                      <span class="error-text"></span>
+                  </div>
+              </div>
+              <div class="input-group">
+                  <div class="input-with-label {% if form.username.errors %}error{% endif %}">
+                      <input id="register-username" type="text" autocomplete="new-username" name="username">
+                      <label for="register-username">Username</label>
+                      {% include 'partial/form_error.html' with errors=form.username.errors %}
+                      <span class="error-text"></span>
+                  </div>
+              </div>
+              <div class="input-group">
+                  <div class="input-with-label {% if form.email.errors %}error{% endif %}">
+                      <input id="id_email" type="email" autocomplete="email" name="email">
+                      <label for="id_email">Email</label>
+                      {% include 'partial/form_error.html' with errors=form.email.errors %}
+                      <span class="error-text"></span>
+                  </div>
+              </div>
+              <div class="input-group">
+                  <div class="input-with-label {% if form.password1.errors %}error{% endif %}">
+                      <input id="register-password" type="password" autocomplete="new-password" name="password1">
+                      <label for="register-password">Password</label>
+                      {% include 'partial/form_error.html' with errors=form.password1.errors %}
+                      <span class="error-text"></span>
+                  </div>
+              </div>
+              <button type="submit" class="button primary-button" id="register-submit">Sign up</button>
+          </form>
+          <p><span class="text-opacity">Have an account?</span> <a class="btn-link" href="{% url 'django_registration_login' %}">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
 {% include 'partial/modal_suggest_news.html' %}
 <div class="modal fade" id="PostModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -163,21 +275,64 @@
         $('header').css({position: 'relative'});
     });
     $(function () {
-        $('.btn-signup').click(function () {
-            $.get("{% url 'django_registration_register' %}",
-                function (data) {
-                    $('#register-modal .modal-body').html(data);
+        $('.button-logout').on('click touch', function (e) {
+            e.preventDefault();
+            $.ajax({
+                method: 'GET',
+                url: "{% url 'logout' %}",
+                success: function () {
+                    let stripe = $('.logout-successful');
+                    stripe.animate({height: 'toggle'}, function () {
+                        setTimeout(function () {
+                            stripe.animate({height: 'toggle'})
+                        }, 2500);
+                    });
                 }
-            );
+            });
         });
-        $('.btn-login').click(function () {
-            $.get("{% url 'django_registration_login' %}",
-                function (data) {
-                    $('#register-modal .modal-body').html(data);
+
+        $(document).on('click', '#password-reset', function (e) {
+            $.ajax({
+                method: "GET",
+                url: "{% url 'password_reset' %}",
+                success: function (data) {
+                    $('#login-modal .modal-body').html(data);
+                },
+                error: function (data) {
+                    console.log(data);
                 }
-            );
+            });
+            e.preventDefault();
         });
-    });
+
+        $('#register_form').preventDoubleSubmit();
+        $(document).on('submit', '#register_form', function (e) {
+            e.preventDefault();
+            let register_form = $(this);
+            $('.error-text').html('');
+            $('.input-with-label').removeClass('error');
+            $.ajax({
+                method: 'POST',
+                url: register_form.attr('action'),
+                data: register_form.serialize(),
+                success: function (data) {
+                    register_form.beenSubmitted = false;
+                    register_form.html(data);
+                },
+                error: function (data) {
+                    register_form.beenSubmitted = false;
+                    let errors = $.parseJSON(data.responseText);
+                    for (error in errors) {
+                        if (errors.hasOwnProperty(error)) {
+                            var input = $('input[name=' + error + ']');
+                            input.closest('.input-with-label').find('.error-text').html(errors[error]);
+                            input.closest('.input-with-label').addClass('error');
+                        }
+                    }
+                }
+            });
+        });
+    })
 </script>
 <!-- Start of HubSpot Embed Code -->
 <script type=“text/javascript” id=“hs-script-loader” async defer src=“http://js.hs-scripts.com/5139372.js”></script>

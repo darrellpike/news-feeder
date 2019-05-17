@@ -35,7 +35,7 @@ urlpatterns = [
     ),
     path('accounts/login/', views.CustomLoginView.as_view(),
          name='django_registration_login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(template_name="django_registration/with_base/logout.html")),
+    path('accounts/logout/', auth_views.LogoutView.as_view(template_name="django_registration/with_base/logout.html"), name='logout'),
     path('accounts/password_reset/', views.CustomPasswordResetView.as_view(), name='password_reset'),
     path('accounts/activate/complete/', TemplateView.as_view(
             template_name='django_registration/activation_complete.html'
