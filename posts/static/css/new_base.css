@@ -626,6 +626,10 @@ nav {
   font-size: 18px;
 }
 
+.logout-successful-mobile {
+  display: none;
+}
+
 .main-content {
   margin-top: 46px;
   margin-bottom: 74px;
@@ -1480,10 +1484,6 @@ nav {
     margin-bottom: 16px;
   }
 
-  .btn-login.d-lg-none, .btn-transparent.d-lg-none {
-    margin-top: 58px;
-  }
-
   .pagination {
     justify-content: space-around;
   }
@@ -1615,6 +1615,18 @@ nav {
   }
   .profile-container .profile-settings-container .input-group .input-with-label {
     max-width: unset !important;
+  }
+
+  .btn.profile-image {
+    display: none;
+  }
+
+  .dropdown-menu {
+    display: none;
+  }
+
+  .logout-successful {
+    display: none;
   }
 }
 @media (min-width: 1200px) {
