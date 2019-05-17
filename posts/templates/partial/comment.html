@@ -1,50 +1,19 @@
 {% load posts_extras %}
-<div>
-    <div class="pull-left" style="margin-top:-3px;;">
-        {% include "partial/voting.html" with item=node vote_type="comment" %}
+<div class="comment">
+    <div class="comment-header">
+        <div class="user-thumbnail">{% if comment.author.userprofile.image_thumbnail_sm.url %}<img src="{{ comment.author.userprofile.image_thumbnail_sm.url }}" alt="{{ comment }}" />{% endif %}</div>
+        <div class="comment-name">{{ comment.author.username }}</div>
+        <div class="comment-date">{{ comment.time_since_submit|smooth_timedelta }} ago</div>
     </div>
-    <div style="margin-top:6px;">
-        <div class="small-info-line comment-info-line">
-            by <a
-                href="{% url 'view_profile' node.author.pk %}">{{ node.author.username }}</a> {{ node.submit_time|timesince }}
-            ago
-            {#<a href="{% url 'view_comment' post.pk node.pk %}">link</a>#}
-            {% if include_form %}
-                {% if node.parent %}
-                    <a href="{% url 'view_comment' post.pk node.parent.pk %}"> | parent</a>
-                {% else %}
-                    <a href="{% url 'view_post' post.pk %}"> | parent</a>
-                {% endif %}
-            {% endif %}
-
-            {% if include_post %}
-                | on <a href="{% url 'view_post' post.pk %}">{{ post.title }}</a>
-                {% if post.url %}({{ post.url|domainize }}){% endif %}
-            {% endif %}
-
-            {% if user.is_staff %}
-                <a href="{% url 'admin:posts_comment_change' node.id %}">
-                    <small>(edit)</small>
-                </a>
-            {% endif %}
-        </div>
-        <div class="comment-body">
-            {% if shorten %}
-                {{ node.text|slice:":255"|linebreaksbr|urlize }}
-            {% else %}
-                {{ node.text|linebreaksbr|urlize }}
-            {% endif %}
-        </div>
-        {% if include_form %}
-            {% include "partial/add_comment_form.html" %}<br>
-        {% else %}
-            <a href="{% url 'add_comment' post.pk node.pk %}" class="md-button md-js-button comment-reply-btn"
-               {% if user.is_authenticated %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Reply to Comment btn (logged in)', 'Clicking the reply to comment button when logged in.']);"
-               {% else %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Reply to Comment btn (not logged in)', 'Clicking the reply to comment button when not logged in.']);"{% endif %}>REPLY</a>
-            {% ifequal user node.author %}{% if node.is_editable and node.is_leaf_node %}
-                <span class="edit-comment">|<a href="{% url 'edit_comment' post.pk node.pk %}"><small>edit</small></a>
-                </span>
-            {% endif %} {% endifequal %}
-        {% endif %}
+    <div class="comment-body">
+        {{ comment.text }}
+    </div>
+    <div class="comment-footer">
+        <button class="btn-upvote {% if request.user.is_authenticated and comment|user_voted:request.user %}active{% endif %}">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.1357 0.139022L0.177109 5.49626C0.0113516 5.64519 -0.0439008 5.87877 0.0362694 6.08663C0.11644 6.29235 0.316865 6.42842 0.541125 6.42842L3.79127 6.42842L3.79127 12.4643C3.79127 12.76 4.03394 13 4.33296 13L8.66648 13C8.96549 13 9.20817 12.76 9.20817 12.4643L9.20817 6.42842L12.4583 6.42842C12.6826 6.42842 12.883 6.29234 12.9642 6.08663C12.9881 6.02341 13 5.95805 13 5.89269C13 5.74484 12.9372 5.60019 12.8223 5.49626L6.86373 0.139022C6.65789 -0.0463393 6.34154 -0.0463393 6.1357 0.139022Z" fill="#888A8C"/>
+                </svg>
+                <span class="rating-text">{{ comment.get_score }}</span>
+            </button>
     </div>
 </div>

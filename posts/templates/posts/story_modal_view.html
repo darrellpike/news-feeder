@@ -43,7 +43,7 @@
                         {% else %}
                             {{ article.label_for_url }}
                         {% endif %}</a>
-                        <span class="article-submitter">{% if article.submitter.first_name and article.submitter.last_name %}{{ article.submitter.first_name }} {{ article.submitter.last_name }}{% else %}{{ article.submitter.get_short_name }}{% endif %}</span>
+                        <span class="article-submitter">• {{ article.submitter.username }}</span>
                     </div>
                 </div>
             </div>
@@ -67,10 +67,11 @@
         </div>
         <div class="article-comments-body d-flex flex-column">
             {% for comment in comments.all %}
-                <div class="comment">
-                    <div class="user-thumbnail">{% if comment.author.user_image_thumbnail %}<img src="{{ comment.author.user_image_thumbnail.url }}" alt="{{ comment }}" />{% endif %}</div>
-                </div>
+                {% include "partial/comment.html" with comment=comment %}
             {% endfor %}
         </div>
+        {% if request.user.is_authenticated %}
+            {% include "partial/new_comment.html" with article=article %}
+        {% endif %}
     </div>
 </div>

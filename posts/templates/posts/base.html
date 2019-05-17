@@ -71,6 +71,7 @@
     <!-- end Mixpanel -->
 </head>
 <body>
+<div class="logout-successful logout-successful-mobile">Log out successful</div>
 <header class="d-flex align-items-stretch">
     <div class="container d-flex align-items-stretch">
         <nav class="navbar navbar-expand-md flex-fill align-items-stretch">
@@ -103,21 +104,18 @@
                             <a class="dropdown-item button-logout" href="#"><h3>Log out</h3></a>
                         </div>
                         </div>
+                        <button type="button" data-toggle="modal" data-target="#suggest_news_modal" class="btn btn-signup red-button d-inline-block d-md-none d-lg-none d-xl-none">Suggest news</button>
+                        <button type="button" class="btn btn-transparent button-logout d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Log out</span></button>
+                    {% else %}
+                        <button type="button" data-toggle="modal" data-target="#register-modal" class="btn btn-signup red-button">Sign up</button>
+                        <button type="button" data-toggle="modal" data-target="#login-modal" class="btn btn-login btn-transparent primary-button"><span class="btn-login-decoration">Login</span></button>
                     {% endif %}
-                    {% if not request.user.is_authenticated %}
-                    <button type="button" data-toggle="modal" data-target="#register-modal" class="btn btn-signup red-button">Sign up</button>
-                    <button type="button" data-toggle="modal" data-target="#login-modal" class="btn btn-login btn-transparent primary-button"><span class="btn-login-decoration">Login</span></button>
-                    {% endif %}
-                    {% if request.user.is_authenticated %}
-                    <button type="button" data-toggle="modal" data-target="#suggest_news_modal" class="btn btn-transparent primary-button d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
-                    {% endif %}
-
                 </div>
             </div>
         </nav>
     </div>
 </header>
-<div class="logout-successful">Log out successful</div>
+<div class="logout-successful logout-successful-desktop">Log out successful</div>
 <div class="search-container">
     <form id="search-form" class="container">
         <input type="search" placeholder="Search News & Articles">
@@ -265,6 +263,7 @@
 <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 {% if request.user.is_authenticated %}
 <script type="text/javascript" src="{% static 'js/upvote.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
 {% endif %}
 <script>
     let menu = $('#navbarSupportedContent');
@@ -281,10 +280,22 @@
                 method: 'GET',
                 url: "{% url 'logout' %}",
                 success: function () {
-                    let stripe = $('.logout-successful');
+                    let stripe;
+                    let width = $(window).width();
+                    if (width < 768) {
+                        stripe = $('.logout-successful-mobile');
+                        if ($('.btn.navbar-toggler[aria-expanded="true"]')) {
+                            $('.btn.navbar-toggler').click();
+                        }
+                    } else {
+                        stripe = $('.logout-successful-desktop');
+                    }
+
                     stripe.animate({height: 'toggle'}, function () {
                         setTimeout(function () {
-                            stripe.animate({height: 'toggle'})
+                            stripe.animate({height: 'toggle'}, function () {
+                                window.location.href = '{% url "index" %}';
+                            })
                         }, 2500);
                     });
                 }

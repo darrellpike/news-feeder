@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http40
 from posts.models import *
 from django.template.response import TemplateResponse
 from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm, UserProfileUpdateForm,\
-	ChangeUserImageForm, NewNewsSuggestionForm
+	ChangeUserImageForm, NewNewsSuggestionForm, NewCommentForm
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
 from posts.utils import DeltaFirstPagePaginator, create_or_update_contact_hubspot, update_contact_property_hubspot
@@ -354,4 +354,33 @@ class NewNewsSuggestionView(LoginRequiredMixin, generic.edit.CreateView):
 				response.status_code = 422
 				return response
 		else:
+			return response
+
+
+class NewCommentView(LoginRequiredMixin, generic.edit.CreateView, AjaxableResponseMixin):
+	ajax_template_name = 'partial/comment.html'
+	template_name = 'partial/new_comment.html'
+	model = Comment
+	fields = ['text']
+
+
+@login_required
+def new_comment(request, post_id, parent_id=None):
+	if request.user.is_authenticated and request.method == 'POST':
+		post = get_object_or_404(Post, pk=post_id)
+		parent = None
+		if not parent_id is None:
+			parent = get_object_or_404(Comment, pk=parent_id)
+			if parent.post != post:
+				raise Http404
+
+		new_comment = Comment(author=request.user, post=post, parent=parent)
+		new_comment_form = NewCommentForm(request.POST, instance=new_comment)
+
+		if new_comment_form.is_valid():
+			new_comment = new_comment_form.save()
+			return TemplateResponse(request, 'partial/comment.html', context={'comment': new_comment})
+		else:
+			response = JsonResponse(new_comment_form.errors)
+			response.status_code = 422
 			return response

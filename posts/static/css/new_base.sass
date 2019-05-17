@@ -723,7 +723,7 @@ nav
   display: flex
 
 .article .article-body .article-statistics
-  .article-time
+  .article-time, .article-submitter
     opacity: 0.5
     margin: 0 4px
   .news-aggregator-link
@@ -842,7 +842,7 @@ nav
 
       .article-header
         display: flex
-        flex-flow: row wrap
+        flex-flow: row nowrap
         margin-bottom: 20px
         .article-header-container
           display: flex
@@ -891,7 +891,7 @@ nav
 
       .article-comments-header
         justify-content: space-between
-
+        margin-bottom: 30px
         .btn-link
           opacity: 0.5
           color: $text-color
@@ -901,6 +901,44 @@ nav
         .btn-link.active
           opacity: 1
           color: $primary-color
+
+      .article-new-comment
+        display: flex
+        flex-flow: row nowrap
+
+        $button-width: 190px
+        $button-height: 44px
+        button
+          max-width: $button-width
+          min-height: $button-height
+          &:after, &:before
+            width: 5px
+        .input-group
+          margin-bottom: 20px
+
+        .error-text
+          position: absolute
+          top: calc(100% + #{$button-height}/2)
+          left: $button-width + 10px
+
+        .new-comment-input
+          flex: 1
+          #newComment
+            font-family: gt_americaregular
+            font-size: 14px
+            background: #F7F7F7
+            min-height: 60px
+            padding: 10px 15px
+            border: none
+            border-radius: 2px
+            width: 100%
+        .user-thumbnail
+          border-radius: 2px
+          margin-right: 12px
+          flex: 0
+          img
+            height: 40px
+            width: 40px
 
 // Modals
 .modal-dialog

@@ -127,7 +127,7 @@ class PartialPostForm(ModelForm):
         #    raise forms.ValidationError("You must include a url or text.")
         #return text
 
-class PartialCommentForm(ModelForm):
+class NewCommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['text',]
@@ -136,26 +136,6 @@ class PartialCommentForm(ModelForm):
                                     'rows':'4',
                                     'placeholder':'write a comment...',}),
             }
-
-
-class PartialUserProfileForm(ModelForm):
-    email = forms.EmailField(widget=TextInput(attrs={'class':'span3'}))
-#    description = forms.CharField(required=False, max_length=500)
-#    is_email_public = forms.BooleanField(required=False)
-
-    class Meta:
-        model = UserProfile
-        fields = ('email', 'description', 'is_email_public')
-        widgets = {
-            'description': Textarea(attrs={'class': 'span3',
-                                           'rows':'4'})
-            }
-
-    def clean_email(self):
-        user = self.instance.user
-        user.email = self.cleaned_data["email"]
-        user.save()
-        return user.email
 
 
 class CustomRegistrationForm(RegistrationFormUniqueEmail):

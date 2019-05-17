@@ -769,7 +769,7 @@ nav {
   display: flex;
 }
 
-.article .article-body .article-statistics .article-time {
+.article .article-body .article-statistics .article-time, .article .article-body .article-statistics .article-submitter {
   opacity: 0.5;
   margin: 0 4px;
 }
@@ -902,7 +902,7 @@ nav {
 }
 #PostModal .article-view .article .article-header {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   margin-bottom: 20px;
 }
 #PostModal .article-view .article .article-header .article-header-container {
@@ -953,6 +953,7 @@ nav {
 }
 #PostModal .article-view .article-comments .article-comments-header {
   justify-content: space-between;
+  margin-bottom: 30px;
 }
 #PostModal .article-view .article-comments .article-comments-header .btn-link {
   opacity: 0.5;
@@ -963,6 +964,47 @@ nav {
 #PostModal .article-view .article-comments .article-comments-header .btn-link.active {
   opacity: 1;
   color: #5A1BE0;
+}
+#PostModal .article-view .article-comments .article-new-comment {
+  display: flex;
+  flex-flow: row nowrap;
+}
+#PostModal .article-view .article-comments .article-new-comment button {
+  max-width: 190px;
+  min-height: 44px;
+}
+#PostModal .article-view .article-comments .article-new-comment button:after, #PostModal .article-view .article-comments .article-new-comment button:before {
+  width: 5px;
+}
+#PostModal .article-view .article-comments .article-new-comment .input-group {
+  margin-bottom: 20px;
+}
+#PostModal .article-view .article-comments .article-new-comment .error-text {
+  position: absolute;
+  top: calc(100% + 44px/2);
+  left: 200px;
+}
+#PostModal .article-view .article-comments .article-new-comment .new-comment-input {
+  flex: 1;
+}
+#PostModal .article-view .article-comments .article-new-comment .new-comment-input #newComment {
+  font-family: gt_americaregular;
+  font-size: 14px;
+  background: #F7F7F7;
+  min-height: 60px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 2px;
+  width: 100%;
+}
+#PostModal .article-view .article-comments .article-new-comment .user-thumbnail {
+  border-radius: 2px;
+  margin-right: 12px;
+  flex: 0;
+}
+#PostModal .article-view .article-comments .article-new-comment .user-thumbnail img {
+  height: 40px;
+  width: 40px;
 }
 
 .modal-dialog {

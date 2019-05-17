@@ -30,6 +30,8 @@ urlpatterns = [
     path('search/', views.SearchView.as_view(), name='search'),
     path('api/vote_post/', views.vote_post, name='vote_post'),
     path('api/suggest_news/', views.NewNewsSuggestionView.as_view(), name="suggest_news"),
+    path('post/<int:post_id>/new_comment/', views.new_comment, name="new_comment"),
+    path('post/<int:post_id>/new_comment/<int:parent_id>/', views.new_comment, name="new_comment"),
     path('accounts/register/',
          views.CustomRegistrationView.as_view(), name='django_registration_register',
     ),

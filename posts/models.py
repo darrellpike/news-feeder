@@ -337,6 +337,9 @@ class Comment(MPTTModel):
 			score=0
 		return score
 
+	def time_since_submit(self):
+		return timezone.now() - self.submit_time
+
 	def __unicode__(self):
 		return self.text
 
