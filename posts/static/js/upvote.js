@@ -10,6 +10,11 @@ $(function () {
                 'csrfmiddlewaretoken': Cookies.get('csrftoken'),
             },
             success: function (vote) {
+                if (button.hasClass('modal-article-vote')) {
+                    let article = button.parents('.article').data('article');
+                    button = $('.article[data-article="' + article + '"]').find('.btn-upvote');
+                    rating_number = button.find('.rating-text');
+                }
                 if (vote['up_vote']) {
                     rating_number.html(vote['score']);
                     button.addClass('active');

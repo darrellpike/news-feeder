@@ -412,3 +412,22 @@ def vote_comment(request, post_id, comment_id):
 	return HttpResponse(0)
 
 
+def comment_sort(request, post_id):
+	if request.GET and post_id:
+		template = 'partial/comments_body.html'
+		sort = request.GET.get('sort', False)
+		post = get_object_or_404(Post, pk=post_id)
+		comments = post.comment_set
+		if sort:
+			if sort == 'newest':
+				comments = comments.order_by('-submit_time')
+			elif sort == 'liked':
+				unsorted_comments = comments.all()
+				comments = sorted(unsorted_comments, key=lambda c: -c.get_score())
+		else:
+			comments = comments.order_by('submit_time')
+
+		return TemplateResponse(request, template, context={'comments': comments})
+
+
+

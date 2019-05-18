@@ -1,4 +1,5 @@
 $(function () {
+    // New comment
     $('#newCommentForm').preventDoubleSubmit();
     $(document).on('submit', '#newCommentForm', function (e) {
         e.preventDefault();
@@ -36,5 +37,20 @@ $(function () {
                 console.log(data);
             }
         });
+    });
+    // Sorting
+    $(document).on('touch click', '.comment-sorting button', function () {
+        let button = $(this);
+        let url = button.data('sort');
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (data) {
+                button.parents('.article-comments').find('.article-comments-body').html(data);
+                button.parent().find('.active').removeClass('active');
+                button.addClass('active');
+            }
+        })
+
     });
 });
