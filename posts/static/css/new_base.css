@@ -953,7 +953,7 @@ nav {
 }
 #PostModal .article-view .article-comments .article-comments-header {
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 12px;
 }
 #PostModal .article-view .article-comments .article-comments-header .btn-link {
   opacity: 0.5;
@@ -965,9 +965,79 @@ nav {
   opacity: 1;
   color: #5A1BE0;
 }
+#PostModal .article-view .article-comments .article-comments-body .comment {
+  display: flex;
+  flex-flow: column nowrap;
+  border-bottom: 1px solid #EBEBEB;
+  margin-top: 18px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-header {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 6px;
+  align-items: flex-end;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-header .user-thumbnail {
+  margin-right: 12px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-header .user-thumbnail img {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-header .comment-name {
+  font-size: 14px;
+  line-height: 20px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-header .comment-date {
+  margin-left: 19px;
+  font-size: 12px;
+  line-height: 20px;
+  color: #888888;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-body {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 13px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 20px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer button {
+  padding: 0;
+  border: none;
+  background: none;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer .comment-reply-btn {
+  display: flex;
+  align-items: center;
+  flex-flow: row nowrap;
+  font-size: 12px;
+  line-height: 16px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer .comment-reply-btn img {
+  margin-right: 6px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer .comment-reply-btn span {
+  color: #888888;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer .btn-upvote {
+  display: flex;
+  margin-right: 16px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer .btn-upvote svg {
+  margin-right: 9px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-footer .btn-upvote .rating-text {
+  color: #888888;
+  line-height: 13px;
+}
 #PostModal .article-view .article-comments .article-new-comment {
   display: flex;
   flex-flow: row nowrap;
+  margin-top: 32px;
 }
 #PostModal .article-view .article-comments .article-new-comment button {
   max-width: 190px;

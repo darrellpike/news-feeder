@@ -9,7 +9,14 @@ $(function () {
             data: form.serialize(),
             success: function (data) {
                 this.beenSubmitted = false;
-                $('.article-comments-body').append(data);
+                let commentSection = $('.article-comments-body');
+                let article_id = form.parents('.article-comments').siblings('.article').data('article');
+                commentSection.append(data);
+                commentSection.find('.comment:last-of-type').show('slow');
+                let currentCommentNumber = $('.comments-count span');
+                let newCommentNumber = parseInt(currentCommentNumber.html()) + 1;
+                currentCommentNumber.html(newCommentNumber);
+                $('.article[data-article="' + article_id + '"] .article-comments-text span').html(newCommentNumber);
             },
             error: function (data) {
                 this.beenSubmitted = false;

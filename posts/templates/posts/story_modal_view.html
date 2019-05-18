@@ -56,7 +56,7 @@
     </div>
     <div class="article-comments">
         <div class="article-comments-header d-flex">
-            <div class="comments-count align-self-start">{{ article.comment_count }} comments</div>
+            <div class="comments-count align-self-start"><span>{{ article.comment_count }}</span> comments</div>
             {% if comments.all %}
                 <div class="align-self-end d-inline-flex">
                     <button id="comments-newest" class="btn btn-link active">oldest</button>

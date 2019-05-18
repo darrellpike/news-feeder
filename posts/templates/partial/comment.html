@@ -1,7 +1,7 @@
-{% load posts_extras %}
-<div class="comment">
+{% load posts_extras staticfiles %}
+<div class="comment" {% if new %}style="display: none"{% endif %}>
     <div class="comment-header">
-        <div class="user-thumbnail">{% if comment.author.userprofile.image_thumbnail_sm.url %}<img src="{{ comment.author.userprofile.image_thumbnail_sm.url }}" alt="{{ comment }}" />{% endif %}</div>
+        {% if not comment.author.userprofile.is_image_default %}<div class="user-thumbnail">{% if comment.author.userprofile.image_thumbnail_sm.url %}<img src="{{ comment.author.userprofile.image_thumbnail_sm.url }}" alt="{{ comment }}" />{% endif %}</div>{% endif %}
         <div class="comment-name">{{ comment.author.username }}</div>
         <div class="comment-date">{{ comment.time_since_submit|smooth_timedelta }} ago</div>
     </div>
@@ -15,5 +15,9 @@
                 </svg>
                 <span class="rating-text">{{ comment.get_score }}</span>
             </button>
+        <button class="comment-reply-btn">
+                <img src="{% static 'images/Comment grey.svg' %}" alt="Reply to a comment">
+                <span>Reply</span>
+        </button>
     </div>
 </div>

@@ -40,7 +40,7 @@
 
             <span class="article-comments">
                                     <img alt="comments" src="{% static 'images/Comments_image.svg' %}" />
-                                    <span class="article-comments-text">{{ article.comment_count }} comments</span>
+                <span class="article-comments-text"><span>{{ article.comment_count }}</span> comments</span>
             </span>
             <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">• {{ article.time_since_submit|smooth_timedelta }} ago •</span>
             <a href="{{ article.url }}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">

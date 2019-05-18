@@ -891,7 +891,7 @@ nav
 
       .article-comments-header
         justify-content: space-between
-        margin-bottom: 30px
+        margin-bottom: 12px
         .btn-link
           opacity: 0.5
           color: $text-color
@@ -902,9 +902,68 @@ nav
           opacity: 1
           color: $primary-color
 
+
+      .article-comments-body
+        .comment
+          display: flex
+          flex-flow: column nowrap
+          border-bottom: 1px solid #EBEBEB
+          margin-top: 18px
+          .comment-header
+            display: flex
+            flex-flow: row nowrap
+            margin-bottom: 6px
+            align-items: flex-end
+            .user-thumbnail
+              margin-right: 12px
+              img
+                width: 20px
+                height: 20px
+                border-radius: 2px
+            .comment-name
+              font-size: 14px
+              line-height: 20px
+            .comment-date
+              margin-left: 19px
+              font-size: 12px
+              line-height: 20px
+              color: #888888
+          .comment-body
+            font-size: 14px
+            line-height: 20px
+            margin-bottom: 13px
+          .comment-footer
+            display: flex
+            flex-flow: row nowrap
+            margin-bottom: 20px
+            button
+              padding: 0
+              border: none
+              background: none
+            .comment-reply-btn
+              display: flex
+              align-items: center
+              flex-flow: row nowrap
+              font-size: 12px
+              line-height: 16px
+              img
+                margin-right: 6px
+              span
+                color: #888888
+            .btn-upvote
+              display: flex
+              margin-right: 16px
+              svg
+                margin-right: 9px
+              .rating-text
+                color: #888888
+                line-height: 13px
+
+
       .article-new-comment
         display: flex
         flex-flow: row nowrap
+        margin-top: 32px
 
         $button-width: 190px
         $button-height: 44px

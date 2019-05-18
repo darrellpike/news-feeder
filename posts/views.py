@@ -379,7 +379,7 @@ def new_comment(request, post_id, parent_id=None):
 
 		if new_comment_form.is_valid():
 			new_comment = new_comment_form.save()
-			return TemplateResponse(request, 'partial/comment.html', context={'comment': new_comment})
+			return TemplateResponse(request, 'partial/comment.html', context={'comment': new_comment, 'new': True})
 		else:
 			response = JsonResponse(new_comment_form.errors)
 			response.status_code = 422

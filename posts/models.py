@@ -139,6 +139,10 @@ class UserProfile(models.Model):
 	is_shadowbanned = models.BooleanField(default=False)
 	is_fake = models.BooleanField(default=False)
 
+	def is_image_default(self):
+		return True if self.image.name == 'user_images/default/default_image_profile.png' else False
+
+
 	def count_karma(self):
 		#I know the score-counting would be shorter and faster using a SUM(score) instead of fors, but django
 		#seems to have a bug when chaining multiple aggregates.
