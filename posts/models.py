@@ -213,6 +213,16 @@ class Post(models.Model):
 		if score is None:
 			score=0
 		return score
+
+	def get_score_formatted(self):
+		score = self.get_score()
+		if score >= 10000:
+			formatted_number = float(score) / 1000
+			formatted_number = str(formatted_number)[:4] + 'k'
+			return formatted_number
+		else:
+			return score
+
 	def get_ranking(self,score=None):
 		if score is None:
 			score=self.get_score()
@@ -341,6 +351,16 @@ class Comment(MPTTModel):
 			score=0
 		return score
 
+
+	def get_score_formatted(self):
+		score = self.get_score()
+		if score >= 10000:
+			formatted_number = float(score) / 1000
+			formatted_number = str(formatted_number)[:4] + 'k'
+			return formatted_number
+		else:
+			return score
+
 	def time_since_submit(self):
 		return timezone.now() - self.submit_time
 
@@ -376,11 +396,6 @@ class CommentVote(Vote):
 	def __unicode__(self):
 		return self.voter.first_name + " " + self.voter.last_name + " " + str(self.score) + " on " + self.comment.post.title + " by " + self.comment.author.username
 
-@receiver(post_save, sender=Comment)
-def auto_upvote_comment(sender, instance, created, **kwargs):
-	if created:
-		vote = CommentVote(comment=instance, voter=instance.author, score=1)
-		vote.save()
 
 class PostFlag(models.Model):
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)

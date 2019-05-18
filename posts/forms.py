@@ -165,7 +165,7 @@ class PostVoteForm(ModelForm):
 
 class CommentVoteForm(ModelForm):
     class Meta:
-        fields = ('score', 'comment')
+        fields = ('comment',)
         model = CommentVote
 
 
