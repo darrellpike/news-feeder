@@ -19,7 +19,7 @@ $(function () {
         });
     }
 
-    $(document).on('click touch', '.article .article-title', function () {
+    $(document).on('click touch', '.article .article-title, .article .article-comments', function () {
         let slug = $(this).closest('.article').data('article');
         $.ajax({
             type: 'GET',
