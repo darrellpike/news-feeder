@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from posts.models import *
-from django.template.response import TemplateResponse
+from django.template.response import TemplateResponse, SimpleTemplateResponse
 from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm, UserProfileUpdateForm,\
 	ChangeUserImageForm, NewNewsSuggestionForm, NewCommentForm, CommentVoteForm
 from django_registration.backends.activation.views import ActivationView
@@ -436,6 +436,22 @@ def comment_sort(request, post_id):
 
 
 		return TemplateResponse(request, template, context={'comments': comments})
+
+
+def send_activation_again(request, email):
+	if email:
+		user = get_object_or_404(User, email=email)
+		if not user.is_active:
+			sent = False
+			response = create_or_update_contact_hubspot(user.id, user.get_activation_key())
+			if response == 200:
+				sent = True
+			return SimpleTemplateResponse('django_registration/with_base/send_activation_again.html', context={
+				'email': email,
+				'sent': sent
+			})
+	raise Http404
+
 
 
 

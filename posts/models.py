@@ -7,12 +7,7 @@ from django.utils import timezone
 from django.db.models import Sum
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-from django.db import DatabaseError
-# from .utils import *
-from django.db.models import Max
-import random
-import requests
-from instagram.bind import InstagramClientError, InstagramAPIError
+from django.core import signing
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill, ResizeToFit, Adjust
 from django.contrib.auth.models import PermissionsMixin
@@ -21,11 +16,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from urllib.parse import urlparse
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.conf import settings
 
 CHAR_FIELD_MAX_LENGTH = 85
 
 #BUFFER_TOKEN="1/2e1a5f4377c137037277b1018687db14"#testing
 BUFFER_TOKEN="1/a87c16b5ef67c2978b55a34eaee28078"
+
+REGISTRATION_SALT = getattr(settings, 'REGISTRATION_SALT', 'registration')
 
 
 class CustomUserManager(BaseUserManager):
@@ -108,17 +106,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 		full_name = '%s %s' % (self.first_name, self.last_name)
 		return full_name.strip()
 
+
 	def get_short_name(self):
 		return self.username
+
 
 	def natural_key(self):
 		return self.email
 
+
 	def email_user(self, subject, message, from_email=None, **kwargs):
 		"""
-		Sends an email to this User.
+		Sends an email to this User. IMPORTANT: Use HubSpot for sending emails.
 		"""
-		send_mail(subject, message, from_email, [self.email], **kwargs)
+		pass
+
+
+	def get_activation_key(self):
+		"""
+		Generate the activation key which will be emailed to the user.
+
+		"""
+		return signing.dumps(
+			obj=self.get_username(),
+			salt=REGISTRATION_SALT
+		)
+
 
 	def __str__(self):
 		full_name = '%s | %s' % (self.username, self.email)

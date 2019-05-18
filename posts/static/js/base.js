@@ -1,6 +1,5 @@
 jQuery.fn.preventDoubleSubmit = function() {
     jQuery(this).submit(function() {
-        console.log(this.beenSubmitted);
         if (this.beenSubmitted) {
             return false;
         }
@@ -109,8 +108,13 @@ $(function () {
                 }
                 for (error in errors) {
                     if (errors.hasOwnProperty(error)) {
-                        if (error === '__all__' || error === 'inactive') {
-                            $('#non-field').html(errors[error]);
+                        if (error === '__all__') {
+                            let error_text = errors[error];
+                            if (error_text[0] === 'This account is inactive.') {
+                                let email = form.find('#id_email').val();
+                                error_text += ' <a class="btn-link" href="/accounts/activate/send_again/' + email + '/">Send activation email again?</a>';
+                            }
+                            $('#non-field').html(error_text);
                         } else  {
                             var input = $('input[name=' + error + ']');
                             input.closest('.input-with-label').find('.error-text').html(errors[error]);
