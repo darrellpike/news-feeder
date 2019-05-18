@@ -60,7 +60,7 @@ def save_profile(backend, user, response, *args, **kwargs):
 		profile = user.userprofile
 		if profile is None:
 			profile = UserProfile(user_id=user.id)
-		if profile.image.name == 'user_images/default/default_image_profile.png':
+		if profile.is_image_default():
 			image_elements = response.get('profilePicture').get('displayImage~').get('elements')
 			image_file = image_elements[len(image_elements) - 1].get('identifiers')[0]
 			image_url = image_file.get('identifier')

@@ -1,5 +1,17 @@
+jQuery.fn.preventDoubleSubmit = function() {
+    jQuery(this).submit(function() {
+        console.log(this.beenSubmitted);
+        if (this.beenSubmitted) {
+            return false;
+        }
+        else {
+            this.beenSubmitted = true;
+        }
+    });
+};
+
+
 $(function () {
-    var csrftoken = Cookies.get('csrftoken');
     let search = $('.search-container');
     let searchButton = $('.btn-search');
     let searchInput = $('#search-form input');
@@ -19,20 +31,24 @@ $(function () {
         });
     }
 
-    $(document).on('click touch', '.article .article-title', function () {
-        let slug = $(this).closest('.article').data('article');
-        $.ajax({
-            type: 'GET',
-            url: '/post/' + slug,
-            success: function (html) {
-                let modal = $('#PostModal');
-                modal.find('.modal-content').html(html);
-                modal.modal('show');
-            },
-            error: function (data, textStatus) {
-                console.log(data, textStatus);
-            }
-        });
+    $(document).on('click touch', '.article .article-title, .article .article-comments', function (e) {
+        let width = $(window).width();
+        if (width > 768) {
+            e.preventDefault();
+            let slug = $(this).closest('.article').data('article');
+            $.ajax({
+                type: 'GET',
+                url: '/post/' + slug,
+                success: function (html) {
+                    let modal = $('#PostModal');
+                    modal.find('.modal-content').html(html);
+                    modal.modal('show');
+                },
+                error: function (data, textStatus) {
+                    console.log(data, textStatus);
+                }
+            });
+        }
     });
 
     searchButton.click(function () {
@@ -63,7 +79,7 @@ $(function () {
       timeoutID = setTimeout(() => searchSend(e.target.value, pageNumber), 250);
     });
 
-    $(document).on('click touch', 'form input', function () {
+    $(document).on('click touch', 'form input, form textarea', function () {
        this.form.beenSubmitted = false;
        $(this).parent().removeClass('error');
        $(this).siblings('.error-text').html('');
@@ -105,16 +121,32 @@ $(function () {
             }
         });
     });
-});
 
-jQuery.fn.preventDoubleSubmit = function() {
-    jQuery(this).submit(function() {
-        console.log(this.beenSubmitted);
-        if (this.beenSubmitted) {
-            return false;
-        }
-        else {
-            this.beenSubmitted = true;
-        }
-    });
-};
+    $('#register_form').preventDoubleSubmit();
+        $(document).on('submit', '#register_form', function (e) {
+            e.preventDefault();
+            let register_form = $(this);
+            $('.error-text').html('');
+            $('.input-with-label').removeClass('error');
+            $.ajax({
+                method: 'POST',
+                url: register_form.attr('action'),
+                data: register_form.serialize(),
+                success: function (data) {
+                    register_form.beenSubmitted = false;
+                    register_form.html(data);
+                },
+                error: function (data) {
+                    register_form.beenSubmitted = false;
+                    let errors = $.parseJSON(data.responseText);
+                    for (error in errors) {
+                        if (errors.hasOwnProperty(error)) {
+                            var input = $('input[name=' + error + ']');
+                            input.closest('.input-with-label').find('.error-text').html(errors[error]);
+                            input.closest('.input-with-label').addClass('error');
+                        }
+                    }
+                }
+            });
+        });
+});

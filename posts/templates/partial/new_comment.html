@@ -1,0 +1,21 @@
+<div class="article-new-comment">
+    <div class="user-thumbnail">
+        {% if request.user.userprofile.image_thumbnail_sm.url %}<img src="{{ request.user.userprofile.image_thumbnail_sm.url }}" alt="{{ user.username }} profile image" />{% endif %}
+    </div>
+    <div class="new-comment-input">
+        {% if parent %}
+            <form id="newCommentForm" action="{% url 'new_comment' article.id parent.id %}" method="post">
+        {% else %}
+            <form id="newCommentForm" action="{% url 'new_comment' article.id %}" method="post">
+        {% endif %}
+            {% csrf_token %}
+            <label for="newComment" hidden>New comment</label>
+            <div class="input-group">
+                <textarea id="newComment" name="text"></textarea>
+                <span class="error-text"></span>
+            </div>
+            <button type="submit" class="button primary-button">Comment</button>
+        </form>
+    </div>
+</div>
+{{ form }}

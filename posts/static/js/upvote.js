@@ -1,29 +1,26 @@
 $(function () {
    // Upvote button
-    $(document).on('click touch', '.article .btn-upvote', function (e) {
+    $(document).on('click touch', '.btn-upvote', function (e) {
         var rating_number = $(this).find('.rating-text');
         var button = $(this);
         $.ajax({
             method: 'POST',
-            url: '/api/vote_post/',
+            url: button.data('vote'),
             data: {
                 'csrfmiddlewaretoken': Cookies.get('csrftoken'),
-                'post': button.parents('.article').data('article')
             },
             success: function (vote) {
-                var currentRatingNumber = rating_number.context.innerText;
-                if (vote === 'upvote') {
-                    if (!(currentRatingNumber.indexOf('k') !== -1)) {
-                        rating_number.html(parseInt(currentRatingNumber) + 1);
-                    }
+                if (button.hasClass('modal-article-vote')) {
+                    let article = button.parents('.article').data('article');
+                    button = $('.article[data-article="' + article + '"]').find('.btn-upvote');
+                    rating_number = button.find('.rating-text');
+                }
+                if (vote['up_vote']) {
+                    rating_number.html(vote['score']);
                     button.addClass('active');
-                } else if (vote === 'unvote') {
-                    if (!(currentRatingNumber.indexOf('k') !== -1)) {
-                        rating_number.html(parseInt(currentRatingNumber) - 1);
-                    }
-                    button.removeClass('active');
                 } else {
-                    console.log(vote);
+                    rating_number.html(vote['score']);
+                    button.removeClass('active');
                 }
             },
             error: function (err) {

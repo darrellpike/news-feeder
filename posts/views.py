@@ -2,7 +2,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http40
 from posts.models import *
 from django.template.response import TemplateResponse
 from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm, UserProfileUpdateForm,\
-	ChangeUserImageForm, NewNewsSuggestionForm
+	ChangeUserImageForm, NewNewsSuggestionForm, NewCommentForm, CommentVoteForm
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
 from posts.utils import DeltaFirstPagePaginator, create_or_update_contact_hubspot, update_contact_property_hubspot
@@ -106,14 +106,19 @@ class IndexLatestView(generic.ListView):
 
 
 class PostDetailView(generic.DetailView):
-	ajax_template_name = 'posts/story_modal_view.html'
-	template_name = 'posts/story_modal_view.html'
+	ajax_template_name = 'partial/post_modal_view.html'
+	template_name = 'posts/post_view.html'
 	model = Post
 	context_object_name = 'article'
 
+	def get(self, request, *args, **kwargs):
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+		return super().get(request, *args, **kwargs)
+
 	def get_context_data(self, **kwargs):
 		context = super(PostDetailView, self).get_context_data(**kwargs)
-		context['comments'] = context['article'].comment_set
+		context['comments'] = context['article'].comment_set.order_by('-submit_time')
 		return context
 
 
@@ -165,23 +170,26 @@ class SearchView(generic.ListView):
 
 
 @login_required(login_url=reverse_lazy('django_registration_login'))
-def vote_post(request):
-	if request.user.is_authenticated and request.method == 'POST':
+def vote_post(request, post_id):
+	if request.user.is_authenticated and request.POST:
 		vote = PostVote(voter=request.user, score=1)
 		# if request.user.userprofile.count_karma()<500:
 		# 	return HttpResponse('Not enough carma')
-
-		post_id = request.POST.get('post', False)
 		if post_id:
-			post = get_object_or_404(Post, pk=int(post_id))
-			form = PostVoteForm(request.POST, instance=vote)
+			post = get_object_or_404(Post, pk=post_id)
+			data = {
+				'post': post.pk,
+				'csrfmiddlewaretoken': request.POST['csrfmiddlewaretoken']
+			}
+			form = PostVoteForm(data, instance=vote)
 			if form.is_valid():
+				up_vote = True
 				try:
 					vote = form.save()
 				except IntegrityError:
 					post.postvote_set.filter(voter=request.user).delete()
-					return HttpResponse('unvote')
-				return HttpResponse('upvote')
+					up_vote = False
+				return JsonResponse({'up_vote': up_vote, 'score': post.get_score_formatted()})
 			else:
 				print(form.errors)
 	return HttpResponse(0)
@@ -205,7 +213,6 @@ class CustomRegistrationView(RegistrationView):
 		new_user.save()
 
 		response = create_or_update_contact_hubspot(new_user.id, self.get_activation_key(new_user))
-		#self.send_activation_email(new_user)
 
 
 		return new_user
@@ -356,3 +363,79 @@ class NewNewsSuggestionView(LoginRequiredMixin, generic.edit.CreateView):
 				return response
 		else:
 			return response
+
+
+class NewCommentView(LoginRequiredMixin, generic.edit.CreateView, AjaxableResponseMixin):
+	ajax_template_name = 'partial/comment.html'
+	template_name = 'partial/new_comment.html'
+	model = Comment
+	fields = ['text']
+
+
+@login_required(login_url=reverse_lazy('django_registration_login'))
+def new_comment(request, post_id, parent_id=None):
+	if request.user.is_authenticated and request.method == 'POST':
+		post = get_object_or_404(Post, pk=post_id)
+		parent = None
+		if not parent_id is None:
+			parent = get_object_or_404(Comment, pk=parent_id)
+			if parent.post != post:
+				raise Http404
+
+		new_comment = Comment(author=request.user, post=post, parent=parent)
+		new_comment_form = NewCommentForm(request.POST, instance=new_comment)
+
+		if new_comment_form.is_valid():
+			new_comment = new_comment_form.save()
+			return TemplateResponse(request, 'partial/comment.html', context={'comment': new_comment, 'new': True})
+		else:
+			response = JsonResponse(new_comment_form.errors)
+			response.status_code = 422
+			return response
+
+@login_required(login_url=reverse_lazy('django_registration_login'))
+def vote_comment(request, post_id, comment_id):
+	if request.user.is_authenticated and request.method == 'POST':
+		post = get_object_or_404(Post, pk=post_id)
+		comment = get_object_or_404(Comment, pk=comment_id)
+		vote = CommentVote(comment=comment, voter=request.user, score=1)
+		data = {
+			'comment': comment.pk,
+			'csrfmiddlewaretoken': request.POST['csrfmiddlewaretoken']
+		}
+		form = CommentVoteForm(data, instance=vote)
+		if form.is_valid():
+			up_vote = True
+			try:
+				vote = form.save()
+			except IntegrityError:
+				comment.commentvote_set.filter(voter=request.user).delete()
+				up_vote = False
+			return JsonResponse({'up_vote': up_vote, 'score': comment.get_score_formatted()})
+		else:
+			print(form.errors)
+	return HttpResponse(0)
+
+
+def comment_sort(request, post_id):
+	if request.GET and post_id:
+		template = 'partial/comments_body.html'
+		sort = request.GET.get('sort', False)
+		try:
+			post = Post.objects.prefetch_related('comment_set').get(pk=post_id)
+		except Post.DoesNotExist:
+			raise Http404
+		comments = post.comment_set
+		if sort:
+			if sort == 'oldest':
+				comments = comments.order_by('submit_time')
+			elif sort == 'popular':
+				comments = sorted(comments.all(), key=lambda c: -c.get_score())
+			else:
+				comments = comments.order_by('-submit_time')
+
+
+		return TemplateResponse(request, template, context={'comments': comments})
+
+
+

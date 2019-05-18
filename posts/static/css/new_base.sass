@@ -331,6 +331,17 @@ button:focus
 .btn:default
   color: $white-text-color
 
+.link-white
+  color: $white-text-color
+  letter-spacing: -0.02em
+  text-transform: uppercase
+  font-size: 44px
+  line-height: 44px
+  font-family: tt_supermolot_neuebold, Arial
+  &:hover
+    color: $white-text-color
+    text-decoration-line: none
+
 // Header styles
 header
     background-color: $primary-color
@@ -483,6 +494,27 @@ nav
     height: 44px
     border-radius: 2px
 
+.dropdown-menu
+  top: calc(100% + 12px)
+  right: 0
+  left: unset
+  min-width: 273px
+  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2)
+  border-radius: 2px
+  padding: 0
+
+  .dropdown-item
+    display: flex
+    flex-direction: column
+    justify-content: center
+    min-height: 64px
+    &:first-of-type
+      border-bottom: 1px solid #D9DCE2
+    &:active
+      background: none
+    h3
+      margin-bottom: 0
+
 
 .btn-signup, .btn-login, .btn-transparent
     font-family: tt_supermolot_neueextrabold
@@ -497,6 +529,9 @@ nav
     text-transform: uppercase
     border: none
     border-radius: 0.5px
+
+.profile-link
+  margin-bottom: 60px
 
 .btn-signup
     margin-right: 16px
@@ -564,6 +599,20 @@ nav
   color: white
   text-decoration: underline
 
+
+.logout-successful
+  display: none
+  width: 100%
+  height: 52px
+  line-height: 52px
+  white-space: nowrap
+  text-align: center
+  background: #8B60E6
+  color: $white-text-color
+  font-size: 18px
+
+.logout-successful-mobile
+  display: none
 
 .main-content
   margin-top: 46px
@@ -658,16 +707,16 @@ nav
   margin: 18px 8px 16px 16px
   width: 100%
 
-.article .btn-upvote.active .rating-text
-  color: $primary-color
+.btn-upvote.active .rating-text
+  color: $primary-color!important
 
-.article .btn-upvote.active svg path
+.btn-upvote.active svg path
   fill: $primary-color
 
-.article .btn-upvote:active .rating-text
-  color: $primary-color
+.btn-upvote:active .rating-text
+  color: $primary-color!important
 
-.article .btn-upvote:active svg path
+.btn-upvote:active svg path
   fill: $primary-color
 
 .article .article-body .article-title
@@ -688,7 +737,7 @@ nav
   display: flex
 
 .article .article-body .article-statistics
-  .article-time
+  .article-time, .article-submitter
     opacity: 0.5
     margin: 0 4px
   .news-aggregator-link
@@ -777,6 +826,196 @@ nav
 .pagination .next img
   transform: rotate(180deg)
 
+// Post view
+.article-view
+    width: 100%
+    border-radius: 2px
+    background: #FFFFFF
+    border: 0
+    display: flex
+    flex-direction: column
+    position: relative
+
+    .article
+      background: transparent
+      margin-bottom: 0
+      box-shadow: none
+
+      .rating
+        background: transparent
+        position: absolute
+        width: auto
+        .btn-upvote
+          svg
+            margin: 26px 21px 0 21px
+
+
+      .article-header
+        display: flex
+        flex-flow: row nowrap
+        .article-header-container
+          display: flex
+          flex-flow: column
+
+        .news-aggregator-image
+          margin: 0 16px 0 0
+
+          img
+            margin: 0
+
+        .article-title
+          display: inline-block
+          margin-bottom: 0
+          flex: 1
+          p
+            margin-top: 6px
+            margin-bottom: 14px
+
+
+      .article-statistics
+        display: block
+        .article-time
+          margin-left: 0
+        .article-comments
+          margin: 0
+          flex-flow: row nowrap
+          .article-comments-text
+            opacity: 0.5
+            color: #111111
+
+      .article-body
+        padding: 20px 16px 30px 16px
+        margin: 0
+        display: flex
+        flex-flow: column
+        border-bottom: 1px solid #EBEBEB
+
+        .article-image
+          overflow: hidden
+          width: 724px
+          text-align: center
+          margin-bottom: 16px
+
+          img
+            max-width: 724px
+
+    .article-comments
+      display: flex
+      margin: 26px 20px
+      flex-flow: column wrap
+      justify-items: stretch
+
+      .article-comments-header
+        justify-content: space-between
+        margin-bottom: 12px
+        .comments-count
+          font-size: 18px
+          line-height: 24px
+        .btn-link
+          opacity: 0.5
+          color: $text-color
+          border: none
+          padding: 0 10px
+
+        .btn-link.active
+          opacity: 1
+          color: $primary-color
+
+
+      .article-comments-body
+        .comment
+          display: flex
+          flex-flow: column nowrap
+          border-bottom: 1px solid #EBEBEB
+          margin-top: 18px
+          .comment-header
+            display: flex
+            flex-flow: row nowrap
+            margin-bottom: 6px
+            align-items: flex-end
+            .user-thumbnail
+              margin-right: 12px
+              img
+                width: 20px
+                height: 20px
+                border-radius: 2px
+            .comment-name
+              font-size: 14px
+              line-height: 20px
+            .comment-date
+              margin-left: 19px
+              font-size: 12px
+              line-height: 20px
+              color: #888888
+          .comment-body
+            font-size: 14px
+            line-height: 20px
+            margin-bottom: 14px
+          .comment-footer
+            display: flex
+            flex-flow: row nowrap
+            margin-bottom: 20px
+            button
+              padding: 0
+              border: none
+              background: none
+            .comment-reply-btn
+              display: flex
+              align-items: center
+              flex-flow: row nowrap
+              font-size: 12px
+              line-height: 16px
+              img
+                margin-right: 6px
+              span
+                color: #888888
+            .btn-upvote
+              display: flex
+              margin-right: 16px
+              svg
+                margin-right: 9px
+              .rating-text
+                color: #888888
+                line-height: 13px
+
+
+      .article-new-comment
+        display: flex
+        flex-flow: row nowrap
+        margin-top: 32px
+
+        $button-width: 190px
+        $button-height: 44px
+        button
+          min-height: $button-height
+          &:after, &:before
+            width: 5px
+        .input-group
+          margin-bottom: 20px
+
+        .error-text
+          position: absolute
+          top: 92%
+
+        .new-comment-input
+          flex: 1
+          #newComment
+            font-family: gt_americaregular
+            font-size: 14px
+            background: #F7F7F7
+            min-height: 60px
+            padding: 10px 15px
+            border: none
+            border-radius: 2px
+            width: 100%
+        .user-thumbnail
+          border-radius: 2px
+          margin-right: 12px
+          flex: 0
+          img
+            height: 40px
+            width: 40px
+
 // Modal view
 #PostModal
   .modal-dialog
@@ -807,7 +1046,7 @@ nav
 
       .article-header
         display: flex
-        flex-flow: row wrap
+        flex-flow: row nowrap
         margin-bottom: 20px
         .article-header-container
           display: flex
@@ -824,6 +1063,7 @@ nav
           margin-bottom: 0
           flex: 1
           p
+            margin-top: 0px
             margin-bottom: 8px
 
 
@@ -856,7 +1096,7 @@ nav
 
       .article-comments-header
         justify-content: space-between
-
+        margin-bottom: 12px
         .btn-link
           opacity: 0.5
           color: $text-color
@@ -867,10 +1107,110 @@ nav
           opacity: 1
           color: $primary-color
 
+
+      .article-comments-body
+        .comment
+          display: flex
+          flex-flow: column nowrap
+          border-bottom: 1px solid #EBEBEB
+          margin-top: 18px
+          .comment-header
+            display: flex
+            flex-flow: row nowrap
+            margin-bottom: 6px
+            align-items: flex-end
+            .user-thumbnail
+              margin-right: 12px
+              img
+                width: 20px
+                height: 20px
+                border-radius: 2px
+            .comment-name
+              font-size: 14px
+              line-height: 20px
+            .comment-date
+              margin-left: 19px
+              font-size: 12px
+              line-height: 20px
+              color: #888888
+          .comment-body
+            font-size: 14px
+            line-height: 20px
+            margin-bottom: 13px
+          .comment-footer
+            display: flex
+            flex-flow: row nowrap
+            margin-bottom: 20px
+            button
+              padding: 0
+              border: none
+              background: none
+            .comment-reply-btn
+              display: flex
+              align-items: center
+              flex-flow: row nowrap
+              font-size: 12px
+              line-height: 16px
+              img
+                margin-right: 6px
+              span
+                color: #888888
+            .btn-upvote
+              display: flex
+              margin-right: 16px
+              svg
+                margin-right: 9px
+              .rating-text
+                color: #888888
+                line-height: 13px
+
+
+      .article-new-comment
+        display: flex
+        flex-flow: row nowrap
+        margin-top: 32px
+
+        $button-width: 190px
+        $button-height: 44px
+        button
+          max-width: $button-width
+          min-height: $button-height
+          &:after, &:before
+            width: 5px
+        .input-group
+          margin-bottom: 20px
+
+        .error-text
+          position: absolute
+          top: calc(100% + #{$button-height}/2)
+          left: $button-width + 10px
+
+        .new-comment-input
+          flex: 1
+          #newComment
+            font-family: gt_americaregular
+            font-size: 14px
+            background: #F7F7F7
+            min-height: 60px
+            padding: 10px 15px
+            border: none
+            border-radius: 2px
+            width: 100%
+        .user-thumbnail
+          border-radius: 2px
+          margin-right: 12px
+          flex: 0
+          img
+            height: 40px
+            width: 40px
+
 // Modals
 .modal-dialog
   max-width: 520px
   margin: 9.75rem auto
+
+#PostModal .modal-dialog
+  margin: 3.38rem auto
 
 .modal-backdrop.show
   opacity: 0.8!important
@@ -1185,6 +1525,7 @@ nav
     max-width: 820px
 
 
+// Mobile styles
 @media (max-width: 767.98px)
 
     header
@@ -1302,9 +1643,6 @@ nav
       margin-right: 0!important
       margin-bottom: 16px
 
-    .btn-login.d-lg-none, .btn-transparent.d-lg-none
-      margin-top: 58px
-
     .pagination
       justify-content: space-around
 
@@ -1420,6 +1758,15 @@ nav
             margin-bottom: 33px
           .input-with-label
             max-width: unset!important
+
+    .btn.profile-image
+      display: none
+
+    .dropdown-menu
+      display: none
+
+    .logout-successful
+      display: none
 
 
 
