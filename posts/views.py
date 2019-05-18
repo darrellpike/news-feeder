@@ -106,14 +106,19 @@ class IndexLatestView(generic.ListView):
 
 
 class PostDetailView(generic.DetailView):
-	ajax_template_name = 'posts/story_modal_view.html'
-	template_name = 'posts/story_modal_view.html'
+	ajax_template_name = 'partial/post_modal_view.html'
+	template_name = 'posts/post_view.html'
 	model = Post
 	context_object_name = 'article'
 
+	def get(self, request, *args, **kwargs):
+		if request.is_ajax():
+			self.template_name = self.ajax_template_name
+		return super().get(request, *args, **kwargs)
+
 	def get_context_data(self, **kwargs):
 		context = super(PostDetailView, self).get_context_data(**kwargs)
-		context['comments'] = context['article'].comment_set
+		context['comments'] = context['article'].comment_set.order_by('-submit_time')
 		return context
 
 
@@ -420,14 +425,15 @@ def comment_sort(request, post_id):
 			post = Post.objects.prefetch_related('comment_set').get(pk=post_id)
 		except Post.DoesNotExist:
 			raise Http404
-		comments = post.comment_set.all()
+		comments = post.comment_set
 		if sort:
-			if sort == 'newest':
+			if sort == 'oldest':
+				comments = comments.order_by('submit_time')
+			elif sort == 'popular':
+				comments = sorted(comments.all(), key=lambda c: -c.get_score())
+			else:
 				comments = comments.order_by('-submit_time')
-			elif sort == 'liked':
-				comments = sorted(comments, key=lambda c: -c.get_score())
-		else:
-			comments = comments.order_by('submit_time')
+
 
 		return TemplateResponse(request, template, context={'comments': comments})
 

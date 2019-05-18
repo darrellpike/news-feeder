@@ -18,6 +18,7 @@ $(function () {
                 let newCommentNumber = parseInt(currentCommentNumber.html()) + 1;
                 currentCommentNumber.html(newCommentNumber);
                 $('.article[data-article="' + article_id + '"] .article-comments-text span').html(newCommentNumber);
+                $(this).find('textarea').val('');
             },
             error: function (data) {
                 this.beenSubmitted = false;
@@ -39,7 +40,7 @@ $(function () {
         });
     });
     // Sorting
-    $(document).on('touch click', '.comment-sorting button', function () {
+    $(document).on('click touch', '.comment-sorting button', function () {
         let button = $(this);
         let url = button.data('sort');
         $.ajax({

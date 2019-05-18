@@ -104,6 +104,7 @@
                             <a class="dropdown-item button-logout" href="#"><h3>Log out</h3></a>
                         </div>
                         </div>
+                        <a class="profile-link link-white d-inline-block d-md-none d-lg-none d-xl-none" href="{% url 'profile' %}">Profile</a>
                         <button type="button" data-toggle="modal" data-target="#suggest_news_modal" class="btn btn-signup red-button d-inline-block d-md-none d-lg-none d-xl-none">Suggest news</button>
                         <button type="button" class="btn btn-transparent button-logout d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Log out</span></button>
                     {% else %}
@@ -263,8 +264,8 @@
 <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 {% if request.user.is_authenticated %}
 <script type="text/javascript" src="{% static 'js/upvote.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
 {% endif %}
+<script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
 <script>
     let menu = $('#navbarSupportedContent');
     menu.on('show.bs.collapse', function () {
@@ -314,34 +315,6 @@
                 }
             });
             e.preventDefault();
-        });
-
-        $('#register_form').preventDoubleSubmit();
-        $(document).on('submit', '#register_form', function (e) {
-            e.preventDefault();
-            let register_form = $(this);
-            $('.error-text').html('');
-            $('.input-with-label').removeClass('error');
-            $.ajax({
-                method: 'POST',
-                url: register_form.attr('action'),
-                data: register_form.serialize(),
-                success: function (data) {
-                    register_form.beenSubmitted = false;
-                    register_form.html(data);
-                },
-                error: function (data) {
-                    register_form.beenSubmitted = false;
-                    let errors = $.parseJSON(data.responseText);
-                    for (error in errors) {
-                        if (errors.hasOwnProperty(error)) {
-                            var input = $('input[name=' + error + ']');
-                            input.closest('.input-with-label').find('.error-text').html(errors[error]);
-                            input.closest('.input-with-label').addClass('error');
-                        }
-                    }
-                }
-            });
         });
     })
 </script>
