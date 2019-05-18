@@ -1,0 +1,50 @@
+{% load posts_extras %}
+<div>
+    <div class="pull-left" style="margin-top:-3px;;">
+        {% include "partial/voting.html" with item=node vote_type="comment" %}
+    </div>
+    <div style="margin-top:6px;">
+        <div class="small-info-line comment-info-line">
+            by <a
+                href="{% url 'view_profile' node.author.pk %}">{{ node.author.username }}</a> {{ node.submit_time|timesince }}
+            ago
+            {#<a href="{% url 'view_comment' post.pk node.pk %}">link</a>#}
+            {% if include_form %}
+                {% if node.parent %}
+                    <a href="{% url 'view_comment' post.pk node.parent.pk %}"> | parent</a>
+                {% else %}
+                    <a href="{% url 'view_post' post.pk %}"> | parent</a>
+                {% endif %}
+            {% endif %}
+
+            {% if include_post %}
+                | on <a href="{% url 'view_post' post.pk %}">{{ post.title }}</a>
+                {% if post.url %}({{ post.url|domainize }}){% endif %}
+            {% endif %}
+
+            {% if user.is_staff %}
+                <a href="{% url 'admin:posts_comment_change' node.id %}">
+                    <small>(edit)</small>
+                </a>
+            {% endif %}
+        </div>
+        <div class="comment-body">
+            {% if shorten %}
+                {{ node.text|slice:":255"|linebreaksbr|urlize }}
+            {% else %}
+                {{ node.text|linebreaksbr|urlize }}
+            {% endif %}
+        </div>
+        {% if include_form %}
+            {% include "partial/add_comment_form.html" %}<br>
+        {% else %}
+            <a href="{% url 'add_comment' post.pk node.pk %}" class="md-button md-js-button comment-reply-btn"
+               {% if user.is_authenticated %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Reply to Comment btn (logged in)', 'Clicking the reply to comment button when logged in.']);"
+               {% else %}onclick="_gaq.push(['_trackEvent', 'Actions', 'Reply to Comment btn (not logged in)', 'Clicking the reply to comment button when not logged in.']);"{% endif %}>REPLY</a>
+            {% ifequal user node.author %}{% if node.is_editable and node.is_leaf_node %}
+                <span class="edit-comment">|<a href="{% url 'edit_comment' post.pk node.pk %}"><small>edit</small></a>
+                </span>
+            {% endif %} {% endifequal %}
+        {% endif %}
+    </div>
+</div>

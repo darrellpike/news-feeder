@@ -31,7 +31,7 @@
                 method: "GET",
                 url: "{% url 'password_reset' %}",
                 success: function (data) {
-                    $('#register-modal .modal-body').html(data);
+                    $('#login-modal .modal-body').html(data);
                 },
                 error: function (data) {
                     console.log(data);

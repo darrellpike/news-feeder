@@ -1,0 +1,9 @@
+{% if comments.all %}
+    {% for comment in comments.all %}
+        {% include "partial/comment.html" with comment=comment %}
+    {% endfor %}
+{% else %}
+    {% for comment in comments %}
+        {% include "partial/comment.html" with comment=comment %}
+    {% endfor %}
+{% endif %}
