@@ -4,7 +4,7 @@
     {% if top_search_results %}
         <div class="news-header">
             <h3>Top results</h3>
-            <span class="total-results d-md-none d-lg-none d-xl-none">{{ total_results }} total result{{ total_results|pluralize }}</span>
+            <span class="total-results">{{ total_results }} total result{{ total_results|pluralize }}</span>
         </div>
         <div class="news search-results">
             {% for article in top_search_results %}

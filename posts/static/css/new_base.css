@@ -453,7 +453,6 @@ nav {
 
 .search .btn {
   padding: 0;
-  transform: rotate();
 }
 
 .search-container {
@@ -502,6 +501,13 @@ nav {
 
 .header-buttons {
   display: inline-flex;
+}
+
+.total-results {
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+  color: #888888;
 }
 
 .btn.profile-image {
@@ -655,6 +661,8 @@ nav {
 
 .news-header {
   margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .news-header h3 {

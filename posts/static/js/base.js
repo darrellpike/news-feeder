@@ -13,7 +13,7 @@ jQuery.fn.preventDoubleSubmit = function() {
 $(function () {
     let search = $('.search-container');
     let searchButton = $('.btn-search');
-    let searchInput = $('#search-form input');
+    let searchInput = $('#search-input');
 
     function searchSend(str, pageNumber=1) {
         $.ajax({
@@ -94,10 +94,20 @@ $(function () {
         });
     });
 
-    searchButton.click(function () {
+    var searchOpened = false;
+    searchInput.focusout(function () {
         search.animate({height: 'toggle'}, 250, function () {
-            searchInput.focus();
+            searchOpened = false;
         });
+    });
+
+    searchButton.click(function () {
+        if (!searchOpened) {
+            search.animate({height: 'toggle'}, 250);
+            searchInput.focus();
+            searchOpened = true;
+        }
+
         if (search.css('display') !== 'none') {
             $('.main-content').css('display', 'block');
             $('#search-results').css('display', 'none');
