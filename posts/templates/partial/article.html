@@ -1,5 +1,5 @@
 {% load posts_extras staticfiles %}
-<div data-article="{{ article.pk }}" class="article">
+<div data-article="{{ article.pk }}" data-search="{{ search }}" data-first="{{ first }}" data-last="{{ last }}" class="article">
     <div class="rating">
         <button data-vote="{% url 'vote_post' article.pk %}" class="btn-upvote {% if request.user.is_authenticated and article|user_voted:request.user %}active{% endif %}">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">

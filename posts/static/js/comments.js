@@ -13,7 +13,7 @@ $(function () {
                 let commentSection = $('.article-comments-body');
                 let article_id = form.parents('.article-comments').siblings('.article').data('article');
                 commentSection.append(data);
-                commentSection.find('.comment:last-of-type').show('slow');
+                commentSection.find('.comment:last-of-type').animate({height: 'toggle'}, 450);
                 let currentCommentNumber = $('.comments-count span');
                 let newCommentNumber = parseInt(currentCommentNumber.html()) + 1;
                 currentCommentNumber.html(newCommentNumber);
@@ -35,7 +35,6 @@ $(function () {
                             input.closest('.input-group').addClass('error');
                     }
                 }
-                console.log(data);
             }
         });
     });

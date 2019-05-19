@@ -34,13 +34,24 @@ $(function () {
         let width = $(window).width();
         if (width > 768) {
             e.preventDefault();
-            let slug = $(this).closest('.article').data('article');
+            let article = $(this).closest('.article');
+            let slug = article.data('article');
+            let first = Boolean(article.data('first'));
+            let last = Boolean(article.data('last'));
+
             $.ajax({
                 type: 'GET',
                 url: '/post/' + slug,
                 success: function (html) {
                     let modal = $('#PostModal');
                     modal.find('.modal-content').html(html);
+                    if (first) {
+                        modal.find('.previous-article').hide();
+                    } else if (last) {
+                        modal.find('.next-article').hide();
+                    }
+                    modal.find('.article').data('latest', article.data('latest'));
+                    modal.find('.article').data('search', article.data('search'));
                     modal.modal('show');
                 },
                 error: function (data, textStatus) {
@@ -48,6 +59,39 @@ $(function () {
                 }
             });
         }
+    });
+
+    $(document).on('click touch', '.previous-article, .next-article', function () {
+        let button = $(this);
+        let articleId = button.siblings('.article').data('article');
+        let articleInList;
+        let article;
+        let latest = Boolean(button.siblings('.article').data('latest'));
+        let searchResults = Boolean(button.siblings('.article').data('search'));
+        if (latest) {
+            articleInList = $('.latest-news .article[data-article="' + articleId + '"]');
+        } else if (searchResults) {
+            articleInList = $('.search-results .article[data-article="' + articleId + '"]');
+        } else {
+            articleInList = $('.news .article[data-article="' + articleId + '"]');
+        }
+        let clickOnButton = true;
+
+        if (button.hasClass('next-article')) {
+            article = articleInList.next('.article');
+        } else if (button.hasClass('previous-article')) {
+            article = articleInList.prev('.article');
+        } else {
+            console.error("Button doesn't have class.");
+        }
+        let modal = button.parents('#PostModal');
+        modal.modal('hide');
+        modal.on('hidden.bs.modal', function () {
+            if (clickOnButton) {
+                article.find('.article-title').click();
+            }
+            clickOnButton = false;
+        });
     });
 
     searchButton.click(function () {

@@ -6,9 +6,15 @@
             <h3>Top results</h3>
             <span class="total-results d-md-none d-lg-none d-xl-none">{{ total_results }} total result{{ total_results|pluralize }}</span>
         </div>
-        <div class="news">
+        <div class="news search-results">
             {% for article in top_search_results %}
-                {% include 'partial/article.html' with article=article %}
+                {% if forloop.first %}
+                        {% include 'partial/article.html' with article=article first=1 last=0 search=1 %}
+                    {% elif forloop.last %}
+                        {% include 'partial/article.html' with article=article last=1 first=0 search=1 %}
+                    {% else %}
+                        {% include 'partial/article.html' with article=article first=0 last=0 search=1 %}
+                    {% endif %}
             {% endfor %}
         </div>
     {% elif not top_search_results and not search_results %}
@@ -21,9 +27,15 @@
             <h3>Other results</h3>
         </div>
     {% endif %}
-        <div class="news">
+        <div class="news search-results">
             {% for article in search_results %}
-                {% include 'partial/article.html' with article=article %}
+                {% if forloop.first %}
+                        {% include 'partial/article.html' with article=article first=1 last=0 search=1 %}
+                    {% elif forloop.last %}
+                        {% include 'partial/article.html' with article=article last=1 first=0 search=1 %}
+                    {% else %}
+                        {% include 'partial/article.html' with article=article first=0 last=0 search=1 %}
+                    {% endif %}
             {% endfor %}
             {% if is_paginated %}
                 <div class="pagination">

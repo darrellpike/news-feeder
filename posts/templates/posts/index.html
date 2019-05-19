@@ -22,7 +22,13 @@
 
             <div class="news">
                 {% for article in news %}
-                    {% include 'partial/article.html' with article=article %}
+                    {% if forloop.first %}
+                        {% include 'partial/article.html' with article=article first=1 last=0 %}
+                    {% elif forloop.last %}
+                        {% include 'partial/article.html' with article=article last=1 first=0 %}
+                    {% else %}
+                        {% include 'partial/article.html' with article=article first=0 last=0 %}
+                    {% endif %}
                 {% endfor %}
                 {% if is_paginated %}
                         <div class="pagination">
@@ -70,7 +76,7 @@
             </div>
             <div class="latest-news">
                 {% for article in latest_news %}
-                    <div class="article" data-article="{{ article.pk }}">
+                    <div class="article" data-latest="1" data-article="{{ article.pk }}" data-first="{% if forloop.first %}1{% else %}0{% endif %}" data-last="{% if forloop.last %}1{% else %}0{% endif %}">
                             <div class="article-body">
                                 {#                            <a href="{% url 'view_post' article.pk %}"><p class="article-title">#}
                                 {#                                {{ article.title }}#}

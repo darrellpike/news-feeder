@@ -242,51 +242,6 @@ class Post(models.Model):
 		timediff = timezone.now() - self.submit_time
 		hours_since = timediff.seconds/60./60 + timediff.days*24.
 		return calculate_rank(score,hours_since)
-	# def buffer_time(self):
-	# 	latest_post = Post.objects.all().aggregate(Max('submit_time'))
-	# 	interval = timedelta(minutes=60+random.randint(1,30))
-	# 	publish_time = max(latest_post['submit_time__max'], timezone.now()) + interval
-	# 	self.submit_time=publish_time
-	# 	print("saving new submit time")
-	# 	self.save()
-	# 	print("saved new submit time. calling create_buffers")
-	# 	self.create_buffers()
-	# 	print("called create_buffers")
-	#
-	# def create_buffers(self):
-	# 	profile_ids = []
-	# 	for bp in BufferProfile.objects.all():
-	# 		profile_ids += [bp.profile_id]
-	# 	if profile_ids == []: return
-	# 	url = "https://api.bufferapp.com/1/updates/create.json"
-	# 	payload={"text":"https://www.plantdietlife.com"+reverse('view_post', args=(self.pk,))+" "+self.title,
-	# 	         "profile_ids[]":profile_ids,
-	# 	         "scheduled_at":self.submit_time.isoformat(),
-	# 	         "access_token":BUFFER_TOKEN,
-	# 	         }
-	# 	r = requests.post(url, data=payload)
-	# 	response=r.json()
-	# 	print response
-	# 	response = response['updates']
-	# 	for r in response:
-	# 		new_id = r['id']
-	# 		buffer_item = BufferItem(post=self, item_id=new_id)
-	# 		buffer_item.save()
-	# #url = 'https://api.bufferapp.com/1/updates/create.json'
-	# #curl --data "access_token=1/2e1a5f4377c137037277b1018687db14&text=This%20is%20an%20example%20update&profile_ids[]=524d95d9718355b01100002e" https://api.bufferapp.com/1/updates/create.json
-	# def update_buffers(self):
-	# 	for item in self.bufferitem_set.all():
-	# 		url = "https://api.bufferapp.com/1/updates/"+item.item_id+"/update.json"
-	# 		payload={"text":"https://www.plantdietlife.com"+reverse('view_post', args=(self.pk,))+" "+self.title,
-	# 		         "scheduled_at":self.submit_time.isoformat(),
-	# 		         "access_token":BUFFER_TOKEN,
-	# 		         }
-	# 		r = requests.post(url, data=payload)
-	# def destroy_buffers(self):
-	# 	for item in self.bufferitem_set.all():
-	# 		url = "https://api.bufferapp.com/1/updates/"+item.item_id+"/destroy.json"
-	# 		payload={"access_token":BUFFER_TOKEN,}
-	# 		r = requests.post(url, data=payload)
 
 	def __unicode__(self):
 		return self.title
@@ -294,49 +249,6 @@ class Post(models.Model):
 def calculate_rank(score,hours_since):
 	return (score-.9)# / (hours_since + 2)**1.8
 
-# @receiver(post_save, sender=Post)
-# def save_article(sender, instance, created, **kwarg):
-# 	if instance.url and not instance.article_text:
-# 		url = instance.url
-# 		if url:
-# 			embedly_info = get_embedly_info(url)
-# 			if 'content' in embedly_info:
-# 				if embedly_info['content']:
-# 					instance.article_text = embedly_info['content']
-# 					instance.save()
-# 			if 'related' in embedly_info:
-# 				if embedly_info['related']:
-# 					for r in embedly_info.get('related',[]):
-# 						try:
-# 							related_article = RelatedArticle(post=instance, url=r.url, title=r.title[:85])
-# 							related_article.save()
-# 						except TypeError:
-# 							continue
-#
-# 	elif instance.submit_time>timezone.now():
-# 		if not created:
-# 			instance.update_buffers()
-
-# @receiver(pre_delete, sender=Post)
-# def delete_from_buffer(sender, instance, **kwarg):
-# 	instance.destroy_buffers()
-#
-# class BufferProfile(models.Model):
-# 	profile_id = models.CharField(max_length=60, primary_key=True)
-# 	profile_description = models.TextField(blank=True)
-# 	def __unicode__(self):
-# 		return self.profile_description
-#
-# class BufferItem(models.Model):
-# 	post = models.ForeignKey(Post)
-# 	item_id = models.CharField(blank=True, max_length=60, primary_key=True)
-#
-# class RelatedArticle(models.Model):
-# 	post = models.ForeignKey(Post)
-# 	url = models.URLField(max_length=300, blank=True)
-# 	title = models.CharField(max_length=85)
-# 	def __unicode__(self):
-# 		return self.title
 
 class Comment(MPTTModel):
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
