@@ -95,18 +95,18 @@ $(function () {
     });
 
     var searchOpened = false;
-    searchInput.focusout(function () {
-        search.animate({height: 'toggle'}, 250, function () {
-            searchOpened = false;
-        });
-    });
+    // searchInput.focusout(function () {
+    //     search.animate({height: 'toggle'}, 250, function () {
+    //         searchOpened = false;
+    //     });
+    // });
 
     searchButton.click(function () {
+        search.animate({height: 'toggle'}, 250);
         if (!searchOpened) {
-            search.animate({height: 'toggle'}, 250);
             searchInput.focus();
             searchOpened = true;
-        }
+        } else searchOpened = false;
 
         if (search.css('display') !== 'none') {
             $('.main-content').css('display', 'block');
@@ -129,7 +129,7 @@ $(function () {
 
     searchInput.on('keyup', function (e) {
         clearTimeout(timeoutID);
-      timeoutID = setTimeout(() => searchSend(e.target.value, pageNumber), 250);
+        timeoutID = setTimeout(() => searchSend(e.target.value, pageNumber), 250);
     });
 
     $(document).on('click touch', 'form input, form textarea', function () {
