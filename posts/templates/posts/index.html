@@ -83,8 +83,10 @@
                                     <img alt="comments" src="{% static 'images/Comments_image.svg' %}" />
                                     <span class="article-comments-text"><span>{{ article.comment_count }}</span> comments</span>
                                 </span>
+                                    <span class="text-separator"></span>
                                     <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">
-                                    • {{ article.time_since_submit|smooth_timedelta }} ago •</span>
+                                    {{ article.time_since_submit|smooth_timedelta }} ago</span>
+                                    <span class="text-separator"></span>
                                     <a href="{{ article.url }}" class="news-aggregator-link
                                  d-none d-md-inline d-lg-inline d-xl-inline">
                                         {% if article.news_aggregator %}

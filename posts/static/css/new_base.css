@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @font-face {
   font-family: "tt_supermolot_neueBlkIt";
   src: url("/static/fonts/typetype_-_tt_supermolot_neue_black_italic-webfont.woff2") format("woff2"), url("/static/fonts/typetype_-_tt_supermolot_neue_black_italic-webfont.woff") format("woff");
@@ -788,7 +789,6 @@ nav {
 
 .article .article-body .article-statistics .article-time, .article .article-body .article-statistics .article-submitter {
   opacity: 0.5;
-  margin: 0 4px;
 }
 .article .article-body .article-statistics .news-aggregator-link {
   color: #111111;
@@ -824,6 +824,25 @@ nav {
 .btn-link:hover {
   color: #5A1BE0;
   cursor: pointer;
+}
+
+.red-link {
+  color: #D92752;
+}
+
+.red-link:hover {
+  color: #D92752;
+}
+
+.text-separator {
+  position: relative;
+  line-height: 16px;
+  margin: 0 4px;
+}
+.text-separator:after {
+  content: "•";
+  visibility: visible;
+  color: #888888;
 }
 
 .latest-news .article {
@@ -1157,7 +1176,7 @@ nav {
   margin-left: 0;
 }
 #PostModal .article-view .article .article-body {
-  padding: 24px 40px 28px 56px;
+  padding: 24px 40px 16px 56px;
   margin: 0;
   display: flex;
   flex-flow: column;
@@ -1171,6 +1190,19 @@ nav {
 }
 #PostModal .article-view .article .article-body .article-image img {
   max-width: 724px;
+}
+#PostModal .article-view .article .article-body .article-link {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 24px;
+}
+#PostModal .article-view .article .article-body .article-link span {
+  margin-right: 1px;
+  width: 724px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #PostModal .article-view .article-comments {
   display: flex;
