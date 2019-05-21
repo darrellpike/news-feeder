@@ -169,7 +169,7 @@ class SearchView(generic.ListView):
 		return context
 
 
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def vote_post(request, post_id):
 	if request.user.is_authenticated and request.POST:
 		vote = PostVote(voter=request.user, score=1)
@@ -244,12 +244,11 @@ class CustomLoginView(LoginView):
 	ajax_template_name = 'django_registration/registration_login.html'
 
 	def get(self, request, *args, **kwargs):
-		response = super().get(request, *args, **kwargs)
 		if request.is_ajax():
 			self.template_name = self.ajax_template_name
 			return render(request, self.template_name, context=self.get_context_data())
 		else:
-			return response
+			return HttpResponseRedirect('/?login=true')
 
 	def post(self, request, *args, **kwargs):
 		response = super().post(request, *args, **kwargs)
@@ -263,7 +262,7 @@ class CustomLoginView(LoginView):
 				response.status_code = 422
 				return response
 		else:
-			return response
+			return HttpResponseRedirect('/?login=true')
 
 
 class CustomPasswordResetView(PasswordResetView):
@@ -322,7 +321,7 @@ class UserProfileView(LoginRequiredMixin, generic.UpdateView):
 		else:
 			return response
 
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def change_user_profile_image(request):
 	if request.user.is_authenticated and request.method == 'POST':
 		form = ChangeUserImageForm(request.POST, request.FILES)
@@ -372,7 +371,7 @@ class NewCommentView(LoginRequiredMixin, generic.edit.CreateView, AjaxableRespon
 	fields = ['text']
 
 
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def new_comment(request, post_id, parent_id=None):
 	if request.user.is_authenticated and request.method == 'POST':
 		post = get_object_or_404(Post, pk=post_id)
@@ -393,7 +392,7 @@ def new_comment(request, post_id, parent_id=None):
 			response.status_code = 422
 			return response
 
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def vote_comment(request, post_id, comment_id):
 	if request.user.is_authenticated and request.method == 'POST':
 		post = get_object_or_404(Post, pk=post_id)

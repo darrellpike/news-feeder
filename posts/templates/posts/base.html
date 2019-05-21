@@ -159,29 +159,29 @@
                 <div class="modal-body">
                     <h5 class="modal-title">Login</h5>
                     <a href="{% url 'social:begin' backend='linkedin-oauth2' %}">Login with Linkedin</a>
-                    <form class="form login" id="register_form" method="POST" action="{% url 'django_registration_login' %}">
+                    <form class="form login" id="login_form" method="POST" action="{% url 'django_registration_login' %}">
                         {% csrf_token %}
                         <div class="input-group">
                             <div class="input-with-label {% if form.username.errors %}error{% endif %}">
-                                <input id="id_email" type="email" autocomplete="email" name="username">
-                                <label for="id_email">Email</label>
+                                <input id="login_email" type="email" autofocus autocomplete="email" name="username">
+                                <label for="login_email">Email</label>
                                 {% include 'partial/form_error.html' with errors=form.email.errors %}
                                 <span class="error-text"></span>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-with-label {% if form.password.errors %}error{% endif %}">
-                                <input id="register-password" type="password" autocomplete="current-password" name="password">
-                                <label for="register-password">Password</label>
+                                <input id="login_password" type="password" autocomplete="current-password" name="password">
+                                <label for="login_password">Password</label>
                                 {% include 'partial/form_error.html' with errors=form.password1.errors %}
                                 <span class="error-text"></span>
                             </div>
                             <a id="password-reset" class="password-reset-link btn-link" href="{% url 'password_reset' %}">Reset password?</a>
                         </div>
                         <span id="non-field" class="error-text "></span>
-                        <button type="submit" class="button primary-button" id="register-submit">Login</button>
+                        <button type="submit" class="button primary-button" id="login-submit">Login</button>
                     </form>
-                    <p><span class="text-opacity">New to White Hats News? </span> <a class="btn-link" href="{% url 'django_registration_register' %}">Sign Up</a></p>
+                    <p><span class="text-opacity">New to White Hats News? </span> <a class="btn-link open-another-modal" data-target="#register-modal" href="#">Sign Up</a></p>
                 </div>
             </div>
         </div>
@@ -204,7 +204,7 @@
               {% csrf_token %}
               <div class="input-group">
                   <div class="input-with-label first-name {% if form.first_name.errors %}error{% endif %}">
-                      <input id="register-first-name" type="text" autocomplete="given-name" name="first_name">
+                      <input id="register-first-name" autofocus type="text" autocomplete="given-name" name="first_name">
                       <label for="register-first-name">First name</label>
                       {% include 'partial/form_error.html' with errors=form.first_name.errors %}
                       <span class="error-text"></span>
@@ -242,7 +242,7 @@
               </div>
               <button type="submit" class="button primary-button" id="register-submit">Sign up</button>
           </form>
-          <p><span class="text-opacity">Have an account?</span> <a class="btn-link" href="{% url 'django_registration_login' %}">Login</a></p>
+          <p><span class="text-opacity">Have an account?</span> <a class="btn-link open-another-modal" data-target="#login-modal" href="#">Login</a></p>
       </div>
     </div>
   </div>
@@ -275,6 +275,13 @@
         $('header').css({position: 'relative'});
     });
     $(function () {
+        let loginModal = $('#login-modal');
+        {% if request.GET.login == 'true' %}
+            loginModal.modal('show');
+        {% elif request.GET.signup == 'true' %}
+            $('#register-modal').modal('show');
+        {% endif %}
+
         $('.button-logout').on('click touch', function (e) {
             e.preventDefault();
             $.ajax({
@@ -302,19 +309,43 @@
                 }
             });
         });
-
+        
+        
+        let loginModalBody = loginModal.find('.modal-body');
         $(document).on('click', '#password-reset', function (e) {
             $.ajax({
                 method: "GET",
                 url: "{% url 'password_reset' %}",
                 success: function (data) {
-                    $('#login-modal .modal-body').html(data);
+                    let emailInLogin = loginModalBody.find('input[type="email"]').val();
+                    loginModalBody.html(data);
+                    let newEmailInput = loginModalBody.find('input[type="email"]');
+                    if (emailInLogin) {
+                        newEmailInput.val(emailInLogin);
+                    }
+                    newEmailInput.focus();
                 },
                 error: function (data) {
                     console.log(data);
                 }
             });
             e.preventDefault();
+        });
+        
+        loginModal.on('hidden.bs.modal', function () {
+            let loginModal = $(this);
+            if (!loginModal.find('.form.login').length) {
+                $.ajax({
+                method: "GET",
+                url: "{% url 'django_registration_login' %}",
+                success: function (data) {
+                    loginModal.find('.modal-body').html(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            }
         });
     })
 </script>

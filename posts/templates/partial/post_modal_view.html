@@ -2,8 +2,8 @@
 
 <button type="button" class="close big-close-button d-none d-md-block d-lg-block d-xl-block" data-dismiss="modal" aria-label="Close"><img src="{% static 'images/big_close_button.svg' %}" alt="Close article"></button>
 <div class="article-view">
-    <button type="button" class="next-article d-none d-md-block d-lg-block d-xl-block"><img src="{% static 'images/right_arrow.svg' %}" alt="Next article"></button>
-    <button type="button" class="previous-article d-none d-md-block d-lg-block d-xl-block"><img src="{% static 'images/right_arrow.svg' %}" alt="Previous article"></button>
+    <button type="button" class="next-article"><img src="{% static 'images/right_arrow.svg' %}" alt="Next article"></button>
+    <button type="button" class="previous-article"><img src="{% static 'images/right_arrow.svg' %}" alt="Previous article"></button>
     <div data-article="{{ article.pk }}" class="article">
         <div class="rating">
             <button data-vote="{% url 'vote_post' article.pk %}" class="btn-upvote {% if request.user.is_authenticated and article|user_voted:request.user %}active{% endif %} modal-article-vote">

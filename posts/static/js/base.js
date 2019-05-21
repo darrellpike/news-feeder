@@ -15,6 +15,17 @@ $(function () {
     let searchButton = $('.btn-search');
     let searchInput = $('#search-input');
 
+    $('.open-another-modal').on('click touch', function () {
+        let target = $($(this).data('target'));
+        if (target.length) {
+            $(this).parents('.modal').modal('hide');
+            setTimeout(function () {
+                target.modal('show');
+            }, 600)
+        }
+
+    });
+
     function searchSend(str, pageNumber=1) {
         $.ajax({
             method: 'GET',
@@ -29,6 +40,12 @@ $(function () {
             }
         });
     }
+
+    // $('button[data-toggle="modal"]').click(function () {
+    //     let input = $('.modal-body').find('input:not(input[type="hidden"])');
+    //     console.log(input);
+    //     input.focus();
+    // });
 
     $(document).on('click touch', '.article .article-title, .article .article-comments', function (e) {
         let width = $(window).width();
@@ -95,11 +112,6 @@ $(function () {
     });
 
     var searchOpened = false;
-    // searchInput.focusout(function () {
-    //     search.animate({height: 'toggle'}, 250, function () {
-    //         searchOpened = false;
-    //     });
-    // });
 
     searchButton.click(function () {
         search.animate({height: 'toggle'}, 250);
