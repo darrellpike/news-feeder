@@ -163,7 +163,7 @@
                         {% csrf_token %}
                         <div class="input-group">
                             <div class="input-with-label {% if form.username.errors %}error{% endif %}">
-                                <input id="login_email" type="email" autofocus autocomplete="email" name="username">
+                                <input id="login_email" type="email" autocomplete="email" name="username">
                                 <label for="login_email">Email</label>
                                 {% include 'partial/form_error.html' with errors=form.email.errors %}
                                 <span class="error-text"></span>
@@ -204,7 +204,7 @@
               {% csrf_token %}
               <div class="input-group">
                   <div class="input-with-label first-name {% if form.first_name.errors %}error{% endif %}">
-                      <input id="register-first-name" autofocus type="text" autocomplete="given-name" name="first_name">
+                      <input id="register-first-name" type="text" autocomplete="given-name" name="first_name">
                       <label for="register-first-name">First name</label>
                       {% include 'partial/form_error.html' with errors=form.first_name.errors %}
                       <span class="error-text"></span>
