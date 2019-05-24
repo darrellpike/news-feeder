@@ -1,4 +1,4 @@
-{% load posts_extras staticfiles %}
+{% load posts_extras staticfiles mptt_tags %}
 <div class="comment" data-comment="{{ comment.pk }}" {% if new %}style="display: none"{% endif %}>
     <div class="comment-header">
         {% if not comment.author.userprofile.is_image_default %}<div class="user-thumbnail">{% if comment.author.userprofile.image_thumbnail_sm.url %}<img src="{{ comment.author.userprofile.image_thumbnail_sm.url }}" alt="{{ comment }}" />{% endif %}</div>{% endif %}
@@ -20,4 +20,18 @@
                 <span>Reply</span>
         </button>
     </div>
+    {% if request.user.is_authenticated %}
+        <div id="newCommentReply-{{ comment.pk }}" class="comment-reply-new" aria-expanded="false">
+            {% include 'partial/new_comment.html' with parent=comment article=comment.post %}
+        </div>
+    {% endif %}
+        <div class="comment-children">
+            {% for child in comment.children.all %}
+                {% if forloop.counter <= 5 %}
+                    <div class="comment-child">
+                        {% include 'partial/comment.html' with comment=child %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
 </div>

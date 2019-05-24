@@ -62,9 +62,9 @@
                 </div>
                 <div class="input-group">
                     <button type="submit" class="button primary-button" id="save-changes">Save changes</button>
-                    <button type="reset" class="button btn btn-login"><span class="btn-login-decoration">Cancel</span></button>
+                    <button type="reset" class="button btn btn-login"><span class="btn-decoration">Cancel</span></button>
                     {% if user.is_staff %}
-                        <a href="{% url 'admin:index' %}" class="button btn-login btn-admin"><span class="btn-login-decoration">Open admin panel</span></a>
+                        <a href="{% url 'admin:index' %}" class="button btn-login btn-admin"><span class="btn-decoration">Open admin panel</span></a>
                     {% endif %}
                 </div>
             </form>

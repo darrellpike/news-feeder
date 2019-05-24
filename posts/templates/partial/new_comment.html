@@ -4,9 +4,9 @@
     </div>
     <div class="new-comment-input">
         {% if parent %}
-            <form id="newCommentForm" action="{% url 'new_comment' article.id parent.id %}" method="post">
+            <form class="newCommentForm" action="{% url 'new_comment' article.id parent.id %}" method="post">
         {% else %}
-            <form id="newCommentForm" action="{% url 'new_comment' article.id %}" method="post">
+            <form class="newCommentForm"  action="{% url 'new_comment' article.id %}" method="post">
         {% endif %}
             {% csrf_token %}
             <label for="newComment" hidden>New comment</label>
@@ -14,8 +14,14 @@
                 <textarea id="newComment" name="text"></textarea>
                 <span class="error-text"></span>
             </div>
+            {% if parent %}
+                <div class="input-group">
+            {% endif %}
             <button type="submit" class="button primary-button">Comment</button>
+            {% if parent %}
+                <button type="reset" class="button button-transparent"><span class="btn-decoration">Cancel</span></button>
+                </div>
+            {% endif %}
         </form>
     </div>
 </div>
-{{ form }}

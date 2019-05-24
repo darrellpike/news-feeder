@@ -118,7 +118,7 @@ class PostDetailView(generic.DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super(PostDetailView, self).get_context_data(**kwargs)
-		context['comments'] = context['article'].comment_set.order_by('-submit_time')
+		context['comments'] = context['article'].comment_set.filter(parent=None).order_by('-submit_time')
 		return context
 
 
@@ -424,7 +424,7 @@ def comment_sort(request, post_id):
 			post = Post.objects.prefetch_related('comment_set').get(pk=post_id)
 		except Post.DoesNotExist:
 			raise Http404
-		comments = post.comment_set
+		comments = post.comment_set.filter(parent=None)
 		if sort:
 			if sort == 'oldest':
 				comments = comments.order_by('submit_time')

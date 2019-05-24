@@ -283,6 +283,32 @@ button:focus {
   color: white;
 }
 
+.button-transparent {
+  background: none;
+  color: #5A1BE0;
+  border: 2px solid #5A1BE0;
+}
+.button-transparent:hover {
+  background: rgba(90, 27, 224, 0.2);
+  border-color: #6F32F0;
+}
+.button-transparent:hover .btn-decoration:after, .button-transparent:hover .btn-decoration:before {
+  background: #6F32F0;
+}
+.button-transparent:active {
+  background: rgba(90, 27, 224, 0.2);
+}
+.button-transparent:after {
+  right: -5px;
+}
+.button-transparent:before {
+  left: -3px;
+}
+.button-transparent .btn-decoration:before, .button-transparent .btn-decoration:after {
+  background: #5A1BE0;
+  opacity: 1;
+}
+
 .primary-button:default {
   background: #5A1BE0;
 }
@@ -579,7 +605,7 @@ nav {
   z-index: 1;
 }
 
-.btn-login-decoration:after, .btn-login-decoration:before {
+.btn-decoration:after, .btn-decoration:before {
   content: "";
   background: #FAFDFE;
   opacity: 0.3;
@@ -591,11 +617,11 @@ nav {
   z-index: 1;
 }
 
-.btn-login-decoration:after {
+.btn-decoration:after {
   right: 0;
 }
 
-.btn-login-decoration:before {
+.btn-decoration:before {
   left: 0;
 }
 
@@ -1017,6 +1043,9 @@ nav {
   opacity: 1;
   color: #5A1BE0;
 }
+.article-view .article-comments .article-comments-body {
+  margin-bottom: 20px;
+}
 .article-view .article-comments .article-comments-body .comment {
   display: flex;
   flex-flow: column nowrap;
@@ -1085,6 +1114,24 @@ nav {
 .article-view .article-comments .article-comments-body .comment .comment-footer .btn-upvote .rating-text {
   color: #888888;
   line-height: 13px;
+}
+.article-view .article-comments .article-comments-body .comment .comment-reply-new {
+  display: none;
+  padding-left: 20px;
+  position: relative;
+}
+.article-view .article-comments .article-comments-body .comment .comment-reply-new:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  background: #ECEEF1;
+  display: block;
+  width: 3px;
+  top: 32px;
+  height: calc(100% - 32px - 20px);
+}
+.article-view .article-comments .article-comments-body .comment .comment-reply-new .error-text {
+  left: 410px !important;
 }
 .article-view .article-comments .article-new-comment {
   display: flex;
@@ -1323,6 +1370,43 @@ nav {
   color: #888888;
   line-height: 13px;
 }
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child {
+  padding: 15px 0 15px 16px;
+  position: relative;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child .comment-child:last-of-type {
+  margin-bottom: 0;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child:first-of-type {
+  margin-top: 10px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child:last-of-type {
+  margin-bottom: 20px;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  background: #ECEEF1;
+  display: block;
+  width: 3px;
+  top: 0;
+  height: 100%;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child .comment {
+  margin-top: 0;
+  border-bottom: 0;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child .comment .comment-footer {
+  margin-bottom: 0;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child .comment .comment-children {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+#PostModal .article-view .article-comments .article-comments-body .comment .comment-children .comment-child .comment .comment-reply-new .newCommentForm .input-group:last-of-type {
+  margin-bottom: 0;
+}
 #PostModal .article-view .article-comments .article-new-comment {
   display: flex;
   flex-flow: row nowrap;
@@ -1335,8 +1419,12 @@ nav {
 #PostModal .article-view .article-comments .article-new-comment button:after, #PostModal .article-view .article-comments .article-new-comment button:before {
   width: 5px;
 }
+#PostModal .article-view .article-comments .article-new-comment button:first-of-type {
+  margin-right: 16px;
+}
 #PostModal .article-view .article-comments .article-new-comment .input-group {
   margin-bottom: 20px;
+  justify-content: unset;
 }
 #PostModal .article-view .article-comments .article-new-comment .error-text {
   position: absolute;
@@ -1479,7 +1567,7 @@ nav {
 .button-email:after, .button-email:before {
   width: 5px;
 }
-.button-email .btn-login-decoration:after, .button-email .btn-login-decoration:before {
+.button-email .btn-decoration:after, .button-email .btn-decoration:before {
   border: 2px solid #DEE1E4;
   z-index: 0;
   opacity: 1;
@@ -1707,7 +1795,7 @@ nav {
   width: 2px;
   background: white;
 }
-.profile-container .profile-settings-container .btn-login .btn-login-decoration:after, .profile-container .profile-settings-container .btn-login .btn-login-decoration:before, .profile-container .profile-settings-container .btn-transparent .btn-login-decoration:after, .profile-container .profile-settings-container .btn-transparent .btn-login-decoration:before {
+.profile-container .profile-settings-container .btn-login .btn-decoration:after, .profile-container .profile-settings-container .btn-login .btn-decoration:before, .profile-container .profile-settings-container .btn-transparent .btn-decoration:after, .profile-container .profile-settings-container .btn-transparent .btn-decoration:before {
   background: #D9DCE2;
   opacity: 1;
 }
@@ -1717,7 +1805,7 @@ nav {
   color: #D92752;
   border-color: #E72C59;
 }
-.profile-container .profile-settings-container .btn-admin .btn-login-decoration:after, .profile-container .profile-settings-container .btn-admin .btn-login-decoration:before {
+.profile-container .profile-settings-container .btn-admin .btn-decoration:after, .profile-container .profile-settings-container .btn-admin .btn-decoration:before {
   background: #E72C59;
 }
 

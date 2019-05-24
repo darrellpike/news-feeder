@@ -256,7 +256,7 @@ class Comment(MPTTModel):
 	submit_time = models.DateTimeField(auto_now_add=True)
 	text = models.TextField(blank=False)
 
-	parent = TreeForeignKey('self', null=True, blank=True, related_name='children', editable=False, on_delete=models.PROTECT)
+	parent = TreeForeignKey('self', null=True, blank=True, related_name='children', editable=False, on_delete=models.CASCADE)
 
 	class MPTTMeta:
 		# comments on one level will be ordered by date of creation

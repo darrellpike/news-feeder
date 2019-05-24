@@ -297,7 +297,31 @@ button:focus
   background: $primary-color
   color: white
 
+.button-transparent
+  background: none
+  color: $primary-color
+  border: 2px solid $primary-color
 
+  &:hover
+    background: rgba(90, 27, 224, 0.2)
+    border-color: #6F32F0
+    .btn-decoration
+      &:after, &:before
+        background: #6F32F0
+
+  &:active
+    background: rgba(90, 27, 224, 0.2)
+
+  &:after
+    right: -5px
+
+  &:before
+    left: -3px
+
+  .btn-decoration
+    &:before, &:after
+      background: $primary-color
+      opacity: 1
 
 .primary-button:default
   background: $primary-color
@@ -551,7 +575,7 @@ nav
     pointer-events: none
     z-index: 1
 
-.btn-login-decoration:after, .btn-login-decoration:before
+.btn-decoration:after, .btn-decoration:before
     content: ''
     background: #FAFDFE
     opacity: 0.3
@@ -562,10 +586,10 @@ nav
     pointer-events: none
     z-index: 1
 
-.btn-login-decoration:after
+.btn-decoration:after
     right: 0
 
-.btn-login-decoration:before
+.btn-decoration:before
     left: 0
 
 
@@ -944,6 +968,7 @@ nav
 
 
       .article-comments-body
+        margin-bottom: 20px
         .comment
           display: flex
           flex-flow: column nowrap
@@ -998,6 +1023,22 @@ nav
               .rating-text
                 color: #888888
                 line-height: 13px
+
+          .comment-reply-new
+            display: none
+            padding-left: 20px
+            position: relative
+            &:before
+              content: ''
+              position: absolute
+              left: 0
+              background: #ECEEF1
+              display: block
+              width: 3px
+              top: 32px
+              height: calc(100% - 32px - 20px)
+            .error-text
+              left: 410px!important
 
 
       .article-new-comment
@@ -1219,6 +1260,38 @@ nav
                 color: #888888
                 line-height: 13px
 
+          .comment-children
+            .comment-child
+              padding: 15px 0 15px 16px
+              position: relative
+              .comment-child:last-of-type
+                margin-bottom: 0
+              &:first-of-type
+                margin-top: 10px
+              &:last-of-type
+                margin-bottom: 20px
+              &:before
+                content: ''
+                position: absolute
+                left: 0
+                background: #ECEEF1
+                display: block
+                width: 3px
+                top: 0
+                height: 100%
+              .comment
+                margin-top: 0
+                border-bottom: 0
+                .comment-footer
+                  margin-bottom: 0
+                .comment-children
+                  margin-bottom: 0
+                  margin-top: 0
+                .comment-reply-new
+                  .newCommentForm
+                    .input-group:last-of-type
+                      margin-bottom: 0
+
 
       .article-new-comment
         display: flex
@@ -1232,8 +1305,11 @@ nav
           min-height: $button-height
           &:after, &:before
             width: 5px
+          &:first-of-type
+            margin-right: 16px
         .input-group
           margin-bottom: 20px
+          justify-content: unset
 
         .error-text
           position: absolute
@@ -1354,7 +1430,7 @@ nav
     background: transparent
   &:after, &:before
     width: 5px
-  .btn-login-decoration
+  .btn-decoration
     &:after, &:before
       border: 2px solid #DEE1E4
       z-index: 0
@@ -1549,7 +1625,7 @@ nav
         background: white
       color: #707070
       border: 2px solid #D9DCE2
-      .btn-login-decoration:after, .btn-login-decoration:before
+      .btn-decoration:after, .btn-decoration:before
         background: #D9DCE2
         opacity: 1
     .btn-admin
@@ -1557,7 +1633,7 @@ nav
       margin-left: auto
       color: #D92752
       border-color: #E72C59
-      .btn-login-decoration:after, .btn-login-decoration:before
+      .btn-decoration:after, .btn-decoration:before
         background: #E72C59
 
 .change-image-icon

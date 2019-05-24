@@ -246,3 +246,10 @@ function focusAndOpenKeyboard(el, timeout) {
     }, timeout);
   }
 }
+
+function goToByScroll(id) {
+    // Remove "link" from the ID
+    $('html,body').animate({
+        scrollTop: $("#" + id).offset().top
+    }, 'slow');
+}
