@@ -72,6 +72,7 @@
 </head>
 <body>
 <div class="logout-successful logout-successful-mobile">Log out successful</div>
+<div class="stripe-success stripe-success-mobile">Saved successfully</div>
 <header class="d-flex align-items-stretch">
     <div class="container d-flex align-items-stretch">
         <nav class="navbar navbar-expand-md flex-fill align-items-stretch">
@@ -117,6 +118,7 @@
     </div>
 </header>
 <div class="logout-successful logout-successful-desktop">Log out successful</div>
+<div class="stripe-success stripe-success-desktop">Saved successfully</div>
 <div class="search-container">
     <form id="search-form" class="container">
         <input id="search-input" type="search" placeholder="Search News & Articles">
@@ -280,6 +282,25 @@
             loginModal.modal('show');
         {% elif request.GET.signup == 'true' %}
             $('#register-modal').modal('show');
+        {% endif %}
+
+        {% if request.GET.success %}
+            let stripe;
+            let width = $(window).width();
+            if (width < 768) {
+                stripe = $('.stripe-success-mobile');
+                if ($('.btn.navbar-toggler[aria-expanded="true"]')) {
+                    $('.btn.navbar-toggler').click();
+                }
+            } else {
+                stripe = $('.stripe-success-desktop');
+            }
+
+            stripe.animate({height: 'toggle'}, function () {
+                setTimeout(function () {
+                    stripe.animate({height: 'toggle'})
+                }, 2500);
+            });
         {% endif %}
 
         $('.button-logout').on('click touch', function (e) {

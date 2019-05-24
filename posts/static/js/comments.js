@@ -1,18 +1,23 @@
 $(function () {
     // New comment in reply
     $(document).on('click touch', '.comment-reply-btn', function (e) {
-        let newComment = $(this).parent().siblings('.comment-reply-new');
-        newComment.animate({height: 'toggle'}, 450, function () {
-            if (newComment.attr('aria-expanded') === 'false') {
-                newComment.attr('aria-expanded', 'true');
-                newComment.find('textarea').focus();
-            } else newComment.attr('aria-expanded', 'false');
+        let replySection = $(this).parent().siblings('.comment-reply-new');
+        replySection.animate({height: 'toggle'}, 450, function () {
+            if (replySection.attr('aria-expanded') === 'false') {
+                replySection.attr('aria-expanded', 'true');
+                replySection.find('textarea').focus();
+            } else replySection.attr('aria-expanded', 'false');
         });
-
+        if (replySection.attr('aria-expanded') === 'false') {
+            replySection.find('textarea').focus();
+        }
     });
 
     $(document).on('click touch', '.article-new-comment button[type="reset"]', function (e) {
-        $(this).parents('.comment-reply-new').animate({height: 'toggle'}, 450);
+        let replySection = $(this).parents('.comment-reply-new');
+        replySection.animate({height: 'toggle'}, 450, function () {
+            replySection.attr('aria-expanded', 'false');
+        });
     });
 
     // New comment
@@ -38,7 +43,7 @@ $(function () {
                 else if (reply.length) {
                     commentSection = reply.siblings('.comment-children');
                     commentSection.prepend('<div class="comment-child"></div>');
-                    newComment = commentSection.find('.comment-child:first-of-type').append(data).find('.comment');
+                    newComment =  commentSection.find('>.comment-child:first-of-type').append(data).find('.comment');
                     reply.animate({height: 'toggle'}, 450, function () {
                         newComment.animate({height: 'toggle'}, 450);
                     });

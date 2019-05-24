@@ -39,6 +39,12 @@
                     </div>
                 </div>
                 <div class="input-group">
+                    <div class="input-with-label first-name {% if form.username.errors %}error{% endif %}">
+                        <input value="{{ user.username }}" id="id_username" autocomplete="username" type="text" name="username">
+                        <label for="id_username">Username</label>
+                        {% include 'partial/form_error.html' with errors=form.username.errors %}
+                        <span class="error-text"></span>
+                    </div>
                     <div class="input-with-label {% if form.email.errors %}error{% endif %}">
                         <input value="{{ user.email }}" id="id_email" autocomplete="email" type="email" name="email">
                         <label for="id_email">Email</label>
@@ -46,8 +52,8 @@
                         <span class="error-text"></span>
                     </div>
                 </div>
+                <h3>Change password</h3>
                 <div class="input-group">
-                    <h3>Change password</h3>
                     <div class="input-with-label first-name {% if form.old_password.errors %}error{% endif %}">
                         <input id="register-password" type="password" autocomplete="old-password" name="old_password">
                         <label for="register-password">Old password</label>
@@ -78,10 +84,11 @@
             var profile_form = $('.profile-settings-container form');
             let first_name = profile_form.find('input[name="first_name"]');
             let last_name = profile_form.find('input[name="last_name"]');
+            let username = profile_form.find('input[name="username"]');
             let email = profile_form.find('input[name="email"]');
             let old_password = profile_form.find('input[name="old_password"]');
             let new_password = profile_form.find('input[name="new_password"]');
-            let changing_fields = [first_name, last_name, email, old_password, new_password];
+            let changing_fields = [first_name, last_name, username, email, old_password, new_password];
 
             profile_form.find('button[type="reset"]').on('click, touch', function (e) {
                 e.preventDefault();
@@ -160,7 +167,7 @@
                     data: data,
                     success: function (data) {
                         this.beenSubmitted = false;
-                        window.location.href = data.url;
+                        window.location.href = data.url + '?success=true';
                     },
                     error: function (data) {
                         this.beenSubmitted = false;
