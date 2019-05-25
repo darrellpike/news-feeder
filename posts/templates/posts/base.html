@@ -18,6 +18,11 @@
 
     {% block title %}<title>White Hat News</title>{% endblock %}
     {% block head_js %}{% endblock %}
+    {% if request.GET.post %}
+        <script>
+            if (window.outerWidth < 767.98) window.location.href = '{% url 'post_detail' request.GET.post %}';
+        </script>
+    {% endif %}
 
     <link href="{% static 'bootstrap-4.3.1/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/new_base.css' %}" rel="stylesheet">
@@ -280,8 +285,32 @@
         {% elif request.GET.signup == 'true' %}
             $('#register-modal').modal('show');
         {% elif request.GET.post %}
-            openModalPost({{ request.GET.post }});
+            if (window.outerWidth > 767.98) openModalPost({{ request.GET.post }});
         {% endif %}
+
+        let is_mobile_post = window.location.pathname.includes('/post/');
+        let is_desktop_post;
+        {% if request.GET.post %}
+            is_desktop_post = true;
+        {% else %}
+            is_desktop_post = false;
+        {% endif %}
+
+        $(window).bind('resize', function(e)
+            {
+                if (($('#PostModal').hasClass('show') && is_desktop_post && window.outerWidth < 767.98) || (is_mobile_post && window.outerWidth > 767.98)) {
+                    if (window.RT) clearTimeout(window.RT);
+                    window.RT = setTimeout(function()
+                    {
+                        if (is_desktop_post) {
+                            this.location.href = "/post/" + $('#PostModal').find('.article').data('article') + '/';
+                        } else if (is_mobile_post) {
+                            let post_id = window.location.pathname.match(/\d+/)[0];
+                            this.location.href = '/?post=' + post_id;
+                        }
+                    }, 10);
+                }
+            });
 
         {% if request.GET.success %}
             let stripe;

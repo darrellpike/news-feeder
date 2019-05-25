@@ -26,6 +26,10 @@ $(function () {
 
     });
 
+    $('#PostModal').on('hidden.bs.modal', function () {
+        window.history.replaceState(null, null, "/");
+    });
+
     function searchSend(str, pageNumber=1) {
         $.ajax({
             method: 'GET',
@@ -244,6 +248,7 @@ function openModalPost(slug, first=true, last=true, search=0, latest=0) {
             modal.find('.article').data('latest', latest);
             modal.find('.article').data('search', search);
             modal.modal('show');
+            window.history.replaceState(null, null, "/?post="+slug);
         },
         error: function (data, textStatus) {
             console.log(data, textStatus);

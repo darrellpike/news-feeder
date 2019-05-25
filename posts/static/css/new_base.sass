@@ -872,6 +872,9 @@ nav
   transform: rotate(180deg)
 
 // Post view
+.mobile-post-view
+  display: none
+
 .article-view
     width: 100%
     border-radius: 2px
@@ -1111,6 +1114,7 @@ nav
 
 // Modal view
 #PostModal
+  display: block
   .modal-dialog
     max-width: 820px
   .big-close-button
@@ -1774,6 +1778,12 @@ nav
 
     .navbar
       padding: 0 6px
+
+    .mobile-post-view
+      display: block
+
+    #PostModal
+      display: none!important
 
     .article
       margin-bottom: 8px
