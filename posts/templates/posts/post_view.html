@@ -1,6 +1,15 @@
 {% extends 'posts/base.html' %}
 {% load staticfiles posts_extras %}
 
+{% block head_js %}
+    <script>
+        let post_id = window.location.pathname.match(/\d+/)[0];
+
+        if (window.outerWidth > 767.98) {
+            window.location = '{% url 'index' %}?post=' + post_id;
+        }
+    </script>
+{% endblock head_js %}
 
 {% block mobile_sort_buttons %}
 {% endblock mobile_sort_buttons %}

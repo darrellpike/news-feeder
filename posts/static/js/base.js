@@ -11,7 +11,7 @@ jQuery.fn.preventDoubleSubmit = function() {
 
 
 $(function () {
-    let search = $('.search-container');
+    var search = $('.search-container');
     let searchButton = $('.btn-search');
     let searchInput = $('#search-input');
 
@@ -54,25 +54,7 @@ $(function () {
             let first = Boolean(article.data('first'));
             let last = Boolean(article.data('last'));
 
-            $.ajax({
-                type: 'GET',
-                url: '/post/' + slug,
-                success: function (html) {
-                    let modal = $('#PostModal');
-                    modal.find('.modal-content').html(html);
-                    if (first) {
-                        modal.find('.previous-article').hide();
-                    } else if (last) {
-                        modal.find('.next-article').hide();
-                    }
-                    modal.find('.article').data('latest', article.data('latest'));
-                    modal.find('.article').data('search', article.data('search'));
-                    modal.modal('show');
-                },
-                error: function (data, textStatus) {
-                    console.log(data, textStatus);
-                }
-            });
+            openModalPost(slug, first, last, article.data('search'), article.data('latest'));
         }
     });
 
@@ -247,9 +229,24 @@ function focusAndOpenKeyboard(el, timeout) {
   }
 }
 
-function goToByScroll(id) {
-    // Remove "link" from the ID
-    $('html,body').animate({
-        scrollTop: $("#" + id).offset().top
-    }, 'slow');
+function openModalPost(slug, first=true, last=true, search=0, latest=0) {
+    $.ajax({
+        type: 'GET',
+        url: '/post/' + slug,
+        success: function (html) {
+            let modal = $('#PostModal');
+            modal.find('.modal-content').html(html);
+            if (first) {
+                modal.find('.previous-article').hide();
+            } else if (last) {
+                modal.find('.next-article').hide();
+            }
+            modal.find('.article').data('latest', latest);
+            modal.find('.article').data('search', search);
+            modal.modal('show');
+        },
+        error: function (data, textStatus) {
+            console.log(data, textStatus);
+        }
+    });
 }

@@ -17,13 +17,10 @@
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
 
     {% block title %}<title>White Hat News</title>{% endblock %}
+    {% block head_js %}{% endblock %}
 
     <link href="{% static 'bootstrap-4.3.1/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-{#    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">#}
     <link href="{% static 'css/new_base.css' %}" rel="stylesheet">
-    <!--<script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script> -->
     {% block css %} {% endblock %}
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -282,6 +279,8 @@
             loginModal.modal('show');
         {% elif request.GET.signup == 'true' %}
             $('#register-modal').modal('show');
+        {% elif request.GET.post %}
+            openModalPost({{ request.GET.post }});
         {% endif %}
 
         {% if request.GET.success %}
