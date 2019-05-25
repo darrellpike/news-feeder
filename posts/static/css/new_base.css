@@ -1215,9 +1215,6 @@ nav {
   width: 40px;
 }
 
-#PostModal {
-  display: block;
-}
 #PostModal .modal-dialog {
   max-width: 820px;
 }
