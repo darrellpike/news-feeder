@@ -364,13 +364,6 @@ class NewNewsSuggestionView(LoginRequiredMixin, generic.edit.CreateView):
 			return response
 
 
-class NewCommentView(LoginRequiredMixin, generic.edit.CreateView, AjaxableResponseMixin):
-	ajax_template_name = 'partial/comment.html'
-	template_name = 'partial/new_comment.html'
-	model = Comment
-	fields = ['text']
-
-
 @login_required(login_url=reverse_lazy('login'))
 def new_comment(request, post_id, parent_id=None):
 	if request.user.is_authenticated and request.method == 'POST':

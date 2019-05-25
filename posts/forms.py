@@ -144,6 +144,12 @@ class PartialPostForm(ModelForm):
         #return text
 
 class NewCommentForm(ModelForm):
+
+    def clean(self):
+        if self.instance.parent and self.instance.parent.level > 3:
+            raise ValidationError(_("Maximum number of replies!"), code='max_level_of_reply')
+        return super().clean()
+
     class Meta:
         model = Comment
         fields = ['text',]

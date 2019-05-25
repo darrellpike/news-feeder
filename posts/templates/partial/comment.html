@@ -15,23 +15,23 @@
                 </svg>
                 <span class="rating-text">{{ comment.get_score_formatted }}</span>
             </button>
-        <button class="comment-reply-btn">
-                <img src="{% static 'images/Comment grey.svg' %}" alt="Reply to a comment">
-                <span>Reply</span>
-        </button>
+        {% if comment.level < 5 %}
+            <button class="comment-reply-btn">
+                    <img src="{% static 'images/Comment grey.svg' %}" alt="Reply to a comment">
+                    <span>Reply</span>
+            </button>
+        {% endif %}
     </div>
-    {% if request.user.is_authenticated %}
+    {% if request.user.is_authenticated and comment.level < 5 %}
         <div id="newCommentReply-{{ comment.pk }}" class="comment-reply-new" aria-expanded="false">
             {% include 'partial/new_comment.html' with parent=comment article=comment.post %}
         </div>
     {% endif %}
         <div class="comment-children">
             {% for child in comment.children.all %}
-                {% if forloop.counter <= 5 %}
                     <div class="comment-child">
                         {% include 'partial/comment.html' with comment=child %}
                     </div>
-                {% endif %}
             {% endfor %}
         </div>
 </div>
