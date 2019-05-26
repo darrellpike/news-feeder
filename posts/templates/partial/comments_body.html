@@ -1,3 +1,4 @@
+{% load mptt_tags %}
 {% if comments.all %}
     {% for comment in comments.all %}
         {% include "partial/comment.html" with comment=comment %}
@@ -7,3 +8,10 @@
         {% include "partial/comment.html" with comment=comment %}
     {% endfor %}
 {% endif %}
+{##}
+{#{% recursetree comments %}#}
+{#    {% include 'partial/comment.html' with comment=node %}#}
+{#    {% if not node.is_leaf_node %}#}
+{#        {{ children }}#}
+{#    {% endif %}#}
+{#{% endrecursetree %}#}

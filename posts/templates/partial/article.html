@@ -1,5 +1,5 @@
 {% load posts_extras staticfiles %}
-<div data-article="{{ article.pk }}" class="article">
+<div data-article="{{ article.pk }}" data-search="{{ search }}" data-first="{{ first }}" data-last="{{ last }}" class="article">
     <div class="rating">
         <button data-vote="{% url 'vote_post' article.pk %}" class="btn-upvote {% if request.user.is_authenticated and article|user_voted:request.user %}active{% endif %}">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,8 @@
                     {{ article.label_for_url }}
                 {% endif %}
             </a>
-            <span class="article-time">• {{ article.time_since_submit|smooth_timedelta }} ago</span>
+            <span class="text-separator"></span>
+            <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago</span>
         </div>
         <a class="article-title" href="{% url 'post_detail' article.pk %}">{{ article.title }}</a>
         <div class="article-statistics">
@@ -42,7 +43,9 @@
                                     <img alt="comments" src="{% static 'images/Comments_image.svg' %}" />
                 <span class="article-comments-text"><span>{{ article.comment_count }}</span> comments</span>
             </span>
-            <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">• {{ article.time_since_submit|smooth_timedelta }} ago •</span>
+            <span class="text-separator d-none d-md-inline d-lg-inline d-xl-inline"></span>
+            <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">{{ article.time_since_submit|smooth_timedelta }} ago</span>
+            <span class="text-separator d-none d-md-inline d-lg-inline d-xl-inline"></span>
             <a href="{{ article.url }}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">
                 {% if article.news_aggregator %}
                     {{ article.news_aggregator.name }}

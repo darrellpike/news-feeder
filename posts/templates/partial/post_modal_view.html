@@ -1,6 +1,9 @@
 {% load staticfiles posts_extras %}
 
+<button type="button" class="close big-close-button d-none d-md-block d-lg-block d-xl-block" data-dismiss="modal" aria-label="Close"><img src="{% static 'images/big_close_button.svg' %}" alt="Close article"></button>
 <div class="article-view">
+    <button type="button" class="next-article"><img src="{% static 'images/right_arrow.svg' %}" alt="Next article"></button>
+    <button type="button" class="previous-article"><img src="{% static 'images/right_arrow.svg' %}" alt="Previous article"></button>
     <div data-article="{{ article.pk }}" class="article">
         <div class="rating">
             <button data-vote="{% url 'vote_post' article.pk %}" class="btn-upvote {% if request.user.is_authenticated and article|user_voted:request.user %}active{% endif %} modal-article-vote">
@@ -27,17 +30,20 @@
                             {{ article.label_for_url }}
                         {% endif %}
                         </a>
-                        <span class="article-time">• {{ article.time_since_submit|smooth_timedelta }} ago</span>
+                        <span class="text-separator"></span>
+                        <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago</span>
                     </div>
                     <a class="article-title" href="{{ article.url }}"><p>{{ article.title }}</p></a>
                     <div class="article-statistics d-none d-md-block d-lg-block d-xl-block">
-                        <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago •</span>
+                        <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago</span>
+                        <span class="text-separator"></span>
                         <a href="{{ article.url }}" class="news-aggregator-link">{% if article.news_aggregator %}
                             {{ article.news_aggregator.name }}
                         {% else %}
                             {{ article.label_for_url }}
                         {% endif %}</a>
-                        <span class="article-submitter">• {{ article.submitter.username }}</span>
+                        <span class="text-separator"></span>
+                        <span class="article-submitter">{{ article.submitter.username }}</span>
                     </div>
                     <div class="article-statistics d-md-none d-lg-none d-xl-none">
                         <span class="article-rating">
@@ -61,6 +67,7 @@
                     <img alt="{{ article.title }}" src="{{ article.image.url }}"/>
                 </div>
             {% endif %}
+            <a class="article-link red-link d-none d-md-flex d-lg-flex d-xl-flex" href="{{ article.url }}"><span>{{ article.url }}</span><img alt="Link to source" src="{% static 'images/external-link.svg' %}"></a>
         </div>
     </div>
     <div class="article-comments">

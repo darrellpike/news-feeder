@@ -17,7 +17,7 @@
                 {% csrf_token %}
                 <div class="input-group">
                     <div class="input-with-label {% if form.link.errors %}error{% endif %}">
-                        <input id="link" name="url" type="text" autocomplete="url">
+                        <input id="link" name="url" type="text" autocomplete="url" autofocus>
                         <label for="link">Link</label>
                         {% include 'partial/form_error.html' with errors=form.link.errors %}
                         <span class="error-text"></span>

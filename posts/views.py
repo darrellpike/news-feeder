@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from posts.models import *
-from django.template.response import TemplateResponse
+from django.template.response import TemplateResponse, SimpleTemplateResponse
 from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordResetForm, UserProfileUpdateForm,\
 	ChangeUserImageForm, NewNewsSuggestionForm, NewCommentForm, CommentVoteForm
 from django_registration.backends.activation.views import ActivationView
@@ -118,7 +118,7 @@ class PostDetailView(generic.DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super(PostDetailView, self).get_context_data(**kwargs)
-		context['comments'] = context['article'].comment_set.order_by('-submit_time')
+		context['comments'] = context['article'].comment_set.filter(parent=None).order_by('-submit_time')
 		return context
 
 
@@ -169,7 +169,7 @@ class SearchView(generic.ListView):
 		return context
 
 
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def vote_post(request, post_id):
 	if request.user.is_authenticated and request.POST:
 		vote = PostVote(voter=request.user, score=1)
@@ -244,12 +244,11 @@ class CustomLoginView(LoginView):
 	ajax_template_name = 'django_registration/registration_login.html'
 
 	def get(self, request, *args, **kwargs):
-		response = super().get(request, *args, **kwargs)
 		if request.is_ajax():
 			self.template_name = self.ajax_template_name
 			return render(request, self.template_name, context=self.get_context_data())
 		else:
-			return response
+			return HttpResponseRedirect('/?login=true')
 
 	def post(self, request, *args, **kwargs):
 		response = super().post(request, *args, **kwargs)
@@ -263,7 +262,7 @@ class CustomLoginView(LoginView):
 				response.status_code = 422
 				return response
 		else:
-			return response
+			return HttpResponseRedirect('/?login=true')
 
 
 class CustomPasswordResetView(PasswordResetView):
@@ -322,7 +321,7 @@ class UserProfileView(LoginRequiredMixin, generic.UpdateView):
 		else:
 			return response
 
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def change_user_profile_image(request):
 	if request.user.is_authenticated and request.method == 'POST':
 		form = ChangeUserImageForm(request.POST, request.FILES)
@@ -365,14 +364,7 @@ class NewNewsSuggestionView(LoginRequiredMixin, generic.edit.CreateView):
 			return response
 
 
-class NewCommentView(LoginRequiredMixin, generic.edit.CreateView, AjaxableResponseMixin):
-	ajax_template_name = 'partial/comment.html'
-	template_name = 'partial/new_comment.html'
-	model = Comment
-	fields = ['text']
-
-
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def new_comment(request, post_id, parent_id=None):
 	if request.user.is_authenticated and request.method == 'POST':
 		post = get_object_or_404(Post, pk=post_id)
@@ -393,7 +385,7 @@ def new_comment(request, post_id, parent_id=None):
 			response.status_code = 422
 			return response
 
-@login_required(login_url=reverse_lazy('django_registration_login'))
+@login_required(login_url=reverse_lazy('login'))
 def vote_comment(request, post_id, comment_id):
 	if request.user.is_authenticated and request.method == 'POST':
 		post = get_object_or_404(Post, pk=post_id)
@@ -425,7 +417,7 @@ def comment_sort(request, post_id):
 			post = Post.objects.prefetch_related('comment_set').get(pk=post_id)
 		except Post.DoesNotExist:
 			raise Http404
-		comments = post.comment_set
+		comments = post.comment_set.filter(parent=None)
 		if sort:
 			if sort == 'oldest':
 				comments = comments.order_by('submit_time')
@@ -436,6 +428,22 @@ def comment_sort(request, post_id):
 
 
 		return TemplateResponse(request, template, context={'comments': comments})
+
+
+def send_activation_again(request, email):
+	if email:
+		user = get_object_or_404(User, email=email)
+		if not user.is_active:
+			sent = False
+			response = create_or_update_contact_hubspot(user.id, user.get_activation_key())
+			if response == 200:
+				sent = True
+			return SimpleTemplateResponse('django_registration/with_base/send_activation_again.html', context={
+				'email': email,
+				'sent': sent
+			})
+	raise Http404
+
 
 
 

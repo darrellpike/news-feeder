@@ -1,0 +1,11 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if sent and email %}
+            <h3>Activation link is sent on {{ email }}.</h3>
+        {% else %}
+            <h3>Activation resend failed.</h3>
+        {% endif %}
+    </div>
+{% endblock content %}

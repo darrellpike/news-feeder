@@ -10,6 +10,7 @@ from posts.utils import update_contact_property_hubspot
 from django.forms import ValidationError
 from django.contrib.auth import password_validation
 from django.core.validators import EmailValidator, validate_image_file_extension
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.files.images import get_image_dimensions
 from social_django.models import UserSocialAuth
 
@@ -33,6 +34,7 @@ class UserProfileUpdateForm(ModelForm):
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     email = forms.CharField(required=False, validators=[EmailValidator])
+    username = forms.CharField(required=False, validators=[UnicodeUsernameValidator])
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -66,6 +68,20 @@ class UserProfileUpdateForm(ModelForm):
             return email
         raise ValidationError(_('This email address is already in use. Please supply a different email address.'),
                               code='email_already_exists')
+
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        try:
+            user = User.objects.get(username=username)
+            if user.pk == self.instance.pk:
+                return username
+        except User.DoesNotExist:
+            if username:
+                response = update_contact_property_hubspot(self.instance.email, 'username', username)
+            return username
+        raise ValidationError(_('This username is already in use. Please supply a different username.'),
+                              code='username_already_exists')
 
 
     def clean_new_password(self):
@@ -102,7 +118,7 @@ class UserProfileUpdateForm(ModelForm):
 
     class Meta:
         model = User
-        fields = [User.USERNAME_FIELD, 'first_name', 'last_name', 'email', 'old_password', 'new_password']
+        fields = [User.USERNAME_FIELD, 'first_name', 'last_name', 'username', 'email', 'old_password', 'new_password']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -128,6 +144,12 @@ class PartialPostForm(ModelForm):
         #return text
 
 class NewCommentForm(ModelForm):
+
+    def clean(self):
+        if self.instance.parent and self.instance.parent.level > 3:
+            raise ValidationError(_("Maximum number of replies!"), code='max_level_of_reply')
+        return super().clean()
+
     class Meta:
         model = Comment
         fields = ['text',]
