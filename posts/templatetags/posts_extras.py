@@ -25,12 +25,15 @@ import operator
 from django import template
 # import urlparse
 from django.urls import reverse
+from datetime import timedelta
 
 register = template.Library()
 
 @register.filter()
 def smooth_timedelta(timedeltaobj):
     """Convert a datetime.timedelta object into Days, Hours, Minutes, Seconds."""
+    if not isinstance(timedeltaobj, timedelta):
+        return 'Error'
     secs = timedeltaobj.total_seconds()
     timetot = ""
     if secs > 86400: # 60sec * 60min * 24hrs

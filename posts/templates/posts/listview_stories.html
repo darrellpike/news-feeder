@@ -14,13 +14,18 @@
         <div class="article-container mx-md-auto mx-lg-auto mx-xl-auto latest-stories">
             <div class="news-header">
                 {% block header-title %}
-
                 {% endblock %}
             </div>
 
             <div class="news">
                 {% for article in news %}
-                    {% include 'partial/article.html' with article=article %}
+                    {% if forloop.first %}
+                        {% include 'partial/article.html' with article=article first=1 last=0 %}
+                    {% elif forloop.last %}
+                        {% include 'partial/article.html' with article=article last=1 first=0 %}
+                    {% else %}
+                        {% include 'partial/article.html' with article=article first=0 last=0 %}
+                    {% endif %}
                 {% endfor %}
                 {% if is_paginated %}
                         <div class="pagination">

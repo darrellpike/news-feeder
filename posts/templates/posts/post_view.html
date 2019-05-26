@@ -1,10 +1,14 @@
 {% extends 'posts/base.html' %}
 {% load staticfiles posts_extras %}
 
+{% block head_js %}
+{% endblock head_js %}
 
 {% block mobile_sort_buttons %}
 {% endblock mobile_sort_buttons %}
 
 {% block content %}
-    {% include 'partial/post_modal_view.html' %}
+    <div class="mobile-post-view">
+        {% include 'partial/post_modal_view.html' %}
+    </div>
 {% endblock content %}

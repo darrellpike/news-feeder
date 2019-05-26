@@ -63,9 +63,9 @@
                     {% if not request.user.is_authenticated %}
                     <button type="button" data-toggle="modal" data-target="#sign-up-modal" class="btn btn-signup red-button">Sign up</button>
                     {% endif %}
-                    <button class="btn btn-login primary-button"><span class="btn-login-decoration">Login</span></button>
+                    <button class="btn btn-login primary-button"><span class="btn-decoration">Login</span></button>
                     {% if request.user.is_authenticated %}
-                    <button class="btn btn-login primary-button d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-login-decoration">Suggest news</span></button>
+                    <button class="btn btn-login primary-button d-inline-block d-md-none d-lg-none d-xl-none"><span class="btn-decoration">Suggest news</span></button>
                     {% endif %}
                 </div>
             </div>

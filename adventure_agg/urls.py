@@ -45,6 +45,7 @@ urlpatterns = [
             template_name='django_registration/activation_complete.html'
         ),
         name='django_registration_activation_complete'),
+    path('accounts/activate/send_again/<str:email>/', views.send_activation_again),
     re_path(r'^accounts/activate/(?P<activation_key>[-:\w]+)/$', views.CustomActivationView.as_view(),
          name='django_registration_activate'),
     path('accounts/profile/', views.UserProfileView.as_view(), name='profile'),

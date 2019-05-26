@@ -15,8 +15,8 @@
                 <h5 class="modal-title">Welcome to White hat news</h5>
                 <p class="grey-text">Our experience spans organizations great and small. We know how to deliver solutions that fit your now...</p>
                 <a class="button button-linkedin" href="{% url 'social:begin' backend='linkedin-oauth2' %}"><img alt="LinkedIn Logo" src="{% static 'images/linkedin_logo.svg' %}"><div class="center">Linkedin Sign Up</div></a>
-                <button onclick="$('.btn-signup').click()" class="button primary-button button-email"><span class="btn-login-decoration">Email Sign Up</span></button>
-                <p><span class="text-opacity">Have an account? </span> <a class="btn-link" href="{% url 'django_registration_login' %}">Login</a></p>
+                <button onclick="$('.btn-signup').click()" class="button primary-button button-email"><span class="btn-decoration">Email Sign Up</span></button>
+                <p><span class="text-opacity">Have an account? </span> <a class="btn-link" href="{% url 'index' %}?login=true">Login</a></p>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-{% load posts_extras staticfiles %}
+{% load posts_extras staticfiles mptt_tags %}
 <div class="comment" data-comment="{{ comment.pk }}" {% if new %}style="display: none"{% endif %}>
     <div class="comment-header">
         {% if not comment.author.userprofile.is_image_default %}<div class="user-thumbnail">{% if comment.author.userprofile.image_thumbnail_sm.url %}<img src="{{ comment.author.userprofile.image_thumbnail_sm.url }}" alt="{{ comment }}" />{% endif %}</div>{% endif %}
@@ -15,9 +15,23 @@
                 </svg>
                 <span class="rating-text">{{ comment.get_score_formatted }}</span>
             </button>
-        <button class="comment-reply-btn">
-                <img src="{% static 'images/Comment grey.svg' %}" alt="Reply to a comment">
-                <span>Reply</span>
-        </button>
+        {% if comment.level < 5 %}
+            <button class="comment-reply-btn">
+                    <img src="{% static 'images/Comment grey.svg' %}" alt="Reply to a comment">
+                    <span>Reply</span>
+            </button>
+        {% endif %}
     </div>
+    {% if request.user.is_authenticated and comment.level < 5 %}
+        <div id="newCommentReply-{{ comment.pk }}" class="comment-reply-new" aria-expanded="false">
+            {% include 'partial/new_comment.html' with parent=comment article=comment.post %}
+        </div>
+    {% endif %}
+        <div class="comment-children">
+            {% for child in comment.children.all %}
+                    <div class="comment-child">
+                        {% include 'partial/comment.html' with comment=child %}
+                    </div>
+            {% endfor %}
+        </div>
 </div>
