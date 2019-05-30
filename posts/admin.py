@@ -2,8 +2,11 @@ from django.contrib import admin
 from posts.models import *
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
+from solo.admin import SingletonModelAdmin
 
 admin.site.register(User)
+
+feedlyConfig = FeedlyAPISettings.get_solo()
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'post_count', 'comment_count', 'postvote_count', 'commentvote_count', 'is_fake')
@@ -30,6 +33,11 @@ class NewsAggregatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'url',)
     search_fields = ['name', 'url']
 
+
+class FeedlyAPISettingsAdmin(SingletonModelAdmin):
+    readonly_fields = ('api_requests_remained',)
+
+admin.site.register(FeedlyAPISettings, FeedlyAPISettingsAdmin)
 admin.site.register(UserNewsSuggestion, NewsSuggestionsAdmin)
 admin.site.register(NewsAggregator, NewsAggregatorAdmin)
 admin.site.register(Comment, CommentAdmin)
@@ -37,20 +45,3 @@ admin.site.register(PostVote)
 admin.site.register(CommentVote)
 admin.site.register(PostFlag)
 # admin.site.register(RelatedArticle)
-
-# class InstagramImageAdmin(admin.ModelAdmin):
-#     list_display = ('caption', 'submitter_username', 'num_likes', 'created_time', 'tag', 'image_url_standardres')
-#
-# admin.site.register(InstagramImage, InstagramImageAdmin)
-#
-# class InstagramCommentAdmin(admin.ModelAdmin):
-#     list_display = ('body', 'submitter_username', 'created_time', 'image')
-#
-# admin.site.register(InstagramComment, InstagramCommentAdmin)
-#
-# class InstagramHashtagsToFetchAdmin(admin.ModelAdmin):
-#     list_display = ('tag',)
-#
-# admin.site.register(InstagramHashtagsToFetch, InstagramHashtagsToFetchAdmin)
-#
-# admin.site.register(BufferProfile)

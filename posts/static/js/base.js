@@ -46,7 +46,7 @@ $(function () {
     }
 
     $('.modal').on('shown.bs.modal', function () {
-        if ($(window).width() > 768) $(this).find('input:not(input[type="hidden"])').focus();
+        if ($(window).width() > 768) $(this).find('input:not(input[type="hidden"]):first-of-type').focus();
     });
 
     $(document).on('click touch', '.article .article-title, .article .article-comments', function (e) {
@@ -128,7 +128,7 @@ $(function () {
         timeoutID = setTimeout(() => searchSend(e.target.value, pageNumber), 250);
     });
 
-    $(document).on('click touch', 'form input, form textarea', function () {
+    $(document).on('keydown', 'form input, form textarea', function () {
        this.form.beenSubmitted = false;
        $(this).parent().removeClass('error');
        $(this).siblings('.error-text').html('');

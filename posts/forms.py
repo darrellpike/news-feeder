@@ -6,7 +6,7 @@ from posts.models import *
 from django_registration.forms import RegistrationFormUniqueEmail
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.translation import ugettext_lazy as _
-from posts.utils import update_contact_property_hubspot
+from posts.tasks import update_contact_property_hubspot
 from django.forms import ValidationError
 from django.contrib.auth import password_validation
 from django.core.validators import EmailValidator, validate_image_file_extension
@@ -46,13 +46,13 @@ class UserProfileUpdateForm(ModelForm):
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
         if first_name:
-            response = update_contact_property_hubspot(self.instance.email, 'firstname', first_name)
+            response = update_contact_property_hubspot.delay(self.instance.email, 'firstname', first_name)
         return first_name
 
     def clean_last_name(self):
         last_name = self.cleaned_data.get('last_name')
         if last_name:
-            response = update_contact_property_hubspot(self.instance.email, 'lastname', last_name)
+            response = update_contact_property_hubspot.delay(self.instance.email, 'lastname', last_name)
         return last_name
 
     def clean_email(self):
@@ -63,7 +63,7 @@ class UserProfileUpdateForm(ModelForm):
                 return email
         except User.DoesNotExist:
             if email:
-                response = update_contact_property_hubspot(self.instance.email, 'email', email)
+                response = update_contact_property_hubspot.delay(self.instance.email, 'email', email)
 
             return email
         raise ValidationError(_('This email address is already in use. Please supply a different email address.'),
@@ -78,7 +78,7 @@ class UserProfileUpdateForm(ModelForm):
                 return username
         except User.DoesNotExist:
             if username:
-                response = update_contact_property_hubspot(self.instance.email, 'username', username)
+                response = update_contact_property_hubspot.delay(self.instance.email, 'username', username)
             return username
         raise ValidationError(_('This username is already in use. Please supply a different username.'),
                               code='username_already_exists')
@@ -134,8 +134,8 @@ class PartialPostForm(ModelForm):
             'url': TextInput(attrs={'class': 'form-control col-lg-8 text-input',
                                     }),
             'title': TextInput(attrs={'class': 'form-control col-lg-8 text-input',
-                                    }),
-            }
+                                      }),
+        }
         #def clean_text(self):
         #url = self.cleaned_data.get('url', '')
         #text = self.cleaned_data['text']
@@ -157,7 +157,7 @@ class NewCommentForm(ModelForm):
             'text': Textarea(attrs={'class': 'form-control col-md-12 comment-form',
                                     'rows':'4',
                                     'placeholder':'write a comment...',}),
-            }
+        }
 
 
 class CustomRegistrationForm(RegistrationFormUniqueEmail):
@@ -195,14 +195,14 @@ class CustomPasswordResetForm(PasswordResetForm):
     def send_mail(self, subject_template_name, email_template_name,
                   context, from_email, to_email, html_email_template_name=None):
         super().send_mail(subject_template_name, email_template_name,
-                  context, from_email, to_email, html_email_template_name=None)
+                          context, from_email, to_email, html_email_template_name=None)
         url = '%s://%s/accounts/reset/%s/%s/' % (context['protocol'], context['domain'], context['uid'], context['token'])
-        response =  update_contact_property_hubspot(to_email, 'password_reset_url_active', True,
-                                        options=[{'label': 'Yes', 'value': True},
-                                                    {'label': 'No', 'value': False}])
+        response =  update_contact_property_hubspot.delay(to_email, 'password_reset_url_active', True,
+                                                    options=[{'label': 'Yes', 'value': True},
+                                                             {'label': 'No', 'value': False}])
         if response == 404:
             raise ValidationError("User doesn't exist on HubSpot")
-        r = update_contact_property_hubspot(to_email, 'password_reset_url', url)
+        r = update_contact_property_hubspot.delay(to_email, 'password_reset_url', url)
 
 
 
@@ -256,41 +256,3 @@ class NewNewsSuggestionForm(ModelForm):
     class Meta:
         model = UserNewsSuggestion
         fields = ['url',]
-"""
-from configstore.configs import ConfigurationInstance, register
-from configstore.forms import ConfigurationForm
-
-class TopCounterConfigurationForm(ConfigurationForm):
-    posts = forms.IntegerField()
-    members = forms.IntegerField()
-    comments = forms.IntegerField()
-
-topcounter_instance = ConfigurationInstance('Top Counter', 'Top Count Config', TopCounterConfigurationForm)
-register(topcounter_instance)
-
-class AboutConfigurationForm(ConfigurationForm):
-    text = forms.CharField(widget=forms.Textarea)
-
-about_instance = ConfigurationInstance('About Page', 'About Page Config', AboutConfigurationForm)
-register(about_instance)
-
-class GuidelinesConfigurationForm(ConfigurationForm):
-    text = forms.CharField(widget=forms.Textarea)
-
-guidelines_instance = ConfigurationInstance('Guidelines Page', 'Guidelines Page Config', GuidelinesConfigurationForm)
-register(guidelines_instance)
-
-
-class TaglineConfigurationForm(ConfigurationForm):
-    text = forms.CharField(widget=forms.Textarea)
-
-tagline_instance = ConfigurationInstance('Tagline', 'Tagline Config', TaglineConfigurationForm)
-register(tagline_instance)
-
-class KarmaThresholdConfigurationForm(ConfigurationForm):
-    karma_threshold = forms.IntegerField()
-
-karmathreshold_instance = ConfigurationInstance('Karma Threshold', 'Karma Threshold Config', KarmaThresholdConfigurationForm)
-register(karmathreshold_instance)
-
-"""

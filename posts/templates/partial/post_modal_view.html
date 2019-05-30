@@ -15,7 +15,7 @@
         </div>
         <div class="article-body">
             <div class="article-header">
-                    {% if article.news_aggregator %}
+                    {% if article.news_aggregator.logo %}
                         <div class="news-aggregator-image">
                             <a href="{{ article.news_aggregator.url }}">
                                 <img alt="{{ article.news_aggregator }}" src="{{ article.news_aggregator.logo.url }}" />
@@ -62,9 +62,13 @@
                     </div>
                 </div>
             </div>
-            {% if article.image %}
+            {% if article.image or article.image_url %}
                 <div class="article-image d-none d-md-block d-lg-block d-xl-block">
-                    <img alt="{{ article.title }}" src="{{ article.image.url }}"/>
+                    {% if article.image %}
+                        <img alt="{{ article.title }}" src="{{ article.image.url }}"/>
+                    {% elif article.image_url %}
+                        <img alt="{{ article.title }}" src="{{ article.image_url }}"/>
+                    {% endif %}
                 </div>
             {% endif %}
             <a class="article-link red-link d-none d-md-flex d-lg-flex d-xl-flex" href="{{ article.url }}"><span>{{ article.url }}</span><img alt="Link to source" src="{% static 'images/external-link.svg' %}"></a>

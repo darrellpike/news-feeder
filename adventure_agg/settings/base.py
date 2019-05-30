@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     'sanitizer',
     'social_django',
     'el_pagination',
-    'django_cleanup.apps.CleanupConfig'
+    'django_cleanup.apps.CleanupConfig',
+    'solo',
+    'django_celery_beat',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -193,6 +196,7 @@ REGISTRATION_SALT = SECRET_KEY
 
 
 # Logging
+# Different in production
 
 LOGGING = {
     "version": 1,
@@ -213,3 +217,6 @@ LOGGING = {
         }
     },
 }
+
+# Celery settings
+CELERY_RESULT_BACKEND = 'django-db'

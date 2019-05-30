@@ -1,27 +1,25 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.core.validators import MaxLengthValidator
-from django_registration.signals import user_registered
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Sum
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core import signing
 from imagekit.models import ProcessedImageField, ImageSpecField
-from imagekit.processors import ResizeToFill, ResizeToFit, Adjust
+from imagekit.processors import ResizeToFill, ResizeToFit
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-from django.core.mail import send_mail
 from urllib.parse import urlparse
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.conf import settings
+from solo.models import SingletonModel
+from posts.utils import FeedlyClient
 
 CHAR_FIELD_MAX_LENGTH = 85
 
-#BUFFER_TOKEN="1/2e1a5f4377c137037277b1018687db14"#testing
-BUFFER_TOKEN="1/a87c16b5ef67c2978b55a34eaee28078"
 
 REGISTRATION_SALT = getattr(settings, 'REGISTRATION_SALT', 'registration')
 
@@ -137,9 +135,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 		full_name = '%s | %s' % (self.username, self.email)
 		return full_name.strip()
 
+
 class UserProfile(models.Model):
-	user = models.OneToOneField(User, primary_key=True, editable=False, on_delete=models.CASCADE, related_name='userprofile')
-	image = models.ImageField(default='user_images/default/default_image_profile.png', upload_to='user_images/', blank=True)
+	user = models.OneToOneField(
+		User, primary_key=True, editable=False, on_delete=models.CASCADE, related_name='userprofile')
+	image = models.ImageField(
+		default='user_images/default/default_image_profile.png', upload_to='user_images/', blank=True)
 	image_thumbnail_sm = ImageSpecField(source='image',
 	                                processors=[ResizeToFill(100,100)],
 	                                format='PNG')
@@ -208,19 +209,23 @@ class Post(models.Model):
 	submit_time = models.DateTimeField(default=timezone.now)
 	news_aggregator = models.ForeignKey('NewsAggregator', on_delete=models.CASCADE, blank=True, null=True)
 	url = models.URLField(max_length=300, blank=True)
-	label_for_url = models.CharField(max_length=85, blank=True, help_text=_("If post don't have news_aggregator, "
-	                                                                        "this label will replace news aggregator name"))
+	label_for_url = models.CharField(max_length=85, blank=True, help_text=_(
+		"If post don't have news_aggregator, this label will replace news aggregator name"))
 	text = models.TextField(blank=True)
 	article_text = models.TextField(blank=True)
 	image = models.ImageField(blank=True)
+	image_url = models.URLField(blank=True, help_text="If post doesn't have image on the server,"
+	                                                  " URL link will be used.")
 
 	def time_since_submit(self):
 		return timezone.now() - self.submit_time
 
 	def comment_count(self):
 		return Comment.objects.filter(post=self).exclude(author__userprofile__is_shadowbanned=True).count()
+
 	def user_voted(self, user):
 		return PostVote.objects.filter(post=self).filter(voter=user).exists()
+
 	def get_score(self):
 		score = PostVote.objects.filter(post=self).aggregate(Sum('score'))['score__sum']
 		if score is None:
@@ -246,6 +251,7 @@ class Post(models.Model):
 	def __unicode__(self):
 		return self.title
 
+
 def calculate_rank(score,hours_since):
 	return (score-.9)# / (hours_since + 2)**1.8
 
@@ -256,7 +262,8 @@ class Comment(MPTTModel):
 	submit_time = models.DateTimeField(auto_now_add=True)
 	text = models.TextField(blank=False)
 
-	parent = TreeForeignKey('self', null=True, blank=True, related_name='children', editable=False, on_delete=models.CASCADE)
+	parent = TreeForeignKey(
+		'self', null=True, blank=True, related_name='children', editable=False, on_delete=models.CASCADE)
 
 	class MPTTMeta:
 		# comments on one level will be ordered by date of creation
@@ -319,7 +326,8 @@ class CommentVote(Vote):
 	class Meta:
 		unique_together = (("voter", "comment",),)
 	def __unicode__(self):
-		return self.voter.first_name + " " + self.voter.last_name + " " + str(self.score) + " on " + self.comment.post.title + " by " + self.comment.author.username
+		return self.voter.first_name + " " + self.voter.last_name + " " \
+		       + str(self.score) + " on " + self.comment.post.title + " by " + self.comment.author.username
 
 
 class PostFlag(models.Model):
@@ -335,3 +343,38 @@ class UserNewsSuggestion(models.Model):
 
 	def __str__(self):
 		return "{url} | {user}".format(url=urlparse(self.url).netloc, user=self.user.email)
+
+
+class FeedlyAPISettings(SingletonModel):
+	FEEDLY_API_CLIENT_ID = models.CharField(blank=True, help_text='Use “feedlydev” for the client_id'
+	                                                  ' if you have developer access token', max_length=400,
+	                                        default='feedlydev')
+	FEEDLY_API_CLIENT_SECRET = models.CharField(blank=True, help_text='Use “feedlydev” for the client_secret'
+	                                                  ' if you have developer access token', max_length=400,
+	                                            default='feedlydev')
+	FEEDLY_API_REFRESH_TOKEN = models.CharField(blank=True, max_length=400)
+	FEEDLY_API_ACCESS_TOKEN = models.CharField(blank=True, max_length=400, help_text="Automatically refreshes"
+	                                                                 " if you have feedly pro or team account")
+	api_requests_remained = models.IntegerField(default=250)
+
+
+	def get_client(self):
+		return FeedlyClient(feedly_config=self, sandbox=False)
+
+
+	def set_api_requests_remained(self, headers):
+		"""Takes from headers of Feedly's response limit and counter of requests"""
+		try:
+			self.api_requests_remained = int(headers.get('X-RateLimit-Limit')) - int(headers.get('X-RateLimit-Count'))
+		except ValueError:
+			raise Exception('Feedly\'s response headers are changed or incorrect.')
+
+		self.save()
+		return self.api_requests_remained
+
+
+	def __str__(self):
+		return "Feedly Configuration"
+
+	class Meta:
+		verbose_name = "Feedly Configuration"

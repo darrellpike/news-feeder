@@ -26,6 +26,8 @@
                         {% include 'partial/article.html' with article=article first=1 last=0 %}
                     {% elif forloop.last %}
                         {% include 'partial/article.html' with article=article last=1 first=0 %}
+                    {% elif forloop.first and forloop.last %}
+                        {% include 'partial/article.html' with article=article last=1 first=1 %}
                     {% else %}
                         {% include 'partial/article.html' with article=article first=0 last=0 %}
                     {% endif %}
@@ -76,12 +78,21 @@
             </div>
             <div class="latest-news">
                 {% for article in latest_news %}
-                    <div class="article" data-latest="1" data-article="{{ article.pk }}" data-first="{% if forloop.first %}1{% else %}0{% endif %}" data-last="{% if forloop.last %}1{% else %}0{% endif %}">
+                    <div class="article" data-latest="1" data-article="{{ article.pk }}"
+                            {% if forloop.first %}
+                                data-first="1" data-last="0"
+                            {% elif forloop.last %}
+                                data-first="0" data-last="1"
+                            {% elif forloop.first and forloop.last %}
+                                data-first="1" data-last="1"
+                            {% else %}
+                                data-first="0" data-last="0"
+                            {% endif %}>
                             <div class="article-body">
                                 {#                            <a href="{% url 'view_post' article.pk %}"><p class="article-title">#}
                                 {#                                {{ article.title }}#}
                                 {#                        </p></a>#}
-                                <a class="article-title">
+                                <a href="#" class="article-title">
                                     {{ article.title }}
                                 </a>
                                 <div class="article-statistics">
