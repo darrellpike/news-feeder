@@ -8,7 +8,7 @@
             <span class="rating-text">{{ article.get_score_formatted }}</span>
         </button>
     </div>
-    {% if article.news_aggregator %}
+    {% if article.news_aggregator.logo %}
         <div class="news-aggregator-image">
             <a href="{{ article.news_aggregator.url }}">
                 <img alt="{{ article.news_aggregator }}" src="{{ article.news_aggregator.logo.url }}" />

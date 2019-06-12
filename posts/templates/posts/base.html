@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-        <meta charset="utf-8">
+    <meta charset="utf-8">
     {% block viewport %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% endblock viewport %}
@@ -15,6 +15,7 @@
     {% block meta_description %}
         <meta property="og:description" content="{{ title_tagline }}">{% endblock %}
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/favicon.png' %}">
 
     {% block title %}<title>White Hat News</title>{% endblock %}
     {% block head_js %}{% endblock %}
@@ -66,9 +67,9 @@
 
     <!-- start Mixpanel -->
     <script type="text/javascript">(function(c,a){if(!a.__SV){var b=window;try{var d,m,j,k=b.location,f=k.hash;d=function(a,b){return(m=a.match(RegExp(b+"=([^&]*)")))?m[1]:null};f&&d(f,"state")&&(j=JSON.parse(decodeURIComponent(d(f,"state"))),"mpeditor"===j.action&&(b.sessionStorage.setItem("_mpcehash",f),history.replaceState(j.desiredHash||"",c.title,k.pathname+k.search)))}catch(n){}var l,h;window.mixpanel=a;a._i=[];a.init=function(b,d,g){function c(b,i){var a=i.split(".");2==a.length&&(b=b[a[0]],i=a[1]);b[i]=function(){b.push([i].concat(Array.prototype.slice.call(arguments,
-    0)))}}var e=a;"undefined"!==typeof g?e=a[g]=[]:g="mixpanel";e.people=e.people||[];e.toString=function(b){var a="mixpanel";"mixpanel"!==g&&(a+="."+g);b||(a+=" (stub)");return a};e.people.toString=function(){return e.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
-    for(h=0;h<l.length;h++)c(e,l[h]);var f="set set_once union unset remove delete".split(" ");e.get_group=function(){function a(c){b[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));e.push([d,call2])}}for(var b={},d=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<f.length;c++)a(f[c]);return b};a._i.push([b,d,g])};a.__SV=1.2;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
-    MIXPANEL_CUSTOM_LIB_URL:"file:"===c.location.protocol&&"//cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js";d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d)}})(document,window.mixpanel||[]);
+        0)))}}var e=a;"undefined"!==typeof g?e=a[g]=[]:g="mixpanel";e.people=e.people||[];e.toString=function(b){var a="mixpanel";"mixpanel"!==g&&(a+="."+g);b||(a+=" (stub)");return a};e.people.toString=function(){return e.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+        for(h=0;h<l.length;h++)c(e,l[h]);var f="set set_once union unset remove delete".split(" ");e.get_group=function(){function a(c){b[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));e.push([d,call2])}}for(var b={},d=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<f.length;c++)a(f[c]);return b};a._i.push([b,d,g])};a.__SV=1.2;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
+        MIXPANEL_CUSTOM_LIB_URL:"file:"===c.location.protocol&&"//cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn4.mxpnl.com/libs/mixpanel-2-latest.min.js";d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d)}})(document,window.mixpanel||[]);
     mixpanel.init("f034f9ea5eaa4565e87a461e88e654b7");</script>
     <!-- end Mixpanel -->
 </head>
@@ -101,11 +102,11 @@
                     {% if request.user.is_authenticated %}
                         <button type="button" data-toggle="modal" data-target="#suggest_news_modal" class="btn btn-signup red-button suggest-news">Suggest news</button>
                         <div class="btn-group">
-                        <button type="button" data-toggle="dropdown" id="userMenu" class="btn profile-image" aria-haspopup="true" aria-expanded="false"><img alt="User image" src="{{ user.userprofile.image_thumbnail_sm.url }}" /></button>
-                        <div class="dropdown-menu" aria-labelledby="userMenu">
-                            <a class="dropdown-item" href="{% url 'profile' %}"><h3>Profile</h3></a>
-                            <a class="dropdown-item button-logout" href="#"><h3>Log out</h3></a>
-                        </div>
+                            <button type="button" data-toggle="dropdown" id="userMenu" class="btn profile-image" aria-haspopup="true" aria-expanded="false"><img alt="User image" src="{{ user.userprofile.image_thumbnail_sm.url }}" /></button>
+                            <div class="dropdown-menu" aria-labelledby="userMenu">
+                                <a class="dropdown-item" href="{% url 'profile' %}"><h3>Profile</h3></a>
+                                <a class="dropdown-item button-logout" href="#"><h3>Log out</h3></a>
+                            </div>
                         </div>
                         <a class="profile-link link-white d-inline-block d-md-none d-lg-none d-xl-none" href="{% url 'profile' %}">Profile</a>
                         <button type="button" data-toggle="modal" data-target="#suggest_news_modal" class="btn btn-signup red-button d-inline-block d-md-none d-lg-none d-xl-none">Suggest news</button>
@@ -130,23 +131,23 @@
 {% endblock mobile_sort_buttons %}
 <div id="search-results" class="container main-content"></div>
 <div class="container main-content">
-{% block content %}{% endblock content %}
+    {% block content %}{% endblock content %}
 </div>
 <div class="modal fade" id="base-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">
               <img class="d-none d-md-block d-lg-block d-xl-block" alt="Close sign up" src="{% static 'images/close.svg' %}" />
               <img class="d-sm-block d-md-none d-lg-none d-xl-none" alt="Close sign up" src="{% static 'images/close_white.svg' %}" />
           </span>
-        </button>
-      </div>
-      <div class="modal-body">
-      </div>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% if not request.user.is_authenticated %}
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
@@ -191,66 +192,66 @@
         </div>
     </div>
 
-<div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">
               <img class="d-none d-md-block d-lg-block d-xl-block" alt="Close sign up" src="{% static 'images/close.svg' %}" />
               <img class="d-sm-block d-md-none d-lg-none d-xl-none" alt="Close sign up" src="{% static 'images/close_white.svg' %}" />
           </span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <h5 class="modal-title">Sign up</h5>
-          <form id="register_form" method="POST" action="{% url 'django_registration_register' %}">
-              {% csrf_token %}
-              <div class="input-group">
-                  <div class="input-with-label first-name {% if form.first_name.errors %}error{% endif %}">
-                      <input id="register-first-name" type="text" autocomplete="given-name" name="first_name">
-                      <label for="register-first-name">First name</label>
-                      {% include 'partial/form_error.html' with errors=form.first_name.errors %}
-                      <span class="error-text"></span>
-                  </div>
-                  <div class="input-with-label {% if form.last_name.errors %}error{% endif %}">
-                      <input id="register-last-name" type="text" autocomplete="family-name" name="last_name">
-                      <label for="register-last-name">Last name</label>
-                      {% include 'partial/form_error.html' with errors=form.last_name.errors %}
-                      <span class="error-text"></span>
-                  </div>
-              </div>
-              <div class="input-group">
-                  <div class="input-with-label {% if form.username.errors %}error{% endif %}">
-                      <input id="register-username" type="text" autocomplete="new-username" name="username">
-                      <label for="register-username">Username</label>
-                      {% include 'partial/form_error.html' with errors=form.username.errors %}
-                      <span class="error-text"></span>
-                  </div>
-              </div>
-              <div class="input-group">
-                  <div class="input-with-label {% if form.email.errors %}error{% endif %}">
-                      <input id="id_email" type="email" autocomplete="email" name="email">
-                      <label for="id_email">Email</label>
-                      {% include 'partial/form_error.html' with errors=form.email.errors %}
-                      <span class="error-text"></span>
-                  </div>
-              </div>
-              <div class="input-group">
-                  <div class="input-with-label {% if form.password1.errors %}error{% endif %}">
-                      <input id="register-password" type="password" autocomplete="new-password" name="password1">
-                      <label for="register-password">Password</label>
-                      {% include 'partial/form_error.html' with errors=form.password1.errors %}
-                      <span class="error-text"></span>
-                  </div>
-              </div>
-              <button type="submit" class="button primary-button" id="register-submit">Sign up</button>
-          </form>
-          <p><span class="text-opacity">Have an account?</span> <a class="btn-link open-another-modal" data-target="#login-modal" href="#">Login</a></p>
-      </div>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="modal-title">Sign up</h5>
+                    <form id="register_form" method="POST" action="{% url 'django_registration_register' %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <div class="input-with-label first-name {% if form.first_name.errors %}error{% endif %}">
+                                <input id="register-first-name" type="text" autocomplete="given-name" name="first_name">
+                                <label for="register-first-name">First name</label>
+                                {% include 'partial/form_error.html' with errors=form.first_name.errors %}
+                                <span class="error-text"></span>
+                            </div>
+                            <div class="input-with-label {% if form.last_name.errors %}error{% endif %}">
+                                <input id="register-last-name" type="text" autocomplete="family-name" name="last_name">
+                                <label for="register-last-name">Last name</label>
+                                {% include 'partial/form_error.html' with errors=form.last_name.errors %}
+                                <span class="error-text"></span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-with-label {% if form.username.errors %}error{% endif %}">
+                                <input id="register-username" type="text" autocomplete="new-username" name="username">
+                                <label for="register-username">Username</label>
+                                {% include 'partial/form_error.html' with errors=form.username.errors %}
+                                <span class="error-text"></span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-with-label {% if form.email.errors %}error{% endif %}">
+                                <input id="id_email" type="email" autocomplete="email" name="email">
+                                <label for="id_email">Email</label>
+                                {% include 'partial/form_error.html' with errors=form.email.errors %}
+                                <span class="error-text"></span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-with-label {% if form.password1.errors %}error{% endif %}">
+                                <input id="register-password" type="password" autocomplete="new-password" name="password1">
+                                <label for="register-password">Password</label>
+                                {% include 'partial/form_error.html' with errors=form.password1.errors %}
+                                <span class="error-text"></span>
+                            </div>
+                        </div>
+                        <button type="submit" class="button primary-button" id="register-submit">Sign up</button>
+                    </form>
+                    <p><span class="text-opacity">Have an account?</span> <a class="btn-link open-another-modal" data-target="#login-modal" href="#">Login</a></p>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 {% endif %}
 {% include 'partial/modal_suggest_news.html' %}
@@ -267,7 +268,7 @@
 <script src="{% static 'bootstrap-4.3.1/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 {% if request.user.is_authenticated %}
-<script type="text/javascript" src="{% static 'js/upvote.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/upvote.js' %}"></script>
 {% endif %}
 <script type="text/javascript" src="{% static 'js/comments.js' %}"></script>
 <script>
@@ -296,21 +297,21 @@
             is_desktop_post = false;
         {% endif %}
 
-        $(window).bind('resize', function(e)
-            {
-                if (($('#PostModal').hasClass('show') && is_desktop_post && window.outerWidth < 767.98) || (is_mobile_post && window.outerWidth > 767.98)) {
-                    if (window.RT) clearTimeout(window.RT);
-                    window.RT = setTimeout(function()
-                    {
-                        if (is_desktop_post) {
-                            this.location.href = "/post/" + $('#PostModal').find('.article').data('article') + '/';
-                        } else if (is_mobile_post) {
-                            let post_id = window.location.pathname.match(/\d+/)[0];
-                            this.location.href = '/?post=' + post_id;
-                        }
-                    }, 10);
-                }
-            });
+        $(window).bind('resize', function()
+        {
+            if (($('#PostModal').hasClass('show') && is_desktop_post && window.outerWidth < 767.98) || (is_mobile_post && window.outerWidth > 767.98)) {
+                if (window.RT) clearTimeout(window.RT);
+                window.RT = setTimeout(function()
+                {
+                    if (is_desktop_post) {
+                        this.location.href = "/post/" + $('#PostModal').find('.article').data('article') + '/';
+                    } else if (is_mobile_post) {
+                        let post_id = window.location.pathname.match(/\d+/)[0];
+                        this.location.href = '/?post=' + post_id;
+                    }
+                }, 10);
+            }
+        });
 
         {% if request.GET.success %}
             let stripe;
@@ -358,8 +359,8 @@
                 }
             });
         });
-        
-        
+
+
         let loginModalBody = loginModal.find('.modal-body');
         $(document).on('click', '#password-reset', function (e) {
             $.ajax({
@@ -380,20 +381,20 @@
             });
             e.preventDefault();
         });
-        
+
         loginModal.on('hidden.bs.modal', function () {
             let loginModal = $(this);
             if (!loginModal.find('.form.login').length) {
                 $.ajax({
-                method: "GET",
-                url: "{% url 'django_registration_login' %}",
-                success: function (data) {
-                    loginModal.find('.modal-body').html(data);
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
+                    method: "GET",
+                    url: "{% url 'django_registration_login' %}",
+                    success: function (data) {
+                        loginModal.find('.modal-body').html(data);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
             }
         });
     })
@@ -404,5 +405,4 @@
 {% block js %}
 {% endblock %}
 </body>
-
 </html>

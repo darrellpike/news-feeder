@@ -1,36 +1,36 @@
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import EmptyPage, PageNotAnInteger
 from django.core.exceptions import ValidationError
 from django import forms
-import requests, json
 from django.core.paginator import Paginator, Page
-from posts.models import User
+import requests
+import json
+from posts.tasks import update_access_token_feedly
+from urllib.parse import quote_plus
 
-
-HUBSPOT_API_KEY = '6384ea2f-48d2-4672-a92a-2d4b30a9be26'
 
 class DeltaFirstPagePaginator(Paginator):
 
-  def __init__(self, object_list, per_page, orphans=0,
+    def __init__(self, object_list, per_page, orphans=0,
                  allow_empty_first_page=True, **kwargs):
-    self.deltafirst = kwargs.pop('deltafirst', 0)
-    Paginator.__init__(self, object_list, per_page, orphans,
-                 allow_empty_first_page)
+        self.deltafirst = kwargs.pop('deltafirst', 0)
+        Paginator.__init__(self, object_list, per_page, orphans,
+                           allow_empty_first_page)
 
-  def page(self, number):
-    "Returns a Page object for the given 1-based page number."
-    number = self.validate_number(number)
-    if number == 1:
-        bottom = 0
-        if self.count > self.deltafirst:
-            top = self.per_page - self.deltafirst
+    def page(self, number):
+        """Returns a Page object for the given 1-based page number."""
+        number = self.validate_number(number)
+        if number == 1:
+            bottom = 0
+            if self.count > self.deltafirst:
+                top = self.per_page - self.deltafirst
+            else:
+                top = self.per_page
         else:
-            top = self.per_page
-    else:
-      bottom = (number - 1) * self.per_page - self.deltafirst
-      top = bottom + self.per_page
-    if top + self.orphans >= self.count:
-      top = self.count
-    return Page(self.object_list[bottom:top], number, self)
+            bottom = (number - 1) * self.per_page - self.deltafirst
+            top = bottom + self.per_page
+        if top + self.orphans >= self.count:
+            top = self.count
+        return Page(self.object_list[bottom:top], number, self)
 
 
 def paginate_items(page, items, per_page):
@@ -45,6 +45,7 @@ def paginate_items(page, items, per_page):
         items = paginator.page(paginator.num_pages)
     return items
 
+
 def validate_email(email):
     f = forms.EmailField()
     try:
@@ -54,163 +55,267 @@ def validate_email(email):
         return False
 
 
-def create_or_update_contact_hubspot(user_id, activation_key=None):
-    user = User.objects.get(id=user_id)
-    endpoint = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/' + user.email + '/?hapikey=' + HUBSPOT_API_KEY
-    headers = {}
-    headers["Content-Type"] = "application/json"
-    properties = {
-        "properties": [
-            {
-                "property": "username",
-                "value": user.username
-            },
-            {
-                "property": "email_confirmed",
-                "value": user.is_active
-            }
-        ]
-    }
-    if activation_key:
-        properties['properties'].append({
-                "property": "conformation_url",
-                "value": "https://news.viceroy.tech/accounts/activate/" + str(activation_key) + "/"
-            })
-    if user.first_name:
-        properties['properties'].append({
-                "property": "firstname",
-                "value": user.first_name
-            })
-    if user.last_name:
-        properties['properties'].append({
-            "property": "lastname",
-            "value": user.last_name
-        })
-    data = json.dumps(properties)
+class FeedlyClient(object):
+    def __init__(self, **options):
+        self.feedlyConfig = options.get('feedly_config')
+        self.client_id = options.get('client_id', self.feedlyConfig.FEEDLY_API_CLIENT_ID)
+        self.client_secret = options.get('client_secret', self.feedlyConfig.FEEDLY_API_CLIENT_SECRET)
+        self.sandbox = options.get('sandbox', True)
+        if self.sandbox:
+            default_service_host = 'sandbox.feedly.com'
+        else:
+            default_service_host = 'cloud.feedly.com'
+        self.service_host = options.get('service_host', default_service_host)
+        self.additional_headers = options.get('additional_headers', {})
+        self.token = options.get('token', self.feedlyConfig.FEEDLY_API_ACCESS_TOKEN)
+        self.secret = options.get('secret')
 
-    r = requests.post(url=endpoint, data=data, headers=headers)
+    def get_code_url(self, callback_url):
+        scope = 'https://cloud.feedly.com/subscriptions'
+        response_type = 'code'
 
-    if r.status_code == 400:
-        response = json.loads(r.content)
-        error = response['validationResults'][0]['error']
-        if error == "PROPERTY_DOESNT_EXIST" and response['validationResults'][0]['name'] == 'email_confirmed':
-            options = [
-                {
-                    "label": "Yes",
-                    "value": True
-                },
-                {
-                    "label": "No",
-                    "value": False
-                }
-            ]
-            create_new_property_hubspot(response['validationResults'][0]['name'], 'booleancheckbox', options=options)
-            create_or_update_contact_hubspot(user_id, activation_key)
-        elif error == "PROPERTY_DOESNT_EXIST" and response['validationResults'][0]['name'] == 'username':
-            create_new_property_hubspot(response['validationResults'][0]['name'], 'text')
-            create_or_update_contact_hubspot(user_id, activation_key)
-    elif r.status_code != 200:
-        raise BaseException(json.loads(r.content))
-    user.userprofile.hubspot_contact = True
-    user.userprofile.save()
-    return r
+        request_url = '%s?client_id=%s&redirect_uri=%s&scope=%s&response_type=%s' % (
+            self._get_endpoint('v3/auth/auth'),
+            self.client_id,
+            callback_url,
+            scope,
+            response_type
+        )
+        return request_url
+
+    def get_access_token(self, redirect_uri, code):
+        params = dict(
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            grant_type='authorization_code',
+            redirect_uri=redirect_uri,
+            code=code
+        )
+
+        quest_url = self._get_endpoint('v3/auth/token')
+        res = requests.post(url=quest_url, params=params)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
+
+    def refresh_access_token(self, refresh_token):
+        """Obtain a new access token by sending a refresh token to the feedly Authorization server"""
+        params = dict(
+            refresh_token=refresh_token,
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            grant_type='refresh_token',
+        )
+        quest_url = self._get_endpoint('v3/auth/token')
+        res = requests.post(url=quest_url, params=params)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
+
+    def get_entry(self, access_token, entry_id):
+        """tag an existing entry """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/entries/'  +  quote_plus(entry_id))
+        # data = dict(
+        #     entryId=entry_id
+        # )
+        res = requests.put(url=quest_url, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.put(url=quest_url, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
+
+    def get_user_subscriptions(self, access_token):
+        """:returns list of user subscriptions"""
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/subscriptions')
+        res = requests.get(url=quest_url, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.get(url=quest_url, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
+
+    def get_user_collections(self, access_token):
+        """:returns list of user collections"""
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/collections')
+        res = requests.get(url=quest_url, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.get(url=quest_url, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
+
+    def get_user_tags(self, access_token):
+        """:returns list of user tags"""
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/tags')
+        res = requests.get(url=quest_url, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.get(url=quest_url, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
 
 
-def create_new_property_hubspot(field_name, field_type, options=None, type='string'):
-    """
-    Creates new property on HubSpot
-    :param field_name: The name for the new property must be a string
-    :param field_type: The type for the new property must be one of these:
-    textarea - a <textarea> field, stores data as a string
-    text - a simple text box, stores a string
-    date - a datepicker field, stores a date type
-    file - stores the URL location of a file. Note: The file itself must be stored separately, as the contact property cannot store the file, just the URL location of a file. Treated as a string.
-    number - a number input field, stores a number value
-    select - a dropdown box, uses the enumeration type
-    radio - a set of radio buttons, used with the enumeration data type.
-    checkbox - a set of checkboxes, used with the enumeration data type
-    booleancheckbox - a single checkbox, stores "true" (as a string) if checked.
-    :param options: Example:
-    options = [
-                {
-                    "label": "Yes",
-                    "value": True
-                },
-                {
-                    "label": "No",
-                    "value": False
-                }
-            ]
-    :return: response of a request
-    """
-    if field_type not in ['textarea', 'text', 'date', 'file', 'number',
-                          'select', 'radio', 'checkbox', 'booleancheckbox']:
-        raise ValueError('Must be one of these types: textarea, text, date, file, number, '
-                         'select, radio, checkbox, booleancheckbox.')
+    def tag_an_existing_entry(self, access_token, tag_id, entry_id):
+        """tag an existing entry """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/tags/' +  quote_plus(tag_id))
+        data = dict(
+            entryId=entry_id
+        )
+        res = requests.put(url=quest_url, headers=headers, data=json.dumps(data))
+        self.feedlyConfig.set_api_requests_remained(res.headers)
 
-    if not isinstance(field_name, str):
-        raise TypeError('Must be a string.')
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.put(url=quest_url, headers=headers, data=json.dumps(data))
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res
 
-    if options is None:
-        options = []
+    def get_enterprise_user_tags(self, access_token):
+        """:returns list of user tags"""
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/enterprise/tags')
+        res = requests.get(url=quest_url, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
 
-    endpoint = 'https://api.hubapi.com/properties/v1/contacts/properties?hapikey=' + HUBSPOT_API_KEY
-    headers = {}
-    headers["Content-Type"] = "application/json"
-    name = field_name
-    name_formatted = name.replace('_', ' ').capitalize()
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.get(url=quest_url, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        json = res.json()
+        return json
 
-    data = json.dumps(
-        {
-            "name": name,
-            "label": name_formatted,
-            "description": "Auto property - %s" % (name_formatted),
-            "groupName": "contactinformation",
-            "type": type,
-            "fieldType": field_type,
-            "formField": False,
-            "options": options
+
+    def get_enterprise_user_tag_info(self, access_token, tag_id):
+        """:returns info about tag"""
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/enterprise/tags')
+        params = dict(
+            tagId=tag_id,
+        )
+        res = requests.get(url=quest_url, headers=headers, params=params)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.get(url=quest_url, headers=headers, params=params)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
+
+    def get_feed_content(self, access_token, stream_id, unread_only=True, newer_than=None):
+        """:returns contents of a feed"""
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/streams/contents')
+        params = dict(
+            streamId=stream_id,
+            unreadOnly=unread_only,
+        )
+        if newer_than:
+            params['newerThan'] = newer_than
+        res = requests.get(url=quest_url, params=params, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.get(url=quest_url, params=params, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        return res.json()
+
+    def mark_article_read(self, access_token, entry_ids):
+        """Mark one or multiple articles as read"""
+        headers = {'content-type': 'application/json',
+                   'Authorization': 'OAuth ' + access_token
+                   }
+        quest_url = self._get_endpoint('v3/markers')
+        params = dict(
+            action="markAsRead",
+            type="entries",
+            entryIds=entry_ids,
+        )
+        res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        return res
+
+    def mark_tag_read(self, access_token, tag_ids, last_read_entry_id):
+        """Mark one or multiple articles as read"""
+        headers = {'content-type': 'application/json',
+                   'Authorization': 'OAuth ' + access_token
+                   }
+        quest_url = self._get_endpoint('v3/markers')
+        params = dict(
+            action="markAsRead",
+            type="tags",
+            tagIds=tag_ids,
+            lastReadEntryId=last_read_entry_id,
+        )
+        res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        return res
+
+    def save_for_later(self, access_token, user_id, entry_ids):
+        """Saved for later.entryIds is a list for entry id."""
+        headers = {'content-type': 'application/json',
+                   'Authorization': 'OAuth ' + access_token
+                   }
+        request_url = self._get_endpoint('v3/tags') + '/user%2F' + user_id + '%2Ftag%2Fglobal.saved'
+
+        params = dict(
+            entryIds=entry_ids
+        )
+        res = requests.put(url=request_url, data=json.dumps(params), headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.put(url=request_url, data=json.dumps(params), headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        return res
+
+    def get_profile(self, access_token):
+        """:returns user profile"""
+        headers = {
+            'content-type': 'application/json',
+            'Authorization': 'OAuth ' + access_token
         }
-    )
+        quest_url = self._get_endpoint('v3/profile')
 
-    r = requests.post(url=endpoint, data=data, headers=headers)
+        res = requests.post(url=quest_url, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
 
-    return json.loads(r.content)
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.post(url=quest_url, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
 
+        return res
 
-def update_contact_property_hubspot(email, property_name, value, options=None):
-    """
-    Updating or creating property on Hubspot.
-    :param name: The property name, must be a string.
-    :return: status code of a response
-    """
-    if not isinstance(email, str) and not isinstance(property_name, str):
-        raise TypeError('Must be a string.')
-
-    endpoint = 'https://api.hubapi.com/contacts/v1/contact/email/' + email + '/profile?hapikey=' + HUBSPOT_API_KEY
-    headers = {}
-    headers["Content-Type"] = "application/json"
-    data = json.dumps({
-        "properties": [
-            {
-                "property": property_name,
-                "value": value
-            }
-        ]
-    })
-
-    r = requests.post(endpoint, data=data, headers=headers)
-
-    if r.status_code == 400:
-        field_type = 'text'
-        if isinstance(value, str):
-            field_type = 'text'
-        elif isinstance(value, bool):
-            field_type = 'booleancheckbox'
-        elif isinstance(value, int):
-            field_type = 'number'
-
-        create_new_property_hubspot(property_name, field_type=field_type, options=options)
-        r = requests.post(endpoint, data=data, headers=headers)
-
-    return r.status_code
+    def _get_endpoint(self, path=None):
+        url = "https://%s" % self.service_host
+        if path is not None:
+            url += "/%s" % path
+        return url

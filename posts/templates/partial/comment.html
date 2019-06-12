@@ -15,14 +15,14 @@
                 </svg>
                 <span class="rating-text">{{ comment.get_score_formatted }}</span>
             </button>
-        {% if comment.level < 5 %}
+        {% if comment.level < 4 %}
             <button class="comment-reply-btn">
                     <img src="{% static 'images/comment_grey.svg' %}" alt="Reply to a comment">
                     <span>Reply</span>
             </button>
         {% endif %}
     </div>
-    {% if request.user.is_authenticated and comment.level < 5 %}
+    {% if request.user.is_authenticated and comment.level < 4 %}
         <div id="newCommentReply-{{ comment.pk }}" class="comment-reply-new" aria-expanded="false">
             {% include 'partial/new_comment.html' with parent=comment article=comment.post %}
         </div>
