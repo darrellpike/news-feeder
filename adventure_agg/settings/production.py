@@ -39,7 +39,6 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, '../logs/celery.log'),
-            'formatter': 'simple',
             'maxBytes': 1024 * 1024 * 100,  # 100 mb
         }
     },
