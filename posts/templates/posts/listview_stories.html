@@ -20,11 +20,13 @@
             <div class="news">
                 {% for article in news %}
                     {% if forloop.first %}
-                        {% include 'partial/article.html' with article=article first=1 last=0 %}
+                        {% include 'partial/article.html' with article=article first=1 last=0 search=1 %}
                     {% elif forloop.last %}
-                        {% include 'partial/article.html' with article=article last=1 first=0 %}
+                        {% include 'partial/article.html' with article=article last=1 first=0 search=1 %}
+                    {% elif forloop.first and forloop.last %}
+                        {% include 'partial/article.html' with article=article first=1 last=1 search=1 %}
                     {% else %}
-                        {% include 'partial/article.html' with article=article first=0 last=0 %}
+                        {% include 'partial/article.html' with article=article first=0 last=0 search=1 %}
                     {% endif %}
                 {% endfor %}
                 {% if is_paginated %}

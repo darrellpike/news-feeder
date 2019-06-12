@@ -2,13 +2,14 @@ from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
 from django.contrib import messages
-from posts.utils import create_or_update_contact_hubspot
+from posts.tasks import create_or_update_contact_hubspot
 from posts.models import UserProfile
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 import requests
 
 UserModel = get_user_model()
+
 
 class CustomModelBackend(ModelBackend):
 
@@ -34,7 +35,8 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
 	if user:
 		return {'is_new': False}
 
-	fields = dict((name, kwargs.get(name, details.get(name))) for name in ['first_name', 'last_name', 'password', 'email', 'username'])
+	fields = dict((name, kwargs.get(name, details.get(name))) for name in [
+		'first_name', 'last_name', 'password', 'email', 'username'])
 	if not fields:
 		return
 
@@ -52,7 +54,7 @@ def activate_user(backend, user, response, *args, **kwargs):
 		user.is_active = True
 		user.save()
 		if not user.userprofile.hubspot_contact:
-			create_or_update_contact_hubspot(user_id=user.id)
+			create_or_update_contact_hubspot.delay(user_id=user.id)
 
 
 def save_profile(backend, user, response, *args, **kwargs):
@@ -69,8 +71,6 @@ def save_profile(backend, user, response, *args, **kwargs):
 				img_temp.write(requests.get(image_url).content)
 				img_temp.flush()
 
-				profile.image.save("{email}_{filename}".format(email=user.email,
-				                                               filename=image_file.get('filename',
-				                                                                       'LinkedIn_image.jpeg')),
-				                   File(img_temp))
+				profile.image.save("{email}_{filename}".format(
+					email=user.email, filename=image_file.get('filename', 'LinkedIn_image.jpeg')), File(img_temp))
 				profile.save()

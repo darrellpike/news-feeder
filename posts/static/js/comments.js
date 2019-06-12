@@ -34,10 +34,11 @@ $(function () {
                 let commentSection;
                 let newComment;
                 let reply = form.parents('.comment-reply-new');
-                let is_article_comment = form.siblings('.article-comments-body').length;
+                let is_article_comment = form.parents('.article-new-comment').siblings('.article-comments-body').length;
                 if (is_article_comment) {
                     commentSection = $('.article-comments-body');
-                    newComment = commentSection.append(data);
+                    commentSection.append(data);
+                    newComment = commentSection.find('.comment:last-of-type');
                     newComment.animate({height: 'toggle'}, 450);
                 }
                 else if (reply.length) {

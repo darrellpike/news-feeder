@@ -5,7 +5,8 @@ from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordRese
 	ChangeUserImageForm, NewNewsSuggestionForm, NewCommentForm, CommentVoteForm
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
-from posts.utils import DeltaFirstPagePaginator, create_or_update_contact_hubspot, update_contact_property_hubspot
+from posts.utils import DeltaFirstPagePaginator
+from posts.tasks import create_or_update_contact_hubspot, update_contact_property_hubspot, get_feedly_article
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
@@ -17,6 +18,9 @@ from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from posts.models import FeedlyAPISettings
+import base64
+from django.contrib.auth import authenticate
 
 class AjaxableResponseMixin(object):
 	"""
@@ -68,6 +72,8 @@ class IndexView(generic.ListView):
 		latest_news = Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')[:5]
 		context['latest_news'] = latest_news
 		context['active'] = 'active'
+		from posts.tasks import get_feedly_articles
+		articles = get_feedly_articles()
 		return context
 
 
@@ -212,7 +218,7 @@ class CustomRegistrationView(RegistrationView):
 		new_user.is_active = False
 		new_user.save()
 
-		response = create_or_update_contact_hubspot(new_user.id, self.get_activation_key(new_user))
+		response = create_or_update_contact_hubspot.delay(new_user.id, self.get_activation_key(new_user))
 
 
 		return new_user
@@ -295,7 +301,7 @@ class CustomPasswordResetView(PasswordResetView):
 class CustomActivationView(ActivationView):
 	def activate(self, *args, **kwargs):
 		user = super().activate(*args, **kwargs)
-		update_contact_property_hubspot(user.email, 'email_confirmed', True)
+		update_contact_property_hubspot.delay(user.email, 'email_confirmed', True)
 		return user
 
 
@@ -435,7 +441,7 @@ def send_activation_again(request, email):
 		user = get_object_or_404(User, email=email)
 		if not user.is_active:
 			sent = False
-			response = create_or_update_contact_hubspot(user.id, user.get_activation_key())
+			response = create_or_update_contact_hubspot.delay(user.id, user.get_activation_key())
 			if response == 200:
 				sent = True
 			return SimpleTemplateResponse('django_registration/with_base/send_activation_again.html', context={
@@ -443,6 +449,32 @@ def send_activation_again(request, email):
 				'sent': sent
 			})
 	raise Http404
+
+
+def get_feedly_article(request):
+	user = None
+	if request.POST:
+		if "HTTP_AUTHORIZATION" in request.META:
+			auth = request.META["HTTP_AUTHORIZATION"].split()
+			if len(auth) == 2 and auth[0].lower() == "basic":
+				username, password = base64.b64decode(auth[1]).split(":")
+				user = authenticate(username=username, password=password)
+
+		if user is None or not user.is_superuser:
+			response = HttpResponse()
+			response.status_code = 401
+			response["WWW-Authenticate"] = 'Basic realm="Private area"'
+			return response
+		else:
+			content = request.json()
+			if content.get('type', '') == 'NewEntrySaved':
+				get_feedly_article.delay(content)
+	else:
+		response = HttpResponse()
+		response.status_code = 401
+		return response
+
+
 
 
 
