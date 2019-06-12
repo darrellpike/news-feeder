@@ -23,6 +23,7 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('WHN@dm!n/', admin.site.urls),
+    path('api/new_feedly_entry/', views.get_feedly_article),
     path('', views.IndexView.as_view(), name='index'),
     path('latest/', views.IndexLatestView.as_view(), name='index_latest'),
     path('popular/', views.IndexPopularView.as_view(), name='index_popular'),
@@ -56,8 +57,8 @@ urlpatterns = [
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        path('debug/', include(debug_toolbar.urls)),
-    ] + urlpatterns
+# if settings.DEBUG:
+#     import debug_toolbar
+#     urlpatterns = [
+#         path('debug/', include(debug_toolbar.urls)),
+#     ] + urlpatterns

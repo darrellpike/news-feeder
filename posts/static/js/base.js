@@ -165,7 +165,7 @@ $(function () {
                                 error_text += ' <a class="btn-link" href="/accounts/activate/send_again/' + email + '/">Send activation email again?</a>';
                             }
                             $('#non-field').html(error_text);
-                        } else  {
+                        } else {
                             var input = $('input[name=' + error + ']');
                             input.closest('.input-with-label').find('.error-text').html(errors[error]);
                             input.closest('.input-with-label').addClass('error');

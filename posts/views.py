@@ -6,7 +6,7 @@ from posts.forms import PostVoteForm, CustomRegistrationForm, CustomPasswordRese
 from django_registration.backends.activation.views import ActivationView
 from django.urls import reverse, reverse_lazy
 from posts.utils import DeltaFirstPagePaginator
-from posts.tasks import create_or_update_contact_hubspot, update_contact_property_hubspot
+from posts.tasks import create_or_update_contact_hubspot, update_contact_property_hubspot, get_feedly_article
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.db.models import Q
@@ -19,6 +19,8 @@ from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from posts.models import FeedlyAPISettings
+import base64
+from django.contrib.auth import authenticate
 
 class AjaxableResponseMixin(object):
 	"""
@@ -447,6 +449,32 @@ def send_activation_again(request, email):
 				'sent': sent
 			})
 	raise Http404
+
+
+def get_feedly_article(request):
+	user = None
+	if request.POST:
+		if "HTTP_AUTHORIZATION" in request.META:
+			auth = request.META["HTTP_AUTHORIZATION"].split()
+			if len(auth) == 2 and auth[0].lower() == "basic":
+				username, password = base64.b64decode(auth[1]).split(":")
+				user = authenticate(username=username, password=password)
+
+		if user is None or not user.is_superuser:
+			response = HttpResponse()
+			response.status_code = 401
+			response["WWW-Authenticate"] = 'Basic realm="Private area"'
+			return response
+		else:
+			content = request.json()
+			if content.get('type', '') == 'NewEntrySaved':
+				get_feedly_article.delay(content)
+	else:
+		response = HttpResponse()
+		response.status_code = 401
+		return response
+
+
 
 
 

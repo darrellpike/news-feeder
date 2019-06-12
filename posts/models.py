@@ -206,6 +206,7 @@ class NewsAggregator(models.Model):
 class Post(models.Model):
 	title = models.CharField(max_length=85)
 	submitter = models.ForeignKey(User, on_delete=models.CASCADE)
+	author = models.CharField(max_length=CHAR_FIELD_MAX_LENGTH, blank=True, null=True)
 	submit_time = models.DateTimeField(default=timezone.now)
 	news_aggregator = models.ForeignKey('NewsAggregator', on_delete=models.CASCADE, blank=True, null=True)
 	url = models.URLField(max_length=300, blank=True)

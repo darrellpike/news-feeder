@@ -110,6 +110,22 @@ class FeedlyClient(object):
         self.feedlyConfig.set_api_requests_remained(res.headers)
         return res.json()
 
+    def get_entry(self, access_token, entry_id):
+        """tag an existing entry """
+        headers = {'Authorization': 'OAuth ' + access_token}
+        quest_url = self._get_endpoint('v3/entries/'  +  quote_plus(entry_id))
+        # data = dict(
+        #     entryId=entry_id
+        # )
+        res = requests.put(url=quest_url, headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.put(url=quest_url, headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+        return res.json()
+
     def get_user_subscriptions(self, access_token):
         """:returns list of user subscriptions"""
         headers = {'Authorization': 'OAuth ' + access_token}
@@ -227,6 +243,28 @@ class FeedlyClient(object):
             action="markAsRead",
             type="entries",
             entryIds=entry_ids,
+        )
+        res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
+        self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        if res.status_code == 401:
+            update_access_token_feedly()
+            res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
+            self.feedlyConfig.set_api_requests_remained(res.headers)
+
+        return res
+
+    def mark_tag_read(self, access_token, tag_ids, last_read_entry_id):
+        """Mark one or multiple articles as read"""
+        headers = {'content-type': 'application/json',
+                   'Authorization': 'OAuth ' + access_token
+                   }
+        quest_url = self._get_endpoint('v3/markers')
+        params = dict(
+            action="markAsRead",
+            type="tags",
+            tagIds=tag_ids,
+            lastReadEntryId=last_read_entry_id,
         )
         res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
         self.feedlyConfig.set_api_requests_remained(res.headers)
