@@ -5,15 +5,18 @@ ALLOWED_HOSTS = ["news.viceroy.tech"]
 # Database settings
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        "NAME": 'news_aggregator',  # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        "USER": "news_aggregator_user",
-        "PASSWORD": "&?6<&MUXr3#r^,",
-        "HOST": "localhost",  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        "PORT": "5432",  # Set to empty string for default.
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': os.environ.get('SQL_USER', 'user'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+        'PORT': os.environ.get('SQL_PORT', '5432'),
     }
 }
+
+DEBUG = int(os.environ.get('DEBUG', default=0))
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
@@ -32,20 +35,14 @@ LOGGING = {
     'handlers': {
         'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django_logger/logs.log'),
-        },
-        'celery': {
-            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, '../logs/celery.log'),
-            'formatter': 'simple',
+            'filename': os.path.join(BASE_DIR, '../logs/django.log'),
             'maxBytes': 1024 * 1024 * 100,  # 100 mb
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'celery'],
+            'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },

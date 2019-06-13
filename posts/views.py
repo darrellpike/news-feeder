@@ -18,8 +18,8 @@ from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from posts.models import FeedlyAPISettings
-import base64
+from django.views.decorators.csrf import csrf_exempt
+import base64, json
 from django.contrib.auth import authenticate
 
 class AjaxableResponseMixin(object):
@@ -72,8 +72,6 @@ class IndexView(generic.ListView):
 		latest_news = Post.objects.filter(submit_time__lt=timezone.now()).order_by('-submit_time')[:5]
 		context['latest_news'] = latest_news
 		context['active'] = 'active'
-		from posts.tasks import get_feedly_articles
-		articles = get_feedly_articles()
 		return context
 
 
@@ -450,25 +448,31 @@ def send_activation_again(request, email):
 			})
 	raise Http404
 
-
+@csrf_exempt
 def get_feedly_article(request):
 	user = None
-	if request.POST:
-		if "HTTP_AUTHORIZATION" in request.META:
-			auth = request.META["HTTP_AUTHORIZATION"].split()
+	if request.method == 'POST':
+		http_auth = request.META.get('HTTP_AUTHORIZATION', False)
+		if http_auth:
+			auth = http_auth.split()
 			if len(auth) == 2 and auth[0].lower() == "basic":
-				username, password = base64.b64decode(auth[1]).split(":")
+				username, password = base64.b64decode(auth[1]).decode('ascii').split(':')
 				user = authenticate(username=username, password=password)
 
 		if user is None or not user.is_superuser:
 			response = HttpResponse()
 			response.status_code = 401
+			response.write('Unauthorized')
 			response["WWW-Authenticate"] = 'Basic realm="Private area"'
 			return response
 		else:
-			content = request.json()
+			content = json.loads(request.body)
 			if content.get('type', '') == 'NewEntrySaved':
 				get_feedly_article.delay(content)
+			response = HttpResponse()
+			response.status_code = 200
+			response.write('Success!')
+			return response
 	else:
 		response = HttpResponse()
 		response.status_code = 401
