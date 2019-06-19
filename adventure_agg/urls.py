@@ -23,7 +23,7 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('WHN@dm!n/', admin.site.urls),
-    path('api/new_feedly_entry/', views.get_feedly_article),
+    path('api/new_feedly_entry/', views.feedly_hook),
     path('', views.IndexView.as_view(), name='index'),
     path('latest/', views.IndexLatestView.as_view(), name='index_latest'),
     path('popular/', views.IndexPopularView.as_view(), name='index_popular'),
