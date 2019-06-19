@@ -6,6 +6,11 @@ from django.utils import timezone
 from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db import DatabaseError
+# from .utils import *
+from django.db.models import Max
+import random
+import requests
 from django.core import signing
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill, ResizeToFit
@@ -204,12 +209,12 @@ class NewsAggregator(models.Model):
 
 
 class Post(models.Model):
-	title = models.CharField(max_length=85)
+	title = models.CharField(max_length=150)
 	submitter = models.ForeignKey(User, on_delete=models.CASCADE)
 	author = models.CharField(max_length=CHAR_FIELD_MAX_LENGTH, blank=True, null=True)
 	submit_time = models.DateTimeField(default=timezone.now)
 	news_aggregator = models.ForeignKey('NewsAggregator', on_delete=models.CASCADE, blank=True, null=True)
-	url = models.URLField(max_length=300, blank=True)
+	url = models.URLField(max_length=600, blank=True, null=True)
 	label_for_url = models.CharField(max_length=85, blank=True, help_text=_(
 		"If post don't have news_aggregator, this label will replace news aggregator name"))
 	text = models.TextField(blank=True)
@@ -379,3 +384,4 @@ class FeedlyAPISettings(SingletonModel):
 
 	class Meta:
 		verbose_name = "Feedly Configuration"
+

@@ -117,12 +117,12 @@ class FeedlyClient(object):
         # data = dict(
         #     entryId=entry_id
         # )
-        res = requests.put(url=quest_url, headers=headers)
+        res = requests.get(url=quest_url, headers=headers)
         self.feedlyConfig.set_api_requests_remained(res.headers)
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.put(url=quest_url, headers=headers)
+            res = requests.get(url=quest_url, headers=headers)
             self.feedlyConfig.set_api_requests_remained(res.headers)
         return res.json()
 

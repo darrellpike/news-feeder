@@ -10,3 +10,5 @@ db.sqlite3
 manage.py
 media/
 adventure_agg/static_root/
+hooks/
+
