@@ -15,6 +15,7 @@ DATABASES = {
     }
 }
 
+
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 # Email settings
@@ -32,19 +33,14 @@ LOGGING = {
     'handlers': {
         'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django_logger/logs.log'),
-        },
-        'celery': {
-            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, '../logs/celery.log'),
+            'filename': os.path.join(BASE_DIR, '../logs/django.log'),
             'maxBytes': 1024 * 1024 * 100,  # 100 mb
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'celery'],
+            'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },
