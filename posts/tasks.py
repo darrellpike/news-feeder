@@ -297,10 +297,11 @@ def get_feedly_article(request_content):
 	feedly_settings = FeedlyAPISettings.get_solo()
 	if feedly_settings.api_requests_remained != 0:
 		feedly = feedly_settings.get_client()
-		article = feedly.get_entry(feedly_settings.FEEDLY_API_ACCESS_TOKEN, request_content.get('entryId'))
+		article = feedly.get_entry(feedly_settings.FEEDLY_API_ACCESS_TOKEN, request_content.get('entryId'))[0]
 		try:
 			post = Post.objects.get(title=request_content.get('title', ''))
 		except Post.DoesNotExist:
+			from posts.models import NewsAggregator
 			try:
 				news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
 			except NewsAggregator.DoesNotExist:
@@ -312,7 +313,8 @@ def get_feedly_article(request_content):
 				soup = BeautifulSoup(index_response.content, features="html5lib")
 				favicon_elements = [
 					re.compile('(?i)apple-touch-icon([\-0-9a-zA-Z]*)'),
-					re.compile('(?i)shortcut[ -_]icon')
+					re.compile('(?i)shortcut[ -_]icon'),
+					re.compile('(?i)icon')
 				]
 				for element in favicon_elements:
 					link_elements = soup.head.find(rel=element)
@@ -335,7 +337,7 @@ def get_feedly_article(request_content):
 					img_temp = NamedTemporaryFile(delete=True)
 					img_temp.write(image_response.content)
 					img_temp.flush()
-					news_aggregator.logo.save(File(img_temp, name=url.netloc + "_logo"))
+					news_aggregator.logo.save(url.netloc + "_logo", File(img_temp, name=url.netloc + "_logo"))
 					news_aggregator.save()
 
 			if request_content.get('title', False) and news_aggregator:
