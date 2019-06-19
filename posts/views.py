@@ -449,14 +449,14 @@ def send_activation_again(request, email):
 	raise Http404
 
 @csrf_exempt
-def get_feedly_article(request):
+def feedly_hook(request):
 	user = None
 	if request.method == 'POST':
 		http_auth = request.META.get('HTTP_AUTHORIZATION', False)
 		if http_auth:
 			auth = http_auth.split()
 			if len(auth) == 2 and auth[0].lower() == "basic":
-				username, password = base64.b64decode(auth[1]).decode('ascii').split(':')
+				username, password = base64.b64decode(auth[1]).decode('utf-8').split(':')
 				user = authenticate(username=username, password=password)
 
 		if user is None or not user.is_superuser:
