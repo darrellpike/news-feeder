@@ -46,7 +46,7 @@
             <span class="text-separator d-none d-md-inline d-lg-inline d-xl-inline"></span>
             <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">{{ article.time_since_submit|smooth_timedelta }} ago</span>
             <span class="text-separator d-none d-md-inline d-lg-inline d-xl-inline"></span>
-            <a href="{{ article.url }}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">
+            <a href="{% if article.news_aggregator %}{{ article.news_aggregator.url }}{% else %}{{ article.url }}{% endif %}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">
                 {% if article.news_aggregator %}
                     {{ article.news_aggregator.name }}
                 {% else %}
