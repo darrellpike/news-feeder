@@ -828,8 +828,6 @@ nav
   flex-flow: column wrap
   margin: 0
 
-  a
-    width: auto
 
 .latest-news .article .article-title
   font-family: gt_americabold
@@ -1584,6 +1582,9 @@ nav
   flex: 1 0 220px
   max-width: 400px
 
+.latest-news .article .news-aggregator-link
+  width: 44px
+
 .article-container
   flex: 1 0 436px
   max-width: 820px
@@ -1700,6 +1701,12 @@ nav
 
   .modal-lg
     max-width: 820px
+
+  .latest-news .article .news-aggregator-link
+    width: 62px
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
 
 
 // Mobile styles
@@ -1970,6 +1977,9 @@ nav
   .latest-container
     max-width: 333px
 
+  .latest-news .article .news-aggregator-link
+    width: 105px
+
 
 @media (min-width: 1400px)
   .main-content
@@ -1981,6 +1991,9 @@ nav
 
   .latest-container
     max-width: 400px
+
+  .latest-news .article .news-aggregator-link
+    width: 172px
 
 @media (max-width: 1199.98px)
   .header-title
@@ -2017,6 +2030,10 @@ nav
 
   .latest-news
     .article
+      .news-aggregator-link
+        text-overflow: ellipsis
+        overflow: hidden
+        white-space: nowrap
       .article-title
           display: block
           height: calc(100% - 38px)
