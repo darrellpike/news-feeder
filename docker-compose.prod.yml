@@ -7,7 +7,8 @@ services:
       context: .
       dockerfile: ./docker/web/Dockerfile.prod
     environment:
-      - SECRET_KEY
+      - SECRET_KEY=_h+@=0j*)3!ez=a&mek5syb99&md=t^wby$388%ke&*am-@93+
+      - DJANGO_SETTINGS_MODULE=adventure_agg.settings.production
     command: gunicorn adventure_agg.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static:/srv/www/news-aggregator/adventure_agg/static_root/
