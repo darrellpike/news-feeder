@@ -1,4 +1,5 @@
 from .base import *
+import sys
 
 ALLOWED_HOSTS = ["news.viceroy.tech"]
 
@@ -16,6 +17,9 @@ DATABASES = {
 }
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+
+SECRET_KEY = os.getenv('SECRET_KEY') or sys.exit('SECRET_KEY environment variable is not set.')
 
 # Email settings
 # We are using HubSpot as email backend

@@ -1,18 +1,28 @@
 FROM python:3.7-alpine
 
-ENV PYTHONUNBUFFERED 1
+RUN mkdir -p /srv/www/news-aggregator
+WORKDIR /srv/www/news-aggregator
+
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV DJANGO_SETTINGS_MODULE=adventure_agg.settings.local
+ENV PYTHONUNBUFFERED 1
+
+# install psycopg2, uwsgi,pillow
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev build-base linux-headers pkgconf \
+    autoconf automake libtool make postgresql-dev postgresql-client openssl-dev && \
+    apk add postgresql-libs postgresql-client && apk add --no-cache jpeg-dev zlib-dev \
+    # Предотвращаем неудачную компиляцию uWSGI внутри Docker, см. https://git.io/v1ve3
+    (while true; do pip --no-cache-dir install psycopg2 pillow pycrypto==2.6 && break; done)
+
+RUN pip install --upgrade pip
+COPY ./requirements.txt /srv/www/news-aggregator/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY ./entrypoint.prod.sh /srv/www/news-aggregator/entrypoint.prod.sh
 
 COPY . /srv/www/news-aggregator
-WORKDIR /srv/www/news-aggregator
-RUN pip install --upgrade pip
 
-# install psycopg2
-RUN apk update \
-    && apk add --virtual build-deps gcc python3-dev musl-dev \
-    && apk add postgresql-dev \
-    && pip install psycopg2 \
-    && apk del build-deps
+RUN SECRET_KEY=build ./manage.py collectstatic --noinput && \
+    ./manage.py makemessages && \
+    apk del .build-deps
 
-RUN pip install -r requirements.txt
+ENTRYPOINT ["/srv/www/news-aggregator/entrypoint.prod.sh"]
