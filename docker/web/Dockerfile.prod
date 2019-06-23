@@ -20,8 +20,6 @@ COPY ./entrypoint.prod.sh /srv/www/news-aggregator/entrypoint.prod.sh
 
 COPY . /srv/www/news-aggregator
 
-RUN SECRET_KEY=build ./manage.py collectstatic --noinput && \
-    ./manage.py makemessages && \
-    apk del .build-deps
+RUN apk del .build-deps
 
 ENTRYPOINT ["/srv/www/news-aggregator/entrypoint.prod.sh"]
