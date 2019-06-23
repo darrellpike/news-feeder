@@ -22,14 +22,14 @@ before_script:
 build:
     stage: build
     script:
-        - docker-compose build
-        - docker-compose push
+        - docker-compose -f docker-compose.prod.yml build
+        - docker-compose -f docker-compose.prod.yml push
 
 test:
     stage: test
     script:
-        - docker-compose pull test
-        - docker-compose run test
+        - docker-compose -f docker-compose.prod.yml pull test
+        - docker-compose -f docker-compose.prod.yml run test
 
 deploy:
     stage: deploy
