@@ -204,152 +204,98 @@ def update_access_token_feedly():
 def get_feedly_articles():
 	from posts.models import FeedlyAPISettings, Post, NewsAggregator
 	from django.contrib.auth import get_user_model
+	from posts.utils import get_favicon
 	feedly_settings = FeedlyAPISettings.get_solo()
 	tag_on_feedly = 'WHN'
-	if feedly_settings.api_requests_remained != 0:
-		feedly = feedly_settings.get_client()
-		data = feedly.get_enterprise_user_tags(feedly_settings.FEEDLY_API_ACCESS_TOKEN)
-		whn_tag_id = False
-		for i in data:
-			label = i.get('label', False)
-			if label and label == tag_on_feedly:
-				whn_tag_id = i.get('id', False)
-				break
-		if whn_tag_id:
-			articles = feedly.get_feed_content(
-				feedly_settings.FEEDLY_API_ACCESS_TOKEN,
-				whn_tag_id
-			)
-			if articles.get('items', False):
-				admin = get_user_model().objects.filter(is_superuser=True)[0]
-				last_entry_id = ''
-				for article in articles['items']:
+	feedly = feedly_settings.get_client()
+	data = feedly.get_enterprise_user_tags(feedly_settings.FEEDLY_API_ACCESS_TOKEN)
+	whn_tag_id = False
+	for i in data:
+		label = i.get('label', False)
+		if label and label == tag_on_feedly:
+			whn_tag_id = i.get('id', False)
+			break
+	if whn_tag_id:
+		articles = feedly.get_feed_content(
+			feedly_settings.FEEDLY_API_ACCESS_TOKEN,
+			whn_tag_id
+		)
+		if articles.get('items', False):
+			admin = get_user_model().objects.filter(is_superuser=True)[0]
+			last_entry_id = ''
+			for article in articles['items']:
+				try:
+					post = Post.objects.get(title=article.get('title', ''))
+				except Post.DoesNotExist:
 					try:
-						post = Post.objects.get(title=article.get('title', ''))
-					except Post.DoesNotExist:
-						try:
-							news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
-						except NewsAggregator.DoesNotExist:
-							news_aggregator = NewsAggregator.objects.create(name=article.get('origin').get('title'),
-							                                                url=article.get('origin').get('htmlUrl'))
+						news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
+					except NewsAggregator.DoesNotExist:
+						news_aggregator = NewsAggregator.objects.create(name=article.get('origin').get('title'),
+						                                                url=article.get('origin').get('htmlUrl'))
+
+						temp_image = get_favicon(article.get('origin').get('htmlUrl'))
+						if temp_image:
 							url = urlparse(article.get('origin').get('htmlUrl'))
-							index_url = url[0] + "://" + url[1]
-							index_response = requests.get(index_url)
-							soup = BeautifulSoup(index_response.content, features="html5lib")
-							favicon_elements = [
-								re.compile('(?i)apple-touch-icon([\-0-9a-zA-Z]*)'),
-								re.compile('(?i)shortcut[ -_]icon')
-							]
-							for element in favicon_elements:
-								link_elements = soup.head.find(rel=element)
-								if link_elements:
-									for link_element in link_elements:
-										try:
-											image_url_parse = urlparse(link_element['href'])
-											image_url = ''
-											for id, result in enumerate(image_url_parse[:3]):
-												image_url += result if result else url[id]
-											image_response = requests.get(image_url)
-											if image_response == 200:
-												break
-										except TypeError:
-											continue
-							else:
-								image_response = requests.get(index_url + '/favicon.ico')
+							news_aggregator.logo.save(url.netloc + "_logo", File(temp_image))
+							news_aggregator.save()
 
-							if image_response:
-								img_temp = NamedTemporaryFile(delete=True)
-								img_temp.write(image_response.content)
-								img_temp.flush()
-								news_aggregator.logo.save(url.netloc + "_logo", File(img_temp))
-								news_aggregator.save()
+					if article.get('title', False) and news_aggregator and article.get('unread', False):
+						post = Post.objects.create(submitter=admin, title=article.get('title'),
+						                           news_aggregator=news_aggregator,
+						                           submit_time=datetime.datetime.fromtimestamp(article.get('published')/1000.0),
+						                           url=article.get('canonicalUrl', None),)
+					else:
+						raise Exception("Article doesn't have title.")
 
+				article_image = article.get('visual', False)
+				if article_image:
+					post.image_url = article_image.get('url', None)
+					post.save()
+				last_entry_id = article.get('id')
 
-						if article.get('title', False) and news_aggregator and article.get('unread', False):
-							post = Post.objects.create(submitter=admin, title=article.get('title'),
-						                    news_aggregator=news_aggregator,
-						                    submit_time=datetime.datetime.fromtimestamp(article.get('published')/1000.0),
-							                url=article.get('canonicalUrl', None),)
-						else:
-							raise Exception("Article doesn't have title.")
+			feedly.mark_tag_read(feedly_settings.FEEDLY_API_ACCESS_TOKEN, whn_tag_id, last_entry_id)
 
-					article_image = article.get('visual', False)
-					if article_image:
-						post.image_url = article_image.get('url', None)
-						post.save()
-					last_entry_id = article.get('id')
-
-				feedly.mark_tag_read(feedly_settings.FEEDLY_API_ACCESS_TOKEN, whn_tag_id, last_entry_id)
-
-
-			else:
-				raise Exception("No entries are found with '%s' tag." % tag_on_feedly)
 		else:
-			raise Exception("Can't find '%s' tag!" % tag_on_feedly)
+			raise Exception("No entries are found with '%s' tag." % tag_on_feedly)
 	else:
-		raise Exception("API requests reached maximum.")
+		raise Exception("Can't find '%s' tag!" % tag_on_feedly)
 
 
 @shared_task
 def get_feedly_article(request_content):
 	from posts.models import FeedlyAPISettings, Post, NewsAggregator
 	from django.contrib.auth import get_user_model
+	from posts.utils import get_favicon
 	feedly_settings = FeedlyAPISettings.get_solo()
-	if feedly_settings.api_requests_remained != 0:
-		feedly = feedly_settings.get_client()
-		article = feedly.get_entry(feedly_settings.FEEDLY_API_ACCESS_TOKEN, request_content.get('entryId'))[0]
+	feedly = feedly_settings.get_client()
+	article = feedly.get_entry(feedly_settings.FEEDLY_API_ACCESS_TOKEN, request_content.get('entryId'))[0]
+	try:
+		Post.objects.get(title=request_content.get('title', None))
+	except Post.DoesNotExist:
 		try:
-			post = Post.objects.get(title=request_content.get('title', ''))
-		except Post.DoesNotExist:
-			from posts.models import NewsAggregator
-			try:
-				news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
-			except NewsAggregator.DoesNotExist:
-				news_aggregator = NewsAggregator.objects.create(name=article.get('origin').get('title'),
-				                                                url=article.get('origin').get('htmlUrl'))
+			news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
+		except NewsAggregator.DoesNotExist:
+			news_aggregator = NewsAggregator.objects.create(name=article.get('origin').get('title'),
+			                                                url=article.get('origin').get('htmlUrl'))
+			temp_image = get_favicon(article.get('origin').get('htmlUrl'))
+			if temp_image:
 				url = urlparse(article.get('origin').get('htmlUrl'))
-				index_url = url[0] + "://" + url[1]
-				index_response = requests.get(index_url)
-				soup = BeautifulSoup(index_response.content, features="html5lib")
-				favicon_elements = [
-					re.compile('(?i)apple-touch-icon([\-0-9a-zA-Z]*)'),
-					re.compile('(?i)shortcut[ -_]icon'),
-					re.compile('(?i)icon')
-				]
-				for element in favicon_elements:
-					link_elements = soup.head.find(rel=element)
-					if link_elements:
-						for link_element in link_elements:
-							try:
-								image_url_parse = urlparse(link_element['href'])
-								image_url = ''
-								for id, result in enumerate(image_url_parse[:3]):
-									image_url += result if result else url[id]
-								image_response = requests.get(image_url)
-								if image_response == 200:
-									break
-							except TypeError:
-								continue
-				else:
-					image_response = requests.get(index_url + '/favicon.ico')
+				news_aggregator.logo.save(
+					url.netloc + "_logo",
+					File(temp_image,
+					     name=url.netloc + "_logo"))
+				news_aggregator.save()
 
-				if image_response:
-					img_temp = NamedTemporaryFile(delete=True)
-					img_temp.write(image_response.content)
-					img_temp.flush()
-					news_aggregator.logo.save(url.netloc + "_logo", File(img_temp, name=url.netloc + "_logo"))
-					news_aggregator.save()
+		if request_content.get('title', False) and news_aggregator:
+			post = Post.objects.create(submitter=get_user_model().objects.filter(is_superuser=True)[0],
+			                           author=request_content.get('author', None),
+			                           title=request_content.get('title'),
+			                           news_aggregator=news_aggregator,
+			                           submit_time=datetime.datetime.fromtimestamp(
+				                           request_content.get('publishedTimestamp') / 1000.0),
+			                           url=request_content.get('entryUrl', None))
 
-			if request_content.get('title', False) and news_aggregator:
-				post = Post.objects.create(submitter=get_user_model().objects.filter(is_superuser=True)[0],
-				                           author=request_content.get('author', None),
-				                           title=request_content.get('title'),
-				                           news_aggregator=news_aggregator,
-				                           submit_time=datetime.datetime.fromtimestamp(
-					                           request_content.get('publishedTimestamp') / 1000.0),
-				                           url=request_content.get('entryUrl', None))
-
-				article_image = request_content.get('visualUrl', None)
-				if article_image:
-					post.image_url = article_image
-					post.save()
+			article_image = request_content.get('visualUrl', None)
+			if article_image:
+				post.image_url = article_image
+				post.save()

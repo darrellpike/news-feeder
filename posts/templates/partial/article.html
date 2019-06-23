@@ -10,14 +10,14 @@
     </div>
     {% if article.news_aggregator.logo %}
         <div class="news-aggregator-image">
-            <a href="{{ article.news_aggregator.url }}">
+            <a href="{{ article.news_aggregator.url }}" target="_blank">
                 <img alt="{{ article.news_aggregator }}" src="{{ article.news_aggregator.logo.url }}" />
             </a>
         </div>
     {% endif %}
     <div class="article-body">
         <div class="article-statistics d-md-none d-lg-none">
-            <a href="{{ article.url }}" class="news-aggregator-link">
+            <a href="{{ article.url }}" target="_blank" class="news-aggregator-link">
                 {% if article.news_aggregator %}
                     {{ article.news_aggregator.name }}
                 {% else %}
@@ -46,7 +46,7 @@
             <span class="text-separator d-none d-md-inline d-lg-inline d-xl-inline"></span>
             <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">{{ article.time_since_submit|smooth_timedelta }} ago</span>
             <span class="text-separator d-none d-md-inline d-lg-inline d-xl-inline"></span>
-            <a href="{{ article.url }}" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">
+            <a href="{% if article.news_aggregator %}{{ article.news_aggregator.url }}{% else %}{{ article.url }}{% endif %}" target="_blank" class="news-aggregator-link d-none d-md-inline d-lg-inline d-xl-inline">
                 {% if article.news_aggregator %}
                     {{ article.news_aggregator.name }}
                 {% else %}

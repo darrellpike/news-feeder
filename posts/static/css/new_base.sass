@@ -366,6 +366,155 @@ button:focus
     color: $white-text-color
     text-decoration-line: none
 
+// Checkbox styles
+.checkbox
+  position: relative
+  margin-top: 20px
+  padding-bottom: 20px
+  border-bottom: 1px solid #DEE1E4
+  input[type="checkbox"]
+    & ~ .error-text
+      opacity: 0
+      font-size: 12px
+      line-height: 12px
+      position: absolute
+      bottom: 0
+      left: 0
+
+    &.error ~ .error-text
+      opacity: 1
+    display: none
+
+[type="checkbox"]
+  &:not(:checked) + label, &:checked + label
+    cursor: pointer
+    padding-left: 24px
+    position: relative
+
+  &:not(:checked) + label::before, &:checked + label::before
+    background: transparent none repeat scroll 0 0
+    border: 2px solid #DEE1E4
+    content: ""
+    height: 16px
+    width: 16px
+    left: 0
+    top: 0
+    bottom: 0
+    position: absolute
+    margin: auto
+    transition: all 0.2s ease 0s
+
+  &:not(:checked) + label::after, &:checked + label::after
+    content: url("/static/images/Stroke_196.svg")
+    left: 3px
+    top: calc(50% - 7px)
+    bottom: 0
+    margin: auto
+    font-size: 16px
+    line-height: 0.8
+    position: absolute
+    transition: all 0.2s ease 0s
+
+  &:checked + label::before
+    background: #5A1BE0
+    border: none
+
+  &:not(:checked) + label::after
+    opacity: 0
+    transform: scale(0)
+
+  &:disabled
+    &:not(:checked) + label::before, &:checked + label::before
+      background: #DEE1E4
+    &:not(:checked) + label::after, &:checked + label::after
+      content: url("/static/images/Stroke_196_grey.svg")
+
+  &:active
+    &:checked + label::before, &:not(:checked) + label::before
+      outline: rgba(90, 27, 224, 0.15) solid 2px
+
+    &:checked + label::before
+      background: #5A1BE0
+      border: none
+
+    &:not(:checked) + label::before
+      background: rgba(90, 27, 224, 0.15)
+      border: 2px solid #FFFFFF
+
+    &:hover:not(:checked) + label::before
+      background: rgba(90, 27, 224, 0.1)
+
+    &:hover:checked + label::before
+      background: rgba(90, 27, 224, 0.8)
+      outline-color: rgba(90, 27, 224, 0.15)
+      opacity: 1!important
+
+  &:hover
+    &:not(:checked) + label::before
+      background: rgba(90, 27, 224, 0.1)
+
+    &:checked + label::before
+      opacity: 0.8
+
+  // Error checkbox
+  &.error
+    &:not(:checked) + label::before, &:checked + label::before
+      border-color: #FF1F1F
+
+    &:checked + label::before
+      background-color: #FF1F1F
+
+    &:active
+      &:checked + label::before, &:not(:checked) + label::before
+        outline-color: rgba(255, 31, 31, 0.15)
+
+      &:checked + label::before
+        background-color: #FF1F1F
+
+      &:not(:checked) + label::before
+        background-color: rgba(255, 31, 31, 0.15)
+        border-color: #FF1F1F
+
+      &:hover:not(:checked) + label::before
+        background: rgba(255, 31, 31, 0.1)
+
+      &:hover:checked + label::before
+        background: rgba(255, 31, 31, 0.8)
+        outline-color: rgba(255, 31, 31, 0.15)
+        opacity: 1!important
+
+    &:disabled
+      &:not(:checked) + label::before, &:checked + label::before
+        background: rgba(255, 31, 31, 0.15)
+
+      &:not(:checked) + label::after, &:checked + label::after
+        content: url("/static/images/Stroke_196.svg")
+
+      &:not(:checked) + label::before
+        border: 2px solid rgba(255, 31, 31, 0.25)
+
+      &:checked + label::before
+        background: rgba(255, 31, 31, 0.25)
+
+    &:hover
+      &:not(:checked) + label::before
+        background: rgba(255, 31, 31, 0.1)
+
+      &:checked + label::before
+        opacity: 0.8
+
+
+
+.radio label, .checkbox label
+  cursor: pointer
+  color: #888888
+  padding-left: 24px
+  font-size: 14px
+  line-height: 20px
+  margin-bottom: 0
+  display: inline-block
+
+
 // Header styles
 header
     background-color: $primary-color
@@ -792,7 +941,7 @@ nav
   text-decoration: underline
 
 .btn-link
-  font-family: gt_americaregular
+  font-family: gt_americaregular, Arial
   display: inline-block
   color: $primary-color
 
@@ -828,8 +977,6 @@ nav
   flex-flow: column wrap
   margin: 0
 
-  a
-    width: auto
 
 .latest-news .article .article-title
   font-family: gt_americabold
@@ -1388,6 +1535,8 @@ nav
   .modal-content
     border: 0
     border-radius: 2px
+    .btn-link
+      font-weight: bolder
     .modal-header
       border-bottom: none
       padding: 9px 8px 6px 8px
@@ -1548,6 +1697,7 @@ nav
   margin-bottom: 8px
   font-size: 16px
   line-height: 16px
+  transition: opacity 1s
 
 // Error in field
 .input-with-label
@@ -1583,6 +1733,9 @@ nav
 .latest-container
   flex: 1 0 220px
   max-width: 400px
+
+.latest-news .article .news-aggregator-link
+  width: 44px
 
 .article-container
   flex: 1 0 436px
@@ -1700,6 +1853,12 @@ nav
 
   .modal-lg
     max-width: 820px
+
+  .latest-news .article .news-aggregator-link
+    width: 62px
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
 
 
 // Mobile styles
@@ -1954,6 +2113,11 @@ nav
           button:first-of-type
             margin-bottom: 8px
 
+    .checkbox
+      [type="checkbox"] ~ .error-text
+        bottom: -8px!important
+
+
 
 
 @media (min-width: 1200px)
@@ -1970,6 +2134,9 @@ nav
   .latest-container
     max-width: 333px
 
+  .latest-news .article .news-aggregator-link
+    width: 105px
+
 
 @media (min-width: 1400px)
   .main-content
@@ -1981,6 +2148,9 @@ nav
 
   .latest-container
     max-width: 400px
+
+  .latest-news .article .news-aggregator-link
+    width: 172px
 
 @media (max-width: 1199.98px)
   .header-title
@@ -2017,6 +2187,10 @@ nav
 
   .latest-news
     .article
+      .news-aggregator-link
+        text-overflow: ellipsis
+        overflow: hidden
+        white-space: nowrap
       .article-title
           display: block
           height: calc(100% - 38px)

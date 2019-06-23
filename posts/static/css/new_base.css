@@ -364,6 +364,148 @@ button:focus {
   text-decoration-line: none;
 }
 
+.checkbox {
+  position: relative;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #DEE1E4;
+}
+.checkbox input[type=checkbox] {
+  display: none;
+}
+.checkbox input[type=checkbox] ~ .error-text {
+  opacity: 0;
+  font-size: 12px;
+  line-height: 12px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.checkbox input[type=checkbox].error ~ .error-text {
+  opacity: 1;
+}
+
+[type=checkbox]:not(:checked) + label, [type=checkbox]:checked + label {
+  cursor: pointer;
+  padding-left: 24px;
+  position: relative;
+}
+[type=checkbox]:not(:checked) + label::before, [type=checkbox]:checked + label::before {
+  background: transparent none repeat scroll 0 0;
+  border: 2px solid #DEE1E4;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  margin: auto;
+  transition: all 0.2s ease 0s;
+}
+[type=checkbox]:not(:checked) + label::after, [type=checkbox]:checked + label::after {
+  content: url("/static/images/Stroke_196.svg");
+  left: 3px;
+  top: calc(50% - 7px);
+  bottom: 0;
+  margin: auto;
+  font-size: 16px;
+  line-height: 0.8;
+  position: absolute;
+  transition: all 0.2s ease 0s;
+}
+[type=checkbox]:checked + label::before {
+  background: #5A1BE0;
+  border: none;
+}
+[type=checkbox]:not(:checked) + label::after {
+  opacity: 0;
+  transform: scale(0);
+}
+[type=checkbox]:disabled:not(:checked) + label::before, [type=checkbox]:disabled:checked + label::before {
+  background: #DEE1E4;
+}
+[type=checkbox]:disabled:not(:checked) + label::after, [type=checkbox]:disabled:checked + label::after {
+  content: url("/static/images/Stroke_196_grey.svg");
+}
+[type=checkbox]:active:checked + label::before, [type=checkbox]:active:not(:checked) + label::before {
+  outline: rgba(90, 27, 224, 0.15) solid 2px;
+}
+[type=checkbox]:active:checked + label::before {
+  background: #5A1BE0;
+  border: none;
+}
+[type=checkbox]:active:not(:checked) + label::before {
+  background: rgba(90, 27, 224, 0.15);
+  border: 2px solid #FFFFFF;
+}
+[type=checkbox]:active:hover:not(:checked) + label::before {
+  background: rgba(90, 27, 224, 0.1);
+}
+[type=checkbox]:active:hover:checked + label::before {
+  background: rgba(90, 27, 224, 0.8);
+  outline-color: rgba(90, 27, 224, 0.15);
+  opacity: 1 !important;
+}
+[type=checkbox]:hover:not(:checked) + label::before {
+  background: rgba(90, 27, 224, 0.1);
+}
+[type=checkbox]:hover:checked + label::before {
+  opacity: 0.8;
+}
+[type=checkbox].error:not(:checked) + label::before, [type=checkbox].error:checked + label::before {
+  border-color: #FF1F1F;
+}
+[type=checkbox].error:checked + label::before {
+  background-color: #FF1F1F;
+}
+[type=checkbox].error:active:checked + label::before, [type=checkbox].error:active:not(:checked) + label::before {
+  outline-color: rgba(255, 31, 31, 0.15);
+}
+[type=checkbox].error:active:checked + label::before {
+  background-color: #FF1F1F;
+}
+[type=checkbox].error:active:not(:checked) + label::before {
+  background-color: rgba(255, 31, 31, 0.15);
+  border-color: #FF1F1F;
+}
+[type=checkbox].error:active:hover:not(:checked) + label::before {
+  background: rgba(255, 31, 31, 0.1);
+}
+[type=checkbox].error:active:hover:checked + label::before {
+  background: rgba(255, 31, 31, 0.8);
+  outline-color: rgba(255, 31, 31, 0.15);
+  opacity: 1 !important;
+}
+[type=checkbox].error:disabled:not(:checked) + label::before, [type=checkbox].error:disabled:checked + label::before {
+  background: rgba(255, 31, 31, 0.15);
+}
+[type=checkbox].error:disabled:not(:checked) + label::after, [type=checkbox].error:disabled:checked + label::after {
+  content: url("/static/images/Stroke_196.svg");
+}
+[type=checkbox].error:disabled:not(:checked) + label::before {
+  border: 2px solid rgba(255, 31, 31, 0.25);
+}
+[type=checkbox].error:disabled:checked + label::before {
+  background: rgba(255, 31, 31, 0.25);
+}
+[type=checkbox].error:hover:not(:checked) + label::before {
+  background: rgba(255, 31, 31, 0.1);
+}
+[type=checkbox].error:hover:checked + label::before {
+  opacity: 0.8;
+}
+
+.radio label, .checkbox label {
+  cursor: pointer;
+  color: #888888;
+  padding-left: 24px;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 0;
+  display: inline-block;
+}
+
 header {
   background-color: #5A1BE0;
   padding: 0;
@@ -850,7 +992,7 @@ nav {
 }
 
 .btn-link {
-  font-family: gt_americaregular;
+  font-family: gt_americaregular, Arial;
   display: inline-block;
   color: #5A1BE0;
 }
@@ -890,9 +1032,6 @@ nav {
   display: flex;
   flex-flow: column wrap;
   margin: 0;
-}
-.latest-news .article .article-body a {
-  width: auto;
 }
 
 .latest-news .article .article-title {
@@ -1517,6 +1656,9 @@ nav {
   border: 0;
   border-radius: 2px;
 }
+.modal .modal-content .btn-link {
+  font-weight: bolder;
+}
 .modal .modal-content .modal-header {
   border-bottom: none;
   padding: 9px 8px 6px 8px;
@@ -1704,6 +1846,7 @@ nav {
   margin-bottom: 8px;
   font-size: 16px;
   line-height: 16px;
+  transition: opacity 1s;
 }
 
 .input-with-label .error-text {
@@ -1744,6 +1887,10 @@ nav {
 .latest-container {
   flex: 1 0 220px;
   max-width: 400px;
+}
+
+.latest-news .article .news-aggregator-link {
+  width: 44px;
 }
 
 .article-container {
@@ -1886,6 +2033,13 @@ nav {
 
   .modal-lg {
     max-width: 820px;
+  }
+
+  .latest-news .article .news-aggregator-link {
+    width: 62px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 }
 @media (max-width: 767.98px) {
@@ -2185,6 +2339,10 @@ nav {
   .comment-reply-new .newCommentForm .input-group:last-of-type button:first-of-type {
     margin-bottom: 8px;
   }
+
+  .checkbox [type=checkbox] ~ .error-text {
+    bottom: -8px !important;
+  }
 }
 @media (min-width: 1200px) {
   .suggest-news {
@@ -2203,6 +2361,10 @@ nav {
   .latest-container {
     max-width: 333px;
   }
+
+  .latest-news .article .news-aggregator-link {
+    width: 105px;
+  }
 }
 @media (min-width: 1400px) {
   .main-content {
@@ -2216,6 +2378,10 @@ nav {
 
   .latest-container {
     max-width: 400px;
+  }
+
+  .latest-news .article .news-aggregator-link {
+    width: 172px;
   }
 }
 @media (max-width: 1199.98px) {
@@ -2251,6 +2417,11 @@ nav {
     min-width: 260px;
   }
 
+  .latest-news .article .news-aggregator-link {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
   .latest-news .article .article-title {
     display: block;
     height: calc(100% - 38px);

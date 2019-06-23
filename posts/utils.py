@@ -6,6 +6,10 @@ import requests
 import json
 from posts.tasks import update_access_token_feedly
 from urllib.parse import quote_plus
+from django.core.files.temp import NamedTemporaryFile
+import re
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 
 class DeltaFirstPagePaginator(Paginator):
@@ -94,7 +98,10 @@ class FeedlyClient(object):
 
         quest_url = self._get_endpoint('v3/auth/token')
         res = requests.post(url=quest_url, params=params)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
+
         return res.json()
 
     def refresh_access_token(self, refresh_token):
@@ -107,23 +114,24 @@ class FeedlyClient(object):
         )
         quest_url = self._get_endpoint('v3/auth/token')
         res = requests.post(url=quest_url, params=params)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
         return res.json()
 
     def get_entry(self, access_token, entry_id):
         """tag an existing entry """
         headers = {'Authorization': 'OAuth ' + access_token}
-        quest_url = self._get_endpoint('v3/entries/'  +  quote_plus(entry_id))
-        # data = dict(
-        #     entryId=entry_id
-        # )
+        quest_url = self._get_endpoint('v3/entries/' +  quote_plus(entry_id))
+
         res = requests.get(url=quest_url, headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.get(url=quest_url, headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
+
         return res.json()
 
     def get_user_subscriptions(self, access_token):
@@ -131,12 +139,12 @@ class FeedlyClient(object):
         headers = {'Authorization': 'OAuth ' + access_token}
         quest_url = self._get_endpoint('v3/subscriptions')
         res = requests.get(url=quest_url, headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.get(url=quest_url, headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
         return res.json()
 
     def get_user_collections(self, access_token):
@@ -144,12 +152,13 @@ class FeedlyClient(object):
         headers = {'Authorization': 'OAuth ' + access_token}
         quest_url = self._get_endpoint('v3/collections')
         res = requests.get(url=quest_url, headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.get(url=quest_url, headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
+
         return res.json()
 
     def get_user_tags(self, access_token):
@@ -157,12 +166,13 @@ class FeedlyClient(object):
         headers = {'Authorization': 'OAuth ' + access_token}
         quest_url = self._get_endpoint('v3/tags')
         res = requests.get(url=quest_url, headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.get(url=quest_url, headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
+
         return res.json()
 
 
@@ -174,12 +184,13 @@ class FeedlyClient(object):
             entryId=entry_id
         )
         res = requests.put(url=quest_url, headers=headers, data=json.dumps(data))
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.put(url=quest_url, headers=headers, data=json.dumps(data))
-            self.feedlyConfig.set_api_requests_remained(res.headers)
+
         return res
 
     def get_enterprise_user_tags(self, access_token):
@@ -187,12 +198,13 @@ class FeedlyClient(object):
         headers = {'Authorization': 'OAuth ' + access_token}
         quest_url = self._get_endpoint('v3/enterprise/tags')
         res = requests.get(url=quest_url, headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.get(url=quest_url, headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
+
         json = res.json()
         return json
 
@@ -205,12 +217,13 @@ class FeedlyClient(object):
             tagId=tag_id,
         )
         res = requests.get(url=quest_url, headers=headers, params=params)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.get(url=quest_url, headers=headers, params=params)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
+
         return res.json()
 
     def get_feed_content(self, access_token, stream_id, unread_only=True, newer_than=None):
@@ -224,20 +237,19 @@ class FeedlyClient(object):
         if newer_than:
             params['newerThan'] = newer_than
         res = requests.get(url=quest_url, params=params, headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.get(url=quest_url, params=params, headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
 
         return res.json()
 
     def mark_article_read(self, access_token, entry_ids):
         """Mark one or multiple articles as read"""
         headers = {'content-type': 'application/json',
-                   'Authorization': 'OAuth ' + access_token
-                   }
+                   'Authorization': 'OAuth ' + access_token}
         quest_url = self._get_endpoint('v3/markers')
         params = dict(
             action="markAsRead",
@@ -245,12 +257,12 @@ class FeedlyClient(object):
             entryIds=entry_ids,
         )
         res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
 
         return res
 
@@ -267,12 +279,12 @@ class FeedlyClient(object):
             lastReadEntryId=last_read_entry_id,
         )
         res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.post(url=quest_url, data=json.dumps(params), headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
 
         return res
 
@@ -287,12 +299,12 @@ class FeedlyClient(object):
             entryIds=entry_ids
         )
         res = requests.put(url=request_url, data=json.dumps(params), headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.put(url=request_url, data=json.dumps(params), headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
 
         return res
 
@@ -305,12 +317,12 @@ class FeedlyClient(object):
         quest_url = self._get_endpoint('v3/profile')
 
         res = requests.post(url=quest_url, headers=headers)
-        self.feedlyConfig.set_api_requests_remained(res.headers)
+        api_requests_remained = self.feedlyConfig.set_api_requests_remained(res.headers)
+        if api_requests_remained == 0:
+            raise Exception('Feedly API reached maximum requests per 24 hours')
 
         if res.status_code == 401:
             update_access_token_feedly()
-            res = requests.post(url=quest_url, headers=headers)
-            self.feedlyConfig.set_api_requests_remained(res.headers)
 
         return res
 
@@ -319,3 +331,56 @@ class FeedlyClient(object):
         if path is not None:
             url += "/%s" % path
         return url
+
+
+def get_favicon(url):
+    """
+    Gets favicon from website.
+    :arg url: string with Url of website.
+    :return: Temporary file with favicon image or None
+    """
+    url = urlparse(url)
+    index_url = url[0] + "://" + url[1]
+    index_response = requests.get(index_url)
+    soup = BeautifulSoup(index_response.content, features="html5lib")
+    favicon_elements = [
+        re.compile('(?i)apple-touch-icon([\-0-9a-zA-Z]*)'),
+        re.compile('(?i)shortcut[ -_]icon'),
+        re.compile('(?i)icon')
+    ]
+
+    for element in favicon_elements:
+        link_elements = soup.head.find_all(rel=element)
+        if link_elements:
+            if link_elements[0].attrs.get('sizes', None) and len(link_elements) > 1:
+                link_elements = sorted(link_elements, key=lambda el:
+                -int(''.join(i for i in el.attrs.get('sizes', '0') if i.isdigit())))
+
+            for link_element in link_elements:
+                try:
+                    image_url_parse = urlparse(link_element['href'])
+                    image_url = ''
+                    for id, result in enumerate(image_url_parse[:3]):
+                        image_url += result if result else url[id]
+                        if id == 0:
+                            image_url += '://'
+                    image_response = requests.get(image_url)
+                    if image_response.status_code == 200:
+                        break
+                except TypeError:
+                    continue
+            else:
+                continue
+        else:
+            continue
+        break
+    else:
+        image_response = requests.get(index_url + '/favicon.ico')
+
+    if image_response and image_response.status_code == 200:
+        img_temp = NamedTemporaryFile(delete=True)
+        img_temp.write(image_response.content)
+        img_temp.flush()
+        return img_temp
+    else:
+        return None
