@@ -2,6 +2,9 @@ image: docker:latest
 services:
     - docker:dind
 
+variables:
+  TEST: "HELLO WORLD"
+
 stages:
     - build
     - test
@@ -28,8 +31,9 @@ build:
 test:
     stage: test
     script:
-        - docker-compose -f docker-compose.prod.yml pull test
-        - docker-compose -f docker-compose.prod.yml run test
+      - echo $TEST
+#      - docker-compose -f docker-compose.prod.yml pull test
+#     - docker-compose -f docker-compose.prod.yml run test
 
 production:
     stage: production
