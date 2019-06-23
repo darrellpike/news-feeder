@@ -33,7 +33,7 @@
                         <span class="text-separator"></span>
                         <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago</span>
                     </div>
-                    <a class="article-title" href="{{ article.url }}"><p>{{ article.title }}</p></a>
+                    <a class="article-title" href="{{ article.url }}" target="_blank"><p>{{ article.title }}</p></a>
                     <div class="article-statistics d-none d-md-block d-lg-block d-xl-block">
                         <span class="article-time">{{ article.time_since_submit|smooth_timedelta }} ago</span>
                         <span class="text-separator"></span>
@@ -62,7 +62,7 @@
                                 </button>
                         </span>
                             <span class="article-comments">
-                                    <img alt="comments" src="{% static 'images/Comment_grey.svg' %}" />
+                                    <img alt="comments" src="{% static 'images/comment_grey.svg' %}" />
                             <span class="article-comments-text"><span>{{ article.comment_count }}</span> comments</span>
                         </span>
                     </div>

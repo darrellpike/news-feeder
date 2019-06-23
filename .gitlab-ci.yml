@@ -35,16 +35,16 @@ test:
 #      - docker-compose -f docker-compose.prod.yml pull test
 #     - docker-compose -f docker-compose.prod.yml run test
 
-production:
-    stage: production
-    only:
-        - master
-    before_script:
-        - apk add --no-cache openssh-client bash rsync
-        - pip install fabric==2.4.0
-        - eval $(ssh-agent -s)
-        - bash -c 'ssh-add <(echo "$DEPLOY_KEY")'
-        - mkdir -p ~/.ssh
-        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    script:
-        - fab -H $DEPLOY_ADDR deploy
+#production:
+#    stage: production
+#    only:
+#        - master
+#    before_script:
+#        - apk add --no-cache openssh-client bash rsync
+#        - pip install fabric==2.4.0
+#        - eval $(ssh-agent -s)
+#        - bash -c 'ssh-add <(echo "$DEPLOY_KEY")'
+#        - mkdir -p ~/.ssh
+#        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+#    script:
+#        - fab -H $DEPLOY_ADDR deploy
