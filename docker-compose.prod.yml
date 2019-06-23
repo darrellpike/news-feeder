@@ -6,9 +6,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/web/Dockerfile.prod
-    environment:
-      - SECRET_KEY=_h+@=0j*)3!ez=a&mek5syb99&md=t^wby$388%ke&*am-@93+
-      - DJANGO_SETTINGS_MODULE=adventure_agg.settings.production
     command: gunicorn adventure_agg.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static:/srv/www/news-aggregator/adventure_agg/static_root/
@@ -16,7 +13,7 @@ services:
     expose:
       - 8000
     restart: unless-stopped
-    #env_file: .env
+    env_file: .env
     depends_on:
       - db
   test:
@@ -27,10 +24,7 @@ services:
     image: postgres:11.2-alpine
     volumes:
       - data:/var/lib/postgresql/data/
-    #env_file: .env.db
-    environment:
-      - POSTGRES_USER=news_aggregator_user
-      - POSTGRES_DB=news_aggregator
+    env_file: .env.db
     restart: unless-stopped
   nginx:
     build: ./docker/nginx/

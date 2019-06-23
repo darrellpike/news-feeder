@@ -7,16 +7,18 @@ ALLOWED_HOSTS = ["news.viceroy.tech"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        "NAME": 'news_aggregator',  # Or path to database file if using sqlite3.
+        "NAME": os.getenv('SQL_DATABASE'),  # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        "USER": "news_aggregator_user",
-        "PASSWORD": "&?6<&MUXr3#r^,",
-        "HOST": "localhost",  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        "PORT": "5432",  # Set to empty string for default.
+        "USER": os.getenv('SQL_USER'),
+        "PASSWORD": os.getenv('SQL_PASSWORD'),
+        "HOST": os.getenv('SQL_HOST'),  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        "PORT": os.getenv('SQL_PORT'),  # Set to empty string for default.
     }
 }
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+DEBUG = os.getenv('DEBUG')
 
 
 SECRET_KEY = os.getenv('SECRET_KEY') or sys.exit('SECRET_KEY environment variable is not set.')
