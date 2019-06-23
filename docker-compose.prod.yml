@@ -31,7 +31,7 @@ services:
     volumes:
       - static:/srv/www/news-aggregator/adventure_agg/static_root/
       - media:/srv/www/news-aggregator/media/
-      - ./nginx:/etc/nginx:ro
+      - .:/etc/nginx:ro
     ports:
       - 80:80
       - 443:443
