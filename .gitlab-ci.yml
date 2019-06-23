@@ -25,11 +25,11 @@ build:
         - docker-compose -f docker-compose.prod.yml build
         - docker-compose -f docker-compose.prod.yml push
 
-test:
-    stage: test
-    script:
-        - docker-compose -f docker-compose.prod.yml pull test
-        - docker-compose -f docker-compose.prod.yml run test
+#test:
+#    stage: test
+#    script:
+#        - docker-compose -f docker-compose.prod.yml pull test
+#        - docker-compose -f docker-compose.prod.yml run test
 
 deploy:
     stage: deploy
