@@ -1,8 +1,5 @@
-version: '3'
+version: '3.7'
 
-volumes:
-    pgdata:
-        driver: local
 services:
     nginx:
         restart: always
@@ -18,7 +15,7 @@ services:
           - ./docker/nginx:/etc/nginx/conf.d
         depends_on:
           - python
-    python:
+    web:
         restart: always
         build:
             context: .
@@ -40,7 +37,7 @@ services:
       ports:
         - "5673:5672"
     postgres:
-        image: postgres:9.3.22
+        image: postgres:11.2-alpine
         ports:
             - 5432:5432
         environment:
@@ -50,3 +47,6 @@ services:
             PGDATA: /var/lib/postgresql/data
         volumes:
             - pgdata:/var/lib/postgresql/data
+volumes:
+    pgdata:
+        driver: local

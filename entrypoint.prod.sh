@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$DATABASE" = "postgres" ]
 then
@@ -10,5 +10,11 @@ then
 
     echo "PostgreSQL started"
 fi
+python manage.py migrate
+python manage.py collectstatic --noinput
+
+touch logs/gunicorn_errors.log
+touch logs/nginx-access.log
+touch logs/django.log
 
 exec "$@"

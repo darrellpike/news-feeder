@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  web:
+    image: registry.gitlab.com/lambospeed/news-aggregator:${CI_BUILD_REF_NAME}
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile.prod
+    command: gunicorn adventure_agg.wsgi:application --bind 0.0.0.0:8000 --workers 3 --log-level=info --log-file=/srv/www/news-aggregator/logs/gunicorn_errors.log
+    volumes:
+      - static:/srv/www/news-aggregator/adventure_agg/static_root/
+      - media:/srv/www/news-aggregator/media/
+    expose:
+      - 8000
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - db
+  test:
+    image: registry.gitlab.com/lambospeed/news-aggregator:${CI_BUILD_REF_NAME}
+    command: python manage.py test
+    restart: "no"
+  db:
+    image: postgres:11.2-alpine
+    volumes:
+      - data:/var/lib/postgresql/data/
+    env_file: .env.db
+    restart: unless-stopped
+  nginx:
+    build: ./docker/nginx/
+    volumes:
+      - static:/srv/www/news-aggregator/adventure_agg/static_root/
+      - media:/srv/www/news-aggregator/media/
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
+    restart: unless-stopped
+
+volumes:
+  data:
+  static:
+  media:

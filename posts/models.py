@@ -6,11 +6,7 @@ from django.utils import timezone
 from django.db.models import Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.db import DatabaseError
-# from .utils import *
-from django.db.models import Max
-import random
-import requests
+from django.core.files import File
 from django.core import signing
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill, ResizeToFit
@@ -21,7 +17,7 @@ from urllib.parse import urlparse
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.conf import settings
 from solo.models import SingletonModel
-from posts.utils import FeedlyClient
+from posts.utils import FeedlyClient, get_favicon
 
 CHAR_FIELD_MAX_LENGTH = 85
 
@@ -206,6 +202,10 @@ class NewsAggregator(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def get_logo_from_website(self):
+		self.logo.save(self.url + "_logo", File(get_favicon(self.url), name=self.url + "_logo"))
+		self.save()
 
 
 class Post(models.Model):
