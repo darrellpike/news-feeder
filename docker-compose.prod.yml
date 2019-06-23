@@ -17,7 +17,6 @@ services:
     depends_on:
       - db
   test:
-    image: registry.gitlab.com/lambospeed/news-aggregator:${CI_BUILD_REF_NAME}
     command: python manage.py test
     restart: "no"
   db:
