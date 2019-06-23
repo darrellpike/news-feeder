@@ -9,13 +9,12 @@ ENV PYTHONUNBUFFERED 1
 # install psycopg2, uwsgi,pillow
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev build-base linux-headers pkgconf \
     autoconf automake libtool make postgresql-dev postgresql-client openssl-dev && \
-    apk add postgresql-libs postgresql-client && apk add --no-cache jpeg-dev zlib-dev \
-    # Предотвращаем неудачную компиляцию uWSGI внутри Docker, см. https://git.io/v1ve3
-    (while true; do pip --no-cache-dir install psycopg2 pillow pycrypto==2.6 && break; done)
+    apk add postgresql-libs postgresql-client && apk add --no-cache jpeg-dev zlib-dev &&\
+    (while true; do pip3 --no-cache-dir install psycopg2 pillow pycrypto==2.6 && break; done)
 
-RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip
 COPY ./requirements.txt /srv/www/news-aggregator/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY ./entrypoint.prod.sh /srv/www/news-aggregator/entrypoint.prod.sh
 

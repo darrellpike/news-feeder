@@ -1,3 +1,5 @@
+# This readme is outdated
+
 # Setup
 
 * Check whether you have pip installed by typing `pip --version` from the terminal. If it tells you what version you have, then it's installed. Do the same thing with python with the command `python --version`. If you don't have them, install them. Install python 2.x, not 3.x.
