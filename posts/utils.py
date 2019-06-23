@@ -341,7 +341,7 @@ def get_favicon(url):
     """
     url = urlparse(url)
     index_url = url[0] + "://" + url[1]
-    index_response = requests.get(index_url)
+    index_response = requests.get(index_url, headers={'User-Agent': 'Mozilla/5.0'})
     soup = BeautifulSoup(index_response.content, features="html5lib")
     favicon_elements = [
         re.compile('(?i)apple-touch-icon([\-0-9a-zA-Z]*)'),
@@ -350,10 +350,10 @@ def get_favicon(url):
     ]
 
     for element in favicon_elements:
-        link_elements = soup.head.find_all(rel=element)
+        link_elements = soup.find_all(rel=element)
         if link_elements:
             if link_elements[0].attrs.get('sizes', None) and len(link_elements) > 1:
-                link_elements = sorted(link_elements, key=lambda el:
+                link_elements = sorted(lexitink_elements, key=lambda el:
                 -int(''.join(i for i in el.attrs.get('sizes', '0') if i.isdigit())))
 
             for link_element in link_elements:
