@@ -377,7 +377,7 @@ class FeedlyAPISettings(SingletonModel):
 		"""Takes from headers of Feedly's response limit and counter of requests"""
 		try:
 			self.api_requests_remained = int(headers.get('X-RateLimit-Limit')) - int(headers.get('X-RateLimit-Count'))
-		except ValueError:
+		except (ValueError, TypeError):
 			raise Exception('Feedly\'s response headers are changed or incorrect.')
 
 		self.save()
