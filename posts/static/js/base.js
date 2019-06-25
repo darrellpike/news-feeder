@@ -23,7 +23,36 @@ $(function () {
                 target.modal('show');
             }, 600)
         }
+    });
 
+    $('#register-modal, #login-modal').on('hidden.bs.modal', function () {
+        const modal = $(this);
+        modal.find('.first').show();
+        modal.find('.second').hide();
+    });
+
+    $(document).on('click touch', '#login-modal .modal-body.first .button-email', function (e) {
+        e.preventDefault();
+        $('#login-modal .first').hide();
+        $('#login-modal .second').show();
+    });
+
+    $(document).on('click touch', '#register-modal a, #register-modal .button-email', function (e) {
+        const checkbox = $('#register-modal input[type="checkbox"]');
+        if (!checkbox[0].checked) {
+            e.preventDefault();
+            checkbox.addClass('error');
+            checkbox.siblings('.error-text').text('You need to agree to the Terms of Service and Privacy Policy before registering.');
+        } else if ($(this).hasClass('button-email')) {
+            $('#register-modal .first').hide();
+            $('#register-modal .second').show();
+        }
+    });
+
+    $(document).on('click touch', '#register-modal input[type="checkbox"], #register-modal label', function () {
+        const checkbox = $('#register-modal input[type="checkbox"]');
+        checkbox.removeClass('error');
+        checkbox.siblings('.error-text').html('');
     });
 
     $('#PostModal').on('hidden.bs.modal', function () {
