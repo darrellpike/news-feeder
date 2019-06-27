@@ -300,7 +300,11 @@ def get_favicon(url):
     if not re.match(regex, url) is not None:
         return None
 
-    url = urlparse(url).geturl()
+    parsed_url = urlparse(url)
+    if len(parsed_url.scheme) < 4:
+        parsed_url.scheme = 'http'
+        url = parsed_url.geturl()
+
     index_response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
     soup = BeautifulSoup(index_response.content, features="html5lib")
     favicon_elements = [
@@ -321,7 +325,7 @@ def get_favicon(url):
                     image_url_parse = urlparse(link_element['href'])
                     image_url = ''
                     for id, result in enumerate(image_url_parse[:3]):
-                        image_url += result if result else url[id]
+                        image_url += result if result else parsed_url[id]
                         if id == 0:
                             image_url += '://'
                     image_response = requests.get(image_url, headers={'User-Agent': 'Mozilla/5.0'})
