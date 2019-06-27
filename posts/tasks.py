@@ -281,7 +281,7 @@ def get_feedly_article(request_content):
 			na_url = urlparse(article['origin']['htmlUrl'])
 			news_aggregator = NewsAggregator.objects.create(name=article.get('origin').get('title'),
 			                                                url=na_url.scheme + '://' + na_url.netloc)
-			temp_image = get_favicon(article.get('origin').get('htmlUrl'))
+			temp_image = get_favicon(na_url.geturl())
 			if temp_image:
 				news_aggregator.logo.save(
 					origin_url.netloc + "_logo",
