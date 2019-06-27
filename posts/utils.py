@@ -291,9 +291,7 @@ def get_favicon(url):
     :arg url: string with Url of website.
     :return: Temporary file with favicon image or None
     """
-    url = urlparse(url)
-    index_url = url[0] + "://" + url[1]
-    index_response = requests.get(index_url, headers={'User-Agent': 'Mozilla/5.0'})
+    index_response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
     soup = BeautifulSoup(index_response.content, features="html5lib")
     favicon_elements = [
         re.compile('(?i)apple-touch-icon([\-0-9a-zA-Z]*)'),
@@ -327,7 +325,7 @@ def get_favicon(url):
             continue
         break
     else:
-        image_response = requests.get(index_url + '/favicon.ico', headers={'User-Agent': 'Mozilla/5.0'})
+        image_response = requests.get(url + '/favicon.ico', headers={'User-Agent': 'Mozilla/5.0'})
 
     if image_response and image_response.status_code == 200:
         img_temp = NamedTemporaryFile(delete=True)

@@ -5,6 +5,7 @@ import json
 from urllib.parse import urlparse
 from django.core.files import File
 from django.utils.timezone import datetime
+import logging
 
 HUBSPOT_API_KEY = '6384ea2f-48d2-4672-a92a-2d4b30a9be26'
 
@@ -227,8 +228,11 @@ def get_feedly_articles():
 
 						temp_image = get_favicon(article.get('origin').get('htmlUrl'))
 						if temp_image:
-							url = urlparse(article.get('origin').get('htmlUrl'))
-							news_aggregator.logo.save(url.netloc + "_logo", File(temp_image))
+							try:
+								news_aggregator.logo.save(na_url.netloc + "_logo", File(temp_image))
+							except OSError:
+								logging.warning("Can't save logo image for news_aggregator: "
+								                + str(news_aggregator.id) + '--' + str(news_aggregator.name))
 							news_aggregator.save()
 
 					if article.get('title', False) and news_aggregator and article.get('unread', False):
@@ -246,7 +250,7 @@ def get_feedly_articles():
 					post.save()
 				last_entry_id = article.get('id')
 
-			#feedly.mark_tag_read(feedly_settings.FEEDLY_API_ACCESS_TOKEN, whn_tag_id, last_entry_id)
+			feedly.mark_tag_read(feedly_settings.FEEDLY_API_ACCESS_TOKEN, whn_tag_id, last_entry_id)
 
 		else:
 			raise Exception("No entries are found with '%s' tag." % tag_on_feedly)
