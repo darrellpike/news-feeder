@@ -227,6 +227,7 @@ class Post(models.Model):
 	image = models.ImageField(blank=True)
 	image_url = models.URLField(blank=True, help_text="If post doesn't have image on the server,"
 	                                                  " URL link will be used.")
+	feedly_engagement = models.IntegerField(blank=True, default=100)
 
 	def time_since_submit(self):
 		return timezone.now() - self.submit_time

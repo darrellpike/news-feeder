@@ -234,7 +234,8 @@ def get_feedly_articles():
 						post = Post.objects.create(submitter=admin, title=article.get('title'),
 						                           news_aggregator=news_aggregator,
 						                           submit_time=datetime.fromtimestamp(article.get('published')/1000.0),
-						                           url=article['canonicalUrl'] if article.get('canonicalUrl', None) else article.get('alternate')[0]['href'])
+						                           url=article['canonicalUrl'] if article.get('canonicalUrl', None) else article.get('alternate')[0]['href'],
+						                           feedly_engagement=article.get('engagement', 100))
 					else:
 						raise Exception("Article doesn't have title.")
 
@@ -289,7 +290,8 @@ def get_feedly_article(request_content):
 			                           news_aggregator=news_aggregator,
 			                           submit_time=datetime.fromtimestamp(
 				                           request_content.get('publishedTimestamp') / 1000.0),
-			                           url=article['canonicalUrl'] if article.get('canonicalUrl', None) else article.get('alternate')[0]['href'])
+			                           url=article['canonicalUrl'] if article.get('canonicalUrl', None) else article.get('alternate')[0]['href'],
+			                           feedly_engagement=article.get('engagement', 100))
 
 			article_image = request_content.get('visualUrl', None)
 			if article_image:

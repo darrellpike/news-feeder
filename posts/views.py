@@ -59,7 +59,7 @@ class IndexView(generic.ListView):
 	paginate_by = 20
 
 	def get_queryset(self):
-		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-submit_time').annotate(
+		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-feedly_engagement', '-submit_time').annotate(
 			score=Sum('postvote__score'))
 		posts = posts.exclude(Q(submitter__userprofile__is_shadowbanned=True) & ~Q(submitter=self.request.user.id))
 		for p in posts:
@@ -82,7 +82,7 @@ class IndexPopularView(generic.ListView):
 	paginate_by = 20
 
 	def get_queryset(self):
-		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-submit_time').annotate(
+		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-feedly_engagement', '-submit_time').annotate(
 			score=Sum('postvote__score'))
 		posts = posts.exclude(Q(submitter__userprofile__is_shadowbanned=True) & ~Q(submitter=self.request.user.id))
 		for p in posts:
