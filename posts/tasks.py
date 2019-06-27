@@ -221,8 +221,9 @@ def get_feedly_articles():
 					try:
 						news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
 					except NewsAggregator.DoesNotExist:
+						na_url = urlparse(article['origin']['htmlUrl'])
 						news_aggregator = NewsAggregator.objects.create(name=article.get('origin').get('title'),
-						                                                url=article.get('origin').get('htmlUrl'))
+						                                                url=na_url.scheme + '://' + na_url.netloc)
 
 						temp_image = get_favicon(article.get('origin').get('htmlUrl'))
 						if temp_image:
@@ -245,7 +246,7 @@ def get_feedly_articles():
 					post.save()
 				last_entry_id = article.get('id')
 
-			feedly.mark_tag_read(feedly_settings.FEEDLY_API_ACCESS_TOKEN, whn_tag_id, last_entry_id)
+			#feedly.mark_tag_read(feedly_settings.FEEDLY_API_ACCESS_TOKEN, whn_tag_id, last_entry_id)
 
 		else:
 			raise Exception("No entries are found with '%s' tag." % tag_on_feedly)
@@ -273,8 +274,9 @@ def get_feedly_article(request_content):
 		try:
 			news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
 		except NewsAggregator.DoesNotExist:
+			na_url = urlparse(article['origin']['htmlUrl'])
 			news_aggregator = NewsAggregator.objects.create(name=article.get('origin').get('title'),
-			                                                url=article.get('origin').get('htmlUrl'))
+			                                                url=na_url.scheme + '://' + na_url.netloc)
 			temp_image = get_favicon(article.get('origin').get('htmlUrl'))
 			if temp_image:
 				news_aggregator.logo.save(

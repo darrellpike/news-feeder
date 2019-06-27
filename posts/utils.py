@@ -316,7 +316,7 @@ def get_favicon(url):
                         image_url += result if result else url[id]
                         if id == 0:
                             image_url += '://'
-                    image_response = requests.get(image_url)
+                    image_response = requests.get(image_url, headers={'User-Agent': 'Mozilla/5.0'})
                     if image_response.status_code == 200:
                         break
                 except TypeError:
@@ -327,7 +327,7 @@ def get_favicon(url):
             continue
         break
     else:
-        image_response = requests.get(index_url + '/favicon.ico')
+        image_response = requests.get(index_url + '/favicon.ico', headers={'User-Agent': 'Mozilla/5.0'})
 
     if image_response and image_response.status_code == 200:
         img_temp = NamedTemporaryFile(delete=True)
