@@ -3,24 +3,10 @@ from celery import shared_task
 import requests
 import json
 from urllib.parse import urlparse
-from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
-from bs4 import BeautifulSoup
-import datetime
-import re
+from django.utils.timezone import datetime
 
 HUBSPOT_API_KEY = '6384ea2f-48d2-4672-a92a-2d4b30a9be26'
-
-
-# FEEDLY_API_ID = "3f82a177-a052-4e1a-a334-1c63482975f6"
-# FEEDLY_API_CLIENT_ID = "feedlydev"
-# FEEDLY_API_CLIENT_SECRET = "feedlydev"
-# FEEDLY_API_ACCESS_TOKEN = "AwvuotfkAh5pPRivugqupci1unZ9jrF_uFITufcpQ6hqD8-GZ7hjaoxe-t6Lhuta3n0L-qXgWLzfMll7C3
-# 3lhUobrx7mMNcJ0jbEnoO0eOlemfBM2s-vxiNm_TreY1ckYzJqoFclq2fBV2NZwfzHB6bBlLYJwvU28QtkD_EFrrCPtpUW_7PTSVJBvv6Tgzj
-# O88TC3JM6kBtIHJRE0eFMgDFEvFNu9o_0fcisroWWZe3saMPbgmUNGkPaUHJLx8yW-HhmqxO5ERgXMQAPf14B9-uIx7KJ:feedlydev"
-# FEEDLY_API_REFRESH_TOKEN = "AwvuotfkAhZpPRjauVf4qICiyT5q2-gi5QMEqromR7ljCteBNbpiboxc89mO0PFamn1Q9a3yK-GOYAAwE
-# wC5wRxF-F21dcUJ0jrEnoPxd7IJiq4CgIO8nXMguWDccBordCNjtgpmpzWHAC8Cl6XQTbKLmq5S1fgitFo_Urte5eja8ctKsuiRDBNPpr-EjD
-# Ha4YjY1Yk6lEoCDtMAiuUGlH5f50tv5JrnMtiuuczQP7ChPIeG1T4ZAlKPXmoZ18aW7XQ5vwu3VjZXMkVUOEssrO-z_OWEYfwZ"
 
 @shared_task
 def create_or_update_contact_hubspot(user_id, activation_key=None):
@@ -196,7 +182,8 @@ def update_access_token_feedly():
 	from posts.models import FeedlyAPISettings
 	feedly_settings = FeedlyAPISettings.get_solo()
 	feedly = feedly_settings.get_client()
-	feedly_settings.FEEDLY_API_ACCESS_TOKEN = feedly.refresh_access_token(feedly_settings.FEEDLY_API_REFRESH_TOKEN)
+	response = feedly.refresh_access_token(feedly_settings.FEEDLY_API_REFRESH_TOKEN)
+	feedly_settings.FEEDLY_API_ACCESS_TOKEN = response.get('access_token')
 	feedly_settings.save()
 
 
@@ -227,6 +214,10 @@ def get_feedly_articles():
 				try:
 					post = Post.objects.get(title=article.get('title', ''))
 				except Post.DoesNotExist:
+					origin_url = urlparse(article.get('origin').get('htmlUrl'))
+					if 'google' in origin_url.netloc:
+						article['origin']['htmlUrl'] = article.get('alternate')[0]['href'] if article.get('alternate', None) else article.get('canonicalUrl')
+						article['origin']['title'] = urlparse(article['origin']['htmlUrl']).netloc
 					try:
 						news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
 					except NewsAggregator.DoesNotExist:
@@ -242,8 +233,9 @@ def get_feedly_articles():
 					if article.get('title', False) and news_aggregator and article.get('unread', False):
 						post = Post.objects.create(submitter=admin, title=article.get('title'),
 						                           news_aggregator=news_aggregator,
-						                           submit_time=datetime.datetime.fromtimestamp(article.get('published')/1000.0),
-						                           url=article.get('canonicalUrl', None),)
+						                           submit_time=datetime.fromtimestamp(article.get('published')/1000.0),
+						                           url=article['canonicalUrl'] if article.get('canonicalUrl', None) else article.get('alternate')[0]['href'],
+						                           feedly_engagement=article.get('engagement', 100))
 					else:
 						raise Exception("Article doesn't have title.")
 
@@ -272,6 +264,12 @@ def get_feedly_article(request_content):
 	try:
 		Post.objects.get(title=request_content.get('title', None))
 	except Post.DoesNotExist:
+		origin_url = urlparse(article.get('origin').get('htmlUrl'))
+		if 'google' in origin_url.netloc:
+			article['origin']['htmlUrl'] = article.get('alternate')[0]['href'] if article.get('alternate',
+			                                                                                  None) else article.get(
+				'canonicalUrl')
+			article['origin']['title'] = urlparse(article['origin']['htmlUrl']).netloc
 		try:
 			news_aggregator = NewsAggregator.objects.get(name=article.get('origin').get('title'))
 		except NewsAggregator.DoesNotExist:
@@ -279,11 +277,10 @@ def get_feedly_article(request_content):
 			                                                url=article.get('origin').get('htmlUrl'))
 			temp_image = get_favicon(article.get('origin').get('htmlUrl'))
 			if temp_image:
-				url = urlparse(article.get('origin').get('htmlUrl'))
 				news_aggregator.logo.save(
-					url.netloc + "_logo",
+					origin_url.netloc + "_logo",
 					File(temp_image,
-					     name=url.netloc + "_logo"))
+					     name=origin_url.netloc + "_logo"))
 				news_aggregator.save()
 
 		if request_content.get('title', False) and news_aggregator:
@@ -291,9 +288,10 @@ def get_feedly_article(request_content):
 			                           author=request_content.get('author', None),
 			                           title=request_content.get('title'),
 			                           news_aggregator=news_aggregator,
-			                           submit_time=datetime.datetime.fromtimestamp(
+			                           submit_time=datetime.fromtimestamp(
 				                           request_content.get('publishedTimestamp') / 1000.0),
-			                           url=request_content.get('entryUrl', None))
+			                           url=article['canonicalUrl'] if article.get('canonicalUrl', None) else article.get('alternate')[0]['href'],
+			                           feedly_engagement=article.get('engagement', 100))
 
 			article_image = request_content.get('visualUrl', None)
 			if article_image:

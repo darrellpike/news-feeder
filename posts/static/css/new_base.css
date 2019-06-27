@@ -325,6 +325,9 @@ button:focus {
   background: #5A1BE0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+.primary-button:focus.button-email {
+  background: transparent;
+}
 
 .primary-button:disabled {
   background: #AC8DEF;
@@ -1837,6 +1840,10 @@ nav {
 
 #register_form .input-group:last-of-type {
   margin-bottom: 40px;
+}
+
+#register-modal .second, #login-modal .second {
+  display: none;
 }
 
 .error-text {

@@ -18,6 +18,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.conf import settings
 from solo.models import SingletonModel
 from posts.utils import FeedlyClient, get_favicon
+import logging
 
 CHAR_FIELD_MAX_LENGTH = 85
 
@@ -204,12 +205,16 @@ class NewsAggregator(models.Model):
 		return self.name
 
 	def get_logo_from_website(self):
-		self.logo.save(self.url + "_logo", File(get_favicon(self.url), name=self.url + "_logo"))
-		self.save()
+		try:
+			self.logo.save(self.url + "_logo", File(get_favicon(self.url), name=self.url + "_logo"))
+			self.save()
+		except (OSError, ValueError):
+			logging.warning('Cannot fetch image from ' + self.url)
+
 
 
 class Post(models.Model):
-	title = models.CharField(max_length=150)
+	title = models.CharField(max_length=250)
 	submitter = models.ForeignKey(User, on_delete=models.CASCADE)
 	author = models.CharField(max_length=CHAR_FIELD_MAX_LENGTH, blank=True, null=True)
 	submit_time = models.DateTimeField(default=timezone.now)
@@ -222,6 +227,7 @@ class Post(models.Model):
 	image = models.ImageField(blank=True)
 	image_url = models.URLField(blank=True, help_text="If post doesn't have image on the server,"
 	                                                  " URL link will be used.")
+	feedly_engagement = models.IntegerField(blank=True, default=100)
 
 	def time_since_submit(self):
 		return timezone.now() - self.submit_time
@@ -372,7 +378,7 @@ class FeedlyAPISettings(SingletonModel):
 		"""Takes from headers of Feedly's response limit and counter of requests"""
 		try:
 			self.api_requests_remained = int(headers.get('X-RateLimit-Limit')) - int(headers.get('X-RateLimit-Count'))
-		except ValueError:
+		except (ValueError, TypeError):
 			raise Exception('Feedly\'s response headers are changed or incorrect.')
 
 		self.save()

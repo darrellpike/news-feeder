@@ -161,7 +161,10 @@
           </span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body first">
+                        {% include 'partial/welcome_modal.html' %}
+                </div>
+                <div class="modal-body second">
                     <h5 class="modal-title">Login</h5>
                     <a href="{% url 'social:begin' backend='linkedin-oauth2' %}">Login with Linkedin</a>
                     <form class="form login" id="login_form" method="POST" action="{% url 'django_registration_login' %}">
@@ -194,7 +197,8 @@
 
     <div class="modal fade" id="register-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            {% include 'partial/welcome_signup_modal_content.html' %}
+            <div class="modal-content second">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">
