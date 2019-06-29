@@ -10,7 +10,7 @@ deploy:
     - chmod 600 ~/.ssh/config
     - ls
   script:
-    - fab -H $DEPLOY_ADDR -i $DEPLOY_KEY deploy
+    - fab -H $DEPLOY_ADDR -i ~/.ssh/id_ed25519 deploy
   only:
     - master
     - bushmaks-dev
