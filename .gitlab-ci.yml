@@ -8,7 +8,7 @@ deploy:
     - bash -c 'ssh-add <(echo "$DEPLOY_KEY")'
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\tUser viceroy627\n\n" > ~/.ssh/config
   script:
-    - fab -H $DEPLOY_ADDR deploy
+    - fab -H $DEPLOY_ADDR -S ~/.ssh/config deploy
   only:
     - master
     - bushmaks-dev
