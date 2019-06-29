@@ -1,5 +1,5 @@
 deploy:
-  image: python3:latest
+  image: python:latest
   before_script:
     - apk add --no-cache openssh-client bash rsync
     - pip install fabric
