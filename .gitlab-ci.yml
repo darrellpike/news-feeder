@@ -9,8 +9,8 @@ deploy:
     - cat ~/.ssh/id_ed25519
     - echo -e "Host *\n\tUser viceroy627\n\tIdentityFile ~/.ssh/id_ed25519\n\n" > ~/.ssh/config
     - chmod 600 ~/.ssh/config
-    - cat ~/.ssh/config
   script:
-    - fab -H $DEPLOY_ADDR deploy
+    - cat ~/.ssh/config
+    - fab -H $DEPLOY_ADDR -S ~/.ssh/config deploy
   only:
     - master
