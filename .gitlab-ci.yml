@@ -4,10 +4,11 @@ deploy:
     - apk add --no-cache openssh-client bash rsync python3-dev gcc g++ make libffi-dev openssl-dev
     - pip install --no-cache-dir fabric
     - eval $(ssh-agent -s)
-    - bash -c 'ssh-add <(echo "$DEPLOY_KEY")'
     - mkdir -p ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - ls ~/.ssh
+    - echo -e "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+    - cat ~/.ssh/id_ed25519
+    - echo -e "Host *\n\tUser viceroy627\n\tIdentityFile ~/.ssh/id_ed25519\n\n" > ~/.ssh/config
+    - chmod 600 ~/.ssh/config
     - cat ~/.ssh/config
   script:
     - fab -H $DEPLOY_ADDR deploy
