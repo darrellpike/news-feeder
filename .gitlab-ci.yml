@@ -4,7 +4,7 @@ deploy:
     - apk add --no-cache openssh-client bash rsync python3-dev gcc g++ make libffi-dev openssl-dev
     - pip install --no-cache-dir fabric
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$DEPLOY_KEY")
+    - bash -c 'ssh-add <(echo "$DEPLOY_KEY")'
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - ls ~/.ssh
