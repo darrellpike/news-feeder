@@ -6,11 +6,10 @@ deploy:
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - echo -e "$DEPLOY_KEY" > ~/.ssh/id_ed25519
-    - cat ~/.ssh/id_ed25519
     - echo -e "Host *\n\tUser viceroy627\n\tIdentityFile ~/.ssh/id_ed25519\n\n" > ~/.ssh/config
     - chmod 600 ~/.ssh/config
+    - ls
   script:
-    - cat ~/.ssh/config
     - fab -H $DEPLOY_ADDR -S ~/.ssh/config deploy
   only:
     - master
