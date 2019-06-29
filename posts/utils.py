@@ -305,7 +305,11 @@ def get_favicon(url):
         parsed_url.scheme = 'http'
         url = parsed_url.geturl()
 
-    index_response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+    try:
+        index_response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+    except requests.exceptions.ConnectionError:
+        index_response = requests.get(url)
+
     soup = BeautifulSoup(index_response.content, features="html5lib")
     favicon_elements = [
         re.compile('(?i)apple-touch-icon([\-0-9a-zA-Z]*)'),
@@ -328,7 +332,10 @@ def get_favicon(url):
                         image_url += result if result else parsed_url[id]
                         if id == 0:
                             image_url += '://'
-                    image_response = requests.get(image_url, headers={'User-Agent': 'Mozilla/5.0'})
+                    try:
+                        image_response = requests.get(image_url, headers={'User-Agent': 'Mozilla/5.0'})
+                    except requests.exceptions.ConnectionError:
+                        image_response = requests.get(image_url)
                     if image_response.status_code == 200:
                         break
                 except TypeError:
@@ -339,7 +346,10 @@ def get_favicon(url):
             continue
         break
     else:
-        image_response = requests.get(url + '/favicon.ico', headers={'User-Agent': 'Mozilla/5.0'})
+        try:
+            image_response = requests.get(url + '/favicon.ico', headers={'User-Agent': 'Mozilla/5.0'})
+        except requests.exceptions.ConnectionError:
+            image_response = requests.get(url + '/favicon.ico')
 
     if image_response and image_response.status_code == 200:
         img_temp = NamedTemporaryFile(delete=True)
