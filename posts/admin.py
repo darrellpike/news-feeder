@@ -35,7 +35,11 @@ class NewsAggregatorAdmin(admin.ModelAdmin):
 
 
 class FeedlyAPISettingsAdmin(SingletonModelAdmin):
-    readonly_fields = ('api_requests_remained',)
+    readonly_fields = ('api_requests_remained', )
+
+
+class TermsOfServiceAdmin(SingletonModelAdmin):
+    readonly_fields = ('last_modified', )
 
 admin.site.register(FeedlyAPISettings, FeedlyAPISettingsAdmin)
 admin.site.register(UserNewsSuggestion, NewsSuggestionsAdmin)
@@ -44,4 +48,5 @@ admin.site.register(Comment, CommentAdmin)
 admin.site.register(PostVote)
 admin.site.register(CommentVote)
 admin.site.register(PostFlag)
+admin.site.register(TermsOfService, TermsOfServiceAdmin)
 # admin.site.register(RelatedArticle)
