@@ -18,7 +18,7 @@
         <div class="checkbox">
             <input id="terms_of_service" type="checkbox" name="terms_of_service" checked>
             <label for="terms_of_service">
-                I agree to the <a href="#" class="btn-link"> Terms of Service </a> and <a href="#" class="btn-link"> Privacy Policy </a>
+                I agree to the <a href="{% url 'terms_of_service' %}" class="btn-link"> Terms of Service </a> and <a href="{% url 'terms_of_service' %}" class="btn-link"> Privacy Policy </a>
             </label>
             <span class="error-text"></span>
         </div>

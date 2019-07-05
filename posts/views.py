@@ -19,6 +19,7 @@ from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 import base64, json
 from django.contrib.auth import authenticate
 
@@ -366,6 +367,16 @@ class NewNewsSuggestionView(LoginRequiredMixin, generic.edit.CreateView):
 				return response
 		else:
 			return response
+
+
+class TermsOfServiceView(TemplateView):
+	template_name = 'posts/terms_of_service.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['terms_of_service'] = TermsOfService.get_solo()
+		return context
+
 
 
 @login_required(login_url=reverse_lazy('login'))

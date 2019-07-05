@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'solo',
     'django_celery_beat',
-    'django_celery_results'
+    'django_celery_results',
+    'ckeditor'
 ]
 
 MIDDLEWARE = [

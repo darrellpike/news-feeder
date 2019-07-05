@@ -19,6 +19,7 @@ from django.conf import settings
 from solo.models import SingletonModel
 from posts.utils import FeedlyClient, get_favicon
 import logging
+from ckeditor.fields import RichTextField
 
 CHAR_FIELD_MAX_LENGTH = 85
 
@@ -391,3 +392,7 @@ class FeedlyAPISettings(SingletonModel):
 	class Meta:
 		verbose_name = "Feedly Configuration"
 
+
+class TermsOfService(SingletonModel):
+	content = RichTextField()
+	last_modified = models.DateTimeField(auto_now=True)
