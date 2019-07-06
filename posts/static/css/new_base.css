@@ -2072,15 +2072,15 @@ nav {
 .header-container {
   background: #F9F9F9;
   height: 400px;
-  padding: 123px 100px 97px;
+}
+.header-container .header-of-text {
+  padding-bottom: 97px;
+  padding-top: 123px;
 }
 .header-container .header-of-text h2 {
   margin: 0 0 32px;
 }
 
-.main-text {
-  padding: 0 100px;
-}
 .main-text a {
   color: #D92752;
 }
@@ -2451,15 +2451,13 @@ nav {
   }
 
   .header-container {
-    padding: 32px 20px;
     max-height: 292px;
+  }
+  .header-container .header-of-text {
+    padding: 32px 20px;
   }
   .header-container .header-of-text h2 {
     margin-bottom: 20px;
-  }
-
-  .main-text {
-    padding: 0 20px;
   }
 }
 @media (min-width: 1200px) {
