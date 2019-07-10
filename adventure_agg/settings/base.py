@@ -227,6 +227,6 @@ CELERY_RESULT_BACKEND = 'django-db'
 
 #CORS whitelist
 CORS_ORIGIN_WHITELIST = [
-    'https://preview.hs-sites.xn--com-to0a',
+    'https://preview.hs-sites.com/',
     'https://www.viceroy.tech',
 ]
