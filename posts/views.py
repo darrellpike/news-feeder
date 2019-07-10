@@ -22,6 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 import base64, json
 from django.contrib.auth import authenticate
+from posts.templatetags.posts_extras import smooth_timedelta
 
 class AjaxableResponseMixin(object):
 	"""
@@ -489,6 +490,34 @@ def feedly_hook(request):
 		response.status_code = 401
 		return response
 
+
+@csrf_exempt
+def get_popular_article_view(request):
+	if request.method == 'GET':
+		posts = Post.objects.all().filter(submit_time__lt=timezone.now()).order_by('-feedly_engagement',
+		                                                                           '-submit_time').annotate(
+			score=Sum('postvote__score'))
+		for p in posts:
+			p.ranking = p.get_ranking(score=p.score)
+		post = sorted(posts, key=operator.attrgetter('ranking'), reverse=True)[0]
+		data = {
+			'popular_post': {
+				'title': post.title,
+				'upvotes': post.get_score_formatted(),
+				'comments': post.comment_count(),
+				'time_since_submit': smooth_timedelta(post.time_since_submit()),
+				'news_aggregator' : {
+					'name': post.news_aggregator.name,
+					'url': post.news_aggregator.url,
+					'image_url': request.build_absolute_uri(post.news_aggregator.logo.url)
+				}
+			}
+		}
+		return JsonResponse(data)
+	else:
+		response = HttpResponse()
+		response.status_code = 401
+		return response
 
 
 
