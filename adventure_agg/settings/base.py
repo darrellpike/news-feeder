@@ -46,12 +46,14 @@ INSTALLED_APPS = [
     'solo',
     'django_celery_beat',
     'django_celery_results',
-    'ckeditor'
+    'ckeditor',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -221,3 +223,10 @@ LOGGING = {
 
 # Celery settings
 CELERY_RESULT_BACKEND = 'django-db'
+
+
+#CORS whitelist
+CORS_ORIGIN_WHITELIST = [
+    'https://preview.hs-sites.xn--com-to0a',
+    'https://www.viceroy.tech',
+]
