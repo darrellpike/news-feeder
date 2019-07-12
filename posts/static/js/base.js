@@ -155,6 +155,12 @@ $(function () {
     searchInput.on('keyup', function (e) {
         clearTimeout(timeoutID);
         timeoutID = setTimeout(() => searchSend(e.target.value, pageNumber), 250);
+        $(this).siblings('button.close').show();
+    });
+    search.find('button.close').on('click touch', function (e) {
+        $(this).hide();
+        $('#search-results').css('display', 'none');
+        $('.main-content:not(#search-results)').css('display', 'block');
     });
 
     $(document).on('keydown', 'form input, form textarea', function () {

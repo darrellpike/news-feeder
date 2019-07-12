@@ -676,7 +676,7 @@ nav
 #search-form
   input
     caret-color: $primary-color
-    width: 100%
+    width: calc(100% - 40px)
     margin: auto
     padding: 24px 0 20px 0
     background: #FFFFFF
@@ -698,6 +698,12 @@ nav
         opacity: 0.3
     &::-webkit-search-decoration, &::-webkit-search-cancel-button
       display: none
+
+  button.close
+    opacity: 1
+    padding: 20px 0
+    display: none
+
 
 #search-results
   display: none
@@ -2097,6 +2103,8 @@ nav
           padding: 14px 0 14px 0
           font-size: 18px
           line-height: 24px
+        button.close
+          padding: 6px 0
 
     #mobile-sort-buttons ~ #search-results
       margin-top: 10px
