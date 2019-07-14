@@ -41,7 +41,7 @@
 
             <span class="article-comments">
                                     <img alt="comments" src="{% static 'images/Comments_image.svg' %}" />
-                <span class="article-comments-text"><span>{{ article.comment_count }}</span> comments</span>
+                <span class="article-comments-text"><span>{{ article.comment_count }}</span> comment{{ article.comment_count|pluralize }}</span>
             </span>
             <span class="text-separator d-none d-md-inline d-lg-inline d-xl-inline"></span>
             <span class="article-time d-none d-md-inline d-lg-inline d-xl-inline">{{ article.time_since_submit|smooth_timedelta }} ago</span>
