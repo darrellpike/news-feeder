@@ -63,7 +63,7 @@
                         </span>
                             <span class="article-comments">
                                     <img alt="comments" src="{% static 'images/comment_grey.svg' %}" />
-                            <span class="article-comments-text"><span>{{ article.comment_count }}</span> comments</span>
+                            <span class="article-comments-text"><span>{{ article.comment_count }}</span> comment{{ article.comment_count|pluralize }}</span>
                         </span>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
     </div>
     <div class="article-comments">
         <div class="article-comments-header d-flex">
-            <div class="comments-count align-self-start"><span>{{ article.comment_count }}</span> comments</div>
+            <div class="comments-count align-self-start"><span>{{ article.comment_count }}</span> comment{{ article.comment_count|pluralize }}</div>
             {% if comments.all %}
                 <div class="comment-sorting align-self-end d-inline-flex">
                     <button data-sort="{% url 'sort_comments' article.pk %}?sort=newset" id="comments-oldest" class="btn btn-link active">Newest</button>
