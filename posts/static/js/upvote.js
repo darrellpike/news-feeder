@@ -9,10 +9,10 @@ $(function () {
             rating_number = button.find('.rating-text');
         }
         if (!button.hasClass('active')) {
-            rating_number.html(Math.sign(rating_number.html()) + 1);
+            rating_number.html(parseInt(rating_number.html()) + 1);
             button.addClass('active');
         } else {
-            rating_number.html(Math.sign(rating_number.html()) - 1);
+            rating_number.html(parseInt(rating_number.html()) - 1);
             button.removeClass('active');
         }
         $.ajax({
